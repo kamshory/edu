@@ -11,7 +11,10 @@ $dir = trim(stripslashes(@$_GET['dir']),"/");
 if(!is_dir(path_decode($dir, $cfg->rootdir))){
 	$dir = '';	
 }
-if(!$dir) $dir =  'base';
+if(empty($dir)) 
+{
+	$dir =  'base';
+}
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
