@@ -89,8 +89,8 @@ if(isset($_POST['save']) || strlen(@$_POST['submit_test']))
 		$answer_str = addslashes(implode(",", $answer_arr)); // catatan answer
 		if ($data['has_limits']) {
 			$sql = "select * from `edu_answer` where `student_id` = '$student_id' and `test_id` = '$test_id' ";
-			$res = mysql_query($sql);
-			$nujian = mysql_num_rows($res);
+			$stmt3 = $database->executeQuery($sql);
+			$nujian = $stmt3->rowCount();
 			if ($nujian < $data['trial_limits']) {
 				$proses = true;
 			} else {
@@ -192,8 +192,8 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 <div class="info">
 <?php
 $sql = "select * from `edu_answer` where `student_id` = '$student_id' and `test_id` = '$test_id' order by `start` desc ";
-$res = mysql_query($sql);
-$ntest = mysql_num_rows($res);
+$stmt4 = $database->executeQuery($sql);
+$ntest = $stmt4->rowCount();
 if($ntest)
 {
 ?>
@@ -265,10 +265,9 @@ Informasi Singkat Ujian
 include_once dirname(__FILE__)."/lib.inc/footer.php";
 exit();
 }
-
 else if(@$_GET['option'] == 'login-to-test')
 {
-include_once dirname(__FILE__)."/lib.inc/header.php";
+include_once dirname(__FILE__) . "/lib.inc/header.php";
 ?>
 <div class="label">
 Informasi Singkat Ujian
@@ -343,8 +342,8 @@ else if(@$_GET['login-to-test']=="yes")
 	if($data['has_limits'])
 	{
 		$sql = "select * from `edu_answer` where `student_id` = '$student_id' and `test_id` = '$test_id' order by `start` desc ";
-		$res = mysql_query($sql);
-		$ntest = mysql_num_rows($res);
+		$stmt2 = $database->executeQuery($sql);
+		$ntest = $stmt2->rowCount();
 		if($ntest < $data['trial_limits'])
 		{
 			$proses = true;
@@ -353,7 +352,7 @@ else if(@$_GET['login-to-test']=="yes")
 		else
 		{
 			$proses = false;
-			$dt = mysql_fetch_assoc($res);
+			$dt = $stmt2->fetch(PDO::FETCH_ASSOC);
 			$test_id_terakhir = $dt['start'];
 			header("Location: ".basename($_SERVER['PHP_SELF'])."?option=limited");
 		}
