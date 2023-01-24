@@ -12,7 +12,7 @@ if(isset($_POST['name']))
 	$name = trim(preg_replace("/\s+/", " ", $name));
 	if($name != '')
 	{
-		if(checkValidName($name))
+		if($picoEdu->checkValidName($name))
 		{
 			$coorected = $name;
 			$arr = explode(" ", $coorected);

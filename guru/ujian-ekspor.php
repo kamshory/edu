@@ -14,7 +14,7 @@ include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(isset($_POST['export']) && isset($_POST['test_id']))
 {
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `name` from `edu_test` where `school_id` = '$school_id' and `test_id` = '$test_id'
+	$sql = "SELECT `name` from `edu_test` where `school_id` = '$school_id' and `test_id` = '$test_id'
 	";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
@@ -34,7 +34,7 @@ if(isset($_GET['test_id']))
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`) as `number_of_real_question`
 from `edu_test` 
 where 1
@@ -184,7 +184,7 @@ if($class_id != '')
 $nt = '';
 
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`)*1 as `number_of_question`
 from `edu_test`

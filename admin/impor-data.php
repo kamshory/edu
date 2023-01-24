@@ -119,7 +119,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 			
 			if(empty($school_id))
 			{
-				$sql = "select `school_id` from `edu_school` where `name` like '$name_school' ";
+				$sql = "SELECT `school_id` from `edu_school` where `name` like '$name_school' ";
 				$stmt = $database->executeQuery($sql);
 				$data_school = $stmt->fetch(PDO::FETCH_ASSOC);
 				$school_id = $data_school['school_id'];
@@ -127,7 +127,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 			
 			if(!$myschool)
 			{
-				$sql = "select `edu_school`.*
+				$sql = "SELECT `edu_school`.*
 				from `edu_school`
 				left join(`edu_member_school`) on(`edu_member_school`.`school_id` = `edu_school`.`school_id` and `edu_member_school`.`role` = 'A')
 				where `edu_school`.`school_id` = '$school_id' and `edu_member_school`.`member_id` = '$admin_id' 
@@ -680,7 +680,7 @@ $edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
 $nt = '';
 
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select `edu_admin1`.`name` from `edu_admin` as `edu_admin1` where `edu_admin1`.`admin_id` = `edu_school`.`admin_create` limit 0,1) as `admin_create`,
 (select `edu_admin2`.`name` from `edu_admin` as `edu_admin2` where `edu_admin2`.`admin_id` = `edu_school`.`admin_edit` limit 0,1) as `admin_edit`,
 (select `edu_admin3`.`name` from `edu_admin` as `edu_admin3` where `edu_admin3`.`admin_id` = `edu_school`.`admin_import_first` limit 0,1) as `admin_import_first`,

@@ -47,7 +47,6 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 		where `admint_id` = '$admin_id' and `school_id` = '$school_id' ";
 		$database->executeUpdate($sql);
 		$_SESSION['password'] = md5($password);
-		$ksession->forcesave();
 	}
 
 	header("Location: profil.php");
@@ -56,7 +55,7 @@ if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'admin_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_admin`.* 
+$sql = "SELECT `edu_admin`.* 
 from `edu_admin` 
 where 1
 and `edu_admin`.`admin_id` = '$edit_key'
@@ -122,7 +121,7 @@ else
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'admin_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_admin`.* $nt,
+$sql = "SELECT `edu_admin`.* $nt,
 (select `edu_admin1`.`name` from `edu_admin` as `edu_admin1` where `edu_admin1`.`admin_id` = `edu_admin`.`admin_create` limit 0,1) as `admin_create`,
 (select `edu_admin2`.`name` from `edu_admin` as `edu_admin2` where `edu_admin2`.`admin_id` = `edu_admin`.`admin_edit` limit 0,1) as `admin_edit`
 from `edu_admin` 

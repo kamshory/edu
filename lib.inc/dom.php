@@ -41,7 +41,7 @@ function getTagNode($data, $tag)
 	}
 	return $result;
 }
-function parsehtmldata($data, $base = "")
+function parseHtmlData($data, $base = "")
 {
 	$ret = new stdClass();
 	$dom = new DOMDocument("1.0", "UTF-8");

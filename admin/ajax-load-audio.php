@@ -5,7 +5,7 @@ if(empty(@$school_id))
 exit();
 }
 $test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.*, 
+$sql = "SELECT `edu_test`.*, 
 (select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 from `edu_test`
 where `edu_test`.`test_id` = '$test_id'

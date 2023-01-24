@@ -20,7 +20,7 @@ if(isset($_POST['import']) && isset($_POST['test_id']) && isset($_FILES['file'])
 	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$picoEdu->sortQuestion($test_id);
 	
-	$sql = "select `edu_test`.*, 
+	$sql = "SELECT `edu_test`.*, 
 	(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 	from `edu_test`
 	where `edu_test`.`test_id` = '$test_id'
@@ -319,7 +319,7 @@ if(isset($_GET['test_id']))
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`) as `koleksi_question`
 from `edu_test` 
@@ -478,7 +478,7 @@ if($class_id != '')
 
 $nt = '';
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`)*1 as `number_of_question`
 from `edu_test`

@@ -3,7 +3,7 @@ include_once dirname(dirname(__FILE__))."/inc-cfg.php";
 
 
 function menu_load(PicoDatabase $database, $member_id, $parent=0, $grade=1){
-	$sql = "select `m1`.* , 
+	$sql = "SELECT `m1`.* , 
 	(select count(distinct `m2`.`menu_id`) from `menu` as `m2` where `m2`.`parent` = `m1`.`menu_id`) as `numchild`,
 	`page`.`page_id` as `page_id`, `page`.`permalink` as `page_permalink`
 	from `menu` as `m1`

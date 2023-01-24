@@ -165,7 +165,7 @@ if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* 
+$sql = "SELECT `edu_test`.* 
 from `edu_test` 
 where 1
 and `edu_test`.`test_id` = '$edit_key' 
@@ -175,7 +175,7 @@ if($stmt->rowCount() > 0)
 {
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 $school_id = $data['school_id'];
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmtc = $database->executeQuery($sqlc);
 $arrc = array();
 if($stmtc->rowCount() > 0)
@@ -328,7 +328,7 @@ $(document).ready(function(e) {
         <td><select class="input-select" name="school_program_id" id="school_program_id">
 		<option value=""></option>
 		<?php 
-		$sql2 = "select `edu_school_program`.* from `edu_school_program` where `edu_school_program`.`school_id` = '$school_id' order by `name` asc ";
+		$sql2 = "SELECT `edu_school_program`.* from `edu_school_program` where `edu_school_program`.`school_id` = '$school_id' order by `name` asc ";
 		$stmt2 = $database->executeQuery($sql2);
 		if ($stmt2->rowCount() > 0) {
 			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -351,7 +351,7 @@ $(document).ready(function(e) {
         <td><select class="input-select" name="teacher_id" id="teacher_id">
 		<option value=""></option>
 		<?php 
-		$sql2 = "select `edu_teacher`.* from `edu_teacher` where `edu_teacher`.`school_id` = '$school_id' order by `name` asc ";
+		$sql2 = "SELECT `edu_teacher`.* from `edu_teacher` where `edu_teacher`.`school_id` = '$school_id' order by `name` asc ";
 		$stmt2 = $database->executeQuery($sql2);
 		if ($stmt2->rowCount() > 0) {
 			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -504,7 +504,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 $array_class = $picoEdu->getArrayClass($school_id);
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
 (select `member`.`name` from `member` where `member`.`member_id` = `edu_test`.`member_create`) as `member_create`,
 (select `member`.`name` from `member` where `member`.`member_id` = `edu_test`.`member_edit`) as `member_edit`
@@ -806,14 +806,14 @@ if($class_id != '')
 $nt = '';
 
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_test`.`school_id` limit 0,1) as `school_name`,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`
 from `edu_test`
 where 1 $sql_filter
 order by `edu_test`.`test_id` desc
 ";
-$sql_test = "select `edu_test`.*
+$sql_test = "SELECT `edu_test`.*
 from `edu_test`
 where 1 $sql_filter
 ";

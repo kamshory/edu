@@ -61,7 +61,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 		if($student_id == 0)
 		{
 			// membuat token untuk semua siswa
-			$sql = "select `student_id` from `edu_student` where `class_id` = '$class_id' and `active` = '1'
+			$sql = "SELECT `student_id` from `edu_student` where `class_id` = '$class_id' and `active` = '1'
 			";
 			$stmt = $database->executeQuery($sql);
 			$students = array();
@@ -261,7 +261,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'token_id', FILTER_SANITIZE_NUMBER_INT);
 $nt = '';
-$sql = "select `edu_token`.* $nt,
+$sql = "SELECT `edu_token`.* $nt,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_token`.`admin_create`) as `creator_name`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_token`.`admin_edit`) as `editor_name`,
 (select `edu_student`.`name` from `edu_student` where `edu_student`.`student_id` = `edu_token`.`student_id`) as `student_name`,
@@ -473,7 +473,7 @@ if($test_id == 0 && $class_id == 0)
 $sql_filter .= " and `edu_token`.`active` = '1' ";
 $nt = '';
 
-$sql = "select `edu_token`.* $nt,
+$sql = "SELECT `edu_token`.* $nt,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_token`.`admin_create`) as `admin_create_name`,
 (select `edu_student`.`name` from `edu_student` where `edu_student`.`student_id` = `edu_token`.`student_id`) as `student_name`,
 (select `edu_class`.`name` from `edu_class` where `edu_class`.`class_id` = `edu_token`.`class_id`) as `class_name`,
@@ -482,7 +482,7 @@ from `edu_token`
 where 1 and `school_id` = '$school_id' $sql_filter
 order by `edu_token`.`token_id` desc
 ";
-$sql_test = "select `edu_token`.*
+$sql_test = "SELECT `edu_token`.*
 from `edu_token`
 where 1 and `school_id` = '$school_id' $sql_filter
 ";

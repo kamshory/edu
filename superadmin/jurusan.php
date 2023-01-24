@@ -78,7 +78,7 @@ if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'school_program_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_school_program`.* 
+$sql = "SELECT `edu_school_program`.* 
 from `edu_school_program` 
 where 1
 and `edu_school_program`.`school_program_id` = '$edit_key'
@@ -129,7 +129,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'school_program_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school_program`.* ,
+$sql = "SELECT `edu_school_program`.* ,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_school_program`.`school_id`) as `school_id`
 from `edu_school_program` 
 where 1
@@ -256,13 +256,13 @@ $sql_filter .= " and (`edu_school_program`.`school_id` = '$school_id' )";
 
 $nt = '';
 
-$sql = "select `edu_school_program`.*,
+$sql = "SELECT `edu_school_program`.*,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_school_program`.`school_id`) as `school_id`
 from `edu_school_program`
 where 1 $sql_filter
 order by `edu_school_program`.`school_id` desc, `edu_school_program`.`school_program_id` asc, `edu_school_program`.`name` asc
 ";
-$sql_test = "select `edu_school_program`.*
+$sql_test = "SELECT `edu_school_program`.*
 from `edu_school_program`
 where 1 $sql_filter
 ";

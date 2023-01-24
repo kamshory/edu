@@ -26,7 +26,7 @@ class AdminAuth
 	{
 		global $picoEdu;
 		if ($username != '') {
-			$sql = "select `edu_admin`.`admin_id`, `edu_admin`.`username`, `edu_admin`.`name`, `edu_admin`.`gender`, 
+			$sql = "SELECT `edu_admin`.`admin_id`, `edu_admin`.`username`, `edu_admin`.`name`, `edu_admin`.`gender`, 
 		`edu_admin`.`birth_place`, `edu_admin`.`birth_day`, `edu_admin`.`email`, `edu_admin`.`phone`, 
 		`edu_admin`.`country_id`, `edu_admin`.`state_id`, `edu_admin`.`city_id`, `edu_admin`.`school_id`, 
 		`edu_school`.`name` as `school_name`, `edu_school`.`school_code` as `school_code`, 

@@ -253,7 +253,7 @@ else if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `".DB_PREFIX."edu_school`.* 
+$sql = "SELECT `".DB_PREFIX."edu_school`.* 
 from `".DB_PREFIX."edu_school` 
 where 1
 and `".DB_PREFIX."edu_school`.`school_id` = '$edit_key'
@@ -434,7 +434,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `".DB_PREFIX."edu_school`.* $nt
+$sql = "SELECT `".DB_PREFIX."edu_school`.* $nt
 from `".DB_PREFIX."edu_school` 
 where 1
 and `".DB_PREFIX."edu_school`.`school_id` = '$edit_key'
@@ -623,12 +623,12 @@ $sql_filter .= " and (`".DB_PREFIX."edu_school`.`nama` like '%".addslashes($pagi
 
 $nt = '';
 
-$sql = "select `".DB_PREFIX."edu_school`.* $nt
+$sql = "SELECT `".DB_PREFIX."edu_school`.* $nt
 from `".DB_PREFIX."edu_school`
 where 1 $sql_filter
 order by `".DB_PREFIX."edu_school`.`school_id` asc
 ";
-$sql_test = "select `".DB_PREFIX."edu_school`.*
+$sql_test = "SELECT `".DB_PREFIX."edu_school`.*
 from `".DB_PREFIX."edu_school`
 where 1 $sql_filter
 ";

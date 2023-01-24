@@ -33,7 +33,7 @@ else
 	if($test_id)
 	{
 		$randobj = array();
-		$sql = "select `edu_test`.`random_distribution`
+		$sql = "SELECT `edu_test`.`random_distribution`
 		from `edu_test`
 		where `edu_test`.`test_id` = '$test_id'
 		";
@@ -55,7 +55,7 @@ else
 				}
 			}
 			
-			$sql = "select `edu_question`.`basic_competence` , count(distinct `edu_question`.`question_id`) as `colection`
+			$sql = "SELECT `edu_question`.`basic_competence` , count(distinct `edu_question`.`question_id`) as `colection`
 			from `edu_question`
 			where `edu_question`.`test_id` = '$test_id'
 			group by `edu_question`.`basic_competence`

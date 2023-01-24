@@ -79,7 +79,7 @@ if(isset($_POST['delete']) && isset($_POST['teacher_id']))
 
 if(isset($_POST['save']) && @$_GET['option']=='edit')
 {
-	$sql = "select `school_id` from `edu_teacher` where `teacher_id` = '$teacher_id2'  ";
+	$sql = "SELECT `school_id` from `edu_teacher` where `teacher_id` = '$teacher_id2'  ";
 	$stmt = $database->executeQuery($sql);
 	if ($stmt->rowCount() > 0) {
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -118,7 +118,7 @@ if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'teacher_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_teacher`.* 
+$sql = "SELECT `edu_teacher`.* 
 from `edu_teacher` 
 where 1
 and `edu_teacher`.`teacher_id` = '$edit_key'
@@ -227,7 +227,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'teacher_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_teacher`.* $nt,
+$sql = "SELECT `edu_teacher`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_teacher`.`school_id` limit 0,1) as `school_name`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_teacher`.`admin_create`) as `admin_create`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_teacher`.`admin_edit`) as `admin_edit`
@@ -391,13 +391,13 @@ $sql_filter .= " and (`edu_teacher`.`school_id` = '$school_id' )";
 
 $nt = '';
 
-$sql = "select `edu_teacher`.* $nt,
+$sql = "SELECT `edu_teacher`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_teacher`.`school_id` limit 0,1) as `school_name`
 from `edu_teacher`
 where 1 $sql_filter
 order by `edu_teacher`.`school_id` desc, `edu_teacher`.`name` asc
 ";
-$sql_test = "select `edu_teacher`.*
+$sql_test = "SELECT `edu_teacher`.*
 from `edu_teacher`
 where 1 $sql_filter
 ";

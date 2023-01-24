@@ -93,7 +93,7 @@ if(@$_GET['option']=='export' && isset($_GET['test_id']))
 
 	$class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 	$nt = '';
-	$sql = "select `edu_test`.* $nt, 
+	$sql = "SELECT `edu_test`.* $nt, 
 	(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
 	(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`) as `koleksi_question`
 	from `edu_test` 
@@ -188,7 +188,7 @@ if($class_id != '')
 $threshold = $data['threshold'];
 if(isset($_GET['expand']))
 {
-	$sql = "select `edu_answer`.* , `edu_answer`.`student_id` as `student_id`, `edu_student`.`reg_number`,
+	$sql = "SELECT `edu_answer`.* , `edu_answer`.`student_id` as `student_id`, `edu_student`.`reg_number`,
 	timediff(`edu_answer`.`end`,`edu_answer`.`start`) as `timediff` ,
 	(select `edu_test`.`number_of_question` from `edu_test` where `edu_test`.`test_id` = `edu_question`.`test_id`) as `number_of_question`,
 	((select `edu_test`.`duration` from `edu_test` where `edu_test`.`test_id` = `edu_answer`.`test_id`) - (UNIX_TIMESTAMP(`edu_answer`.`end`)-UNIX_TIMESTAMP(`edu_answer`.`start`))<0) as `lewat`,
@@ -359,7 +359,7 @@ else if(@$_GET['option']=='answerdetail' && isset($_GET['answer_id']))
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $array_class = $picoEdu->getArrayClass($school_id);
 $answer_id = kh_filter_input(INPUT_GET, 'answer_id', FILTER_SANITIZE_NUMBER_UINT);
-$sql = "select `edu_test`.*, `edu_answer`.*, 
+$sql = "SELECT `edu_test`.*, `edu_answer`.*, 
 timediff(`edu_answer`.`end`,`edu_answer`.`start`) as `duration_test` ,
 (select `edu_student`.`name` from `edu_student` where `edu_student`.`student_id` = `edu_answer`.`student_id`) as `student_name`
 from `edu_test`
@@ -451,7 +451,7 @@ if(strlen($info['random_distribution']) > 5)
 else
 {
 	$bc_array = array();
-	$sql = "select `edu_question`.`basic_competence`, count(distinct `edu_question`.`question_id`) as `num_question`
+	$sql = "SELECT `edu_question`.`basic_competence`, count(distinct `edu_question`.`question_id`) as `num_question`
 	from `edu_question`
 	where `edu_question`.`test_id` = '$test_id' 
 	group by `edu_question`.`basic_competence`
@@ -548,7 +548,7 @@ foreach($bc_score as $key=>$val)
 ?>
 
 <?php
-$sql = "select `edu_question`.* , `edu_answer`.`answer` as `answer` , instr(`edu_answer`.`answer`,`edu_question`.`question_id`) as `pos`
+$sql = "SELECT `edu_question`.* , `edu_answer`.`answer` as `answer` , instr(`edu_answer`.`answer`,`edu_question`.`question_id`) as `pos`
 from `edu_question` 
 left join (`edu_answer`) on (`edu_answer`.`answer` like concat('%[',`edu_question`.`question_id`,',%' ))
 left join (`edu_test`) on (`edu_test`.`test_id` = `edu_question`.`test_id`)
@@ -576,7 +576,7 @@ $answer = $data['answer'];
 <div class="question">
 <?php echo $data['content'];?>
 <?php
-$sql2 = "select `edu_option`.* , '$answer' like concat('%,',`edu_option`.`option_id`,']%') as `my_answer`
+$sql2 = "SELECT `edu_option`.* , '$answer' like concat('%,',`edu_option`.`option_id`,']%') as `my_answer`
 from `edu_option` 
 where  `edu_option`.`question_id` = '$qid' group by  `edu_option`.`option_id` order by  `edu_option`.`order` asc";
 $stmt2 = $database->executeQuery($sql2);
@@ -710,7 +710,7 @@ window.onload = function()
 $q1 = basename($_SERVER['PHP_SELF'])."?option=detail&test_id=$test_id&expand=1";
 $q2 = basename($_SERVER['PHP_SELF'])."?option=detail&test_id=$test_id";
 $nt ='';
-$sql = "select `edu_test`.* $nt
+$sql = "SELECT `edu_test`.* $nt
 from `edu_test` 
 where (`edu_test`.`active` = '1' or `edu_test`.`active` = '0')
 and `edu_test`.`test_id` = '$test_id'
@@ -754,7 +754,7 @@ $nt = '';
 
 if(isset($_GET['expand']))
 {
-	$sql = "select `edu_answer`.* , `edu_answer`.`student_id` as `student_id`, `edu_student`.`reg_number`,
+	$sql = "SELECT `edu_answer`.* , `edu_answer`.`student_id` as `student_id`, `edu_student`.`reg_number`,
 	timediff(`edu_answer`.`end`,`edu_answer`.`start`) as `timediff` ,
 	(select `edu_test`.`number_of_question` from `edu_test` where `edu_test`.`test_id` = `edu_question`.`test_id`) as `number_of_question`,
 	((select `edu_test`.`duration` from `edu_test` where `edu_test`.`test_id` = `edu_answer`.`test_id`) - (UNIX_TIMESTAMP(`edu_answer`.`end`)-UNIX_TIMESTAMP(`edu_answer`.`start`))<0) as `lewat`,
@@ -1027,7 +1027,7 @@ $pagination->array_get[] = 'q';
 $sql_filter .= " and (`edu_test`.`name` like '%".addslashes($pagination->query)."%' )";
 }
 
-$sql = "select `edu_test`.*,
+$sql = "SELECT `edu_test`.*,
 (select count(distinct `edu_answer`.`student_id`) from `edu_answer` where `edu_answer`.`test_id` = `edu_test`.`test_id`) as `number_of_student`,
 (select `edu_answer`.`start` from `edu_answer` where `edu_answer`.`test_id` = `edu_test`.`test_id` order by `edu_answer`.`start` desc limit 0,1) as `last_test`
 from `edu_test`
@@ -1035,7 +1035,7 @@ where `edu_test`.`school_id` = '$school_id' $sql_filter
 having 1 and `number_of_student` > 0
 order by `last_test` desc, `edu_test`.`test_id` desc
 ";
-$sql_test = "select `edu_test`.*,
+$sql_test = "SELECT `edu_test`.*,
 (select count(distinct `edu_answer`.`student_id`) from `edu_answer` where `edu_answer`.`test_id` = `edu_test`.`test_id`) as `number_of_student`
 from `edu_test`
 where `edu_test`.`school_id` = '$school_id' $sql_filter

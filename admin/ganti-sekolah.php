@@ -10,7 +10,7 @@ include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(@$_GET['option']=='select')
 {
 	$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_school`.* 
+	$sql = "SELECT `edu_school`.* 
 	from `edu_member_school`
 	inner join(`edu_school`) on(`edu_school`.`school_id` = `edu_member_school`.`school_id`)
 	where `edu_member_school`.`member_id` = '$admin_id' and `edu_member_school`.`role` = 'A' 
@@ -58,7 +58,7 @@ if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`school_id` = `edu_school`.`school_id`) as `student`,
 (select `country`.`name` from `country` where `country`.`country_id` = `edu_school`.`country_id`) as `country_id`,
 (select `state`.`name` from `state` where `state`.`state_id` = `edu_school`.`state_id`) as `state_id`,
@@ -201,7 +201,7 @@ $sql_filter .= " and (`edu_school`.`name` like '%".addslashes($pagination->query
 
 $nt = '';
 
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_school`.`admin_create`) as `admin_create`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_school`.`admin_edit`) as `admin_edit`
 from `edu_member_school`
@@ -209,7 +209,7 @@ inner join(`edu_school`) on(`edu_school`.`school_id` = `edu_member_school`.`scho
 where `edu_member_school`.`member_id` = '$admin_id' and `edu_member_school`.`role` = 'A' $sql_filter
 order by `edu_school`.`school_id` asc
 ";
-$sql_test = "select `edu_school`.*
+$sql_test = "SELECT `edu_school`.*
 from `edu_member_school`
 inner join(`edu_school`) on(`edu_school`.`school_id` = `edu_member_school`.`school_id`)
 where `edu_member_school`.`member_id` = '$admin_id' and `edu_member_school`.`role` = 'A' $sql_filter

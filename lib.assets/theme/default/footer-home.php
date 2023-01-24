@@ -52,7 +52,7 @@
        <div class="article-link-list">
        <h3>Informasi <?php echo $cfg->app_name;?></h3>
        <?php
-		$sql = "select `edu_info`.* 
+		$sql = "SELECT `edu_info`.* 
 		from `edu_info` 
 		where `edu_info`.`active` = '1'
 		order by `edu_info`.`info_id` desc
@@ -79,7 +79,7 @@
        <div class="article-archive">
        <h3>Arsip Informasi</h3>
        <?php
-		$sql = "select `edu_info`.`time_create` , left(`edu_info`.`time_create`, 7) as `month`, count(*) as `count`
+		$sql = "SELECT `edu_info`.`time_create` , left(`edu_info`.`time_create`, 7) as `month`, count(*) as `count`
 		from `edu_info` 
 		where `edu_info`.`active` = '1'
 		group by `month`

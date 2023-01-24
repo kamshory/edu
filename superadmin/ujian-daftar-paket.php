@@ -281,7 +281,7 @@ else if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_collection_id', FILTER_SANITIZE_NUMBER_UINT);
-$sql = "select `edu_test_collection`.* 
+$sql = "SELECT `edu_test_collection`.* 
 from `edu_test_collection` 
 where 1
 and `edu_test_collection`.`test_collection_id` = '$edit_key'
@@ -342,7 +342,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_collection_id', FILTER_SANITIZE_NUMBER_UINT);
 $nt = '';
-$sql = "select `edu_test_collection`.* $nt
+$sql = "SELECT `edu_test_collection`.* $nt
 from `edu_test_collection` 
 where 1
 and `edu_test_collection`.`test_collection_id` = '$edit_key'
@@ -544,12 +544,12 @@ $sql_filter .= " and (`edu_test_collection`.`grade_id` = '$grade_id' )";
 $nt = '';
 
 
-$sql = "select `edu_test_collection`.* $nt
+$sql = "SELECT `edu_test_collection`.* $nt
 from `edu_test_collection`
 where 1 $sql_filter
 order by `edu_test_collection`.`test_collection_id` desc
 ";
-$sql_test = "select `edu_test_collection`.*
+$sql_test = "SELECT `edu_test_collection`.*
 from `edu_test_collection`
 where 1 $sql_filter
 ";

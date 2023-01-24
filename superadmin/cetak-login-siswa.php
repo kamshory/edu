@@ -15,7 +15,7 @@ $imageString = base64_encode( ob_get_contents() );
 ob_end_clean();
 
 $nt = '';
-$sql = "select `edu_class`.* $nt,
+$sql = "SELECT `edu_class`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_class`.`school_id`) as `school_name`
 from `edu_class` 
 where `edu_class`.`school_id` = '$school_id'
@@ -31,7 +31,7 @@ if($stmt->rowCount() > 0)
 else
 {
 $class_id = 0;
-$sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
+$sql = "SELECT `edu_school`.*, `edu_school`.`name` as `school_name`
 from `edu_school` 
 where `edu_school`.`school_id` = '$school_id'
 ";
@@ -142,7 +142,7 @@ else
 {
 $filter = "";
 }
-$sql = "select `edu_student`.* 
+$sql = "SELECT `edu_student`.* 
 from `edu_student` 
 where 1 and `edu_student`.`school_id` = '$school_id' and `edu_student`.`active` = '1' $filter
 order by `edu_student`.`name` asc ";

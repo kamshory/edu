@@ -10,7 +10,7 @@ if(isset($_POST['sync']))
 	$password = kh_filter_input(INPUT_POST, 'password', FILTER_SANITIZE_PASSWORD);
 	if($password != '')
 	{
-		$sql = "select `edu_teacher`.*
+		$sql = "SELECT `edu_teacher`.*
 		from `edu_teacher` 
 		where `edu_teacher`.`teacher_id` = '$teacher_id' and `edu_teacher`.`email` like '$email' and `edu_teacher`.`auth` like '$auth' ";
 		$res = mysql_query($sql);
@@ -24,7 +24,7 @@ if(isset($_POST['sync']))
 				$sql = "update `member` set `email` = '$email', `password` = md5(md5('$password')), `active` = '1', `blocked` = '0' 
 				where `member_id` = '$teacher_id' ";
 				mysql_query($sql);
-				$sql = "select `username`, `member_id`
+				$sql = "SELECT `username`, `member_id`
 				from `member`
 				where `email` like '$email' and `password` like md5(md5('$password'))
 				";
@@ -50,7 +50,7 @@ $teacher_id = kh_filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_UINT);
 $email = kh_filter_input(INPUT_GET, 'email', FILTER_SANITIZE_EMAIL);
 $auth = kh_filter_input(INPUT_GET, 'auth', FILTER_SANITIZE_STRING_NEW);
 
-$sql = "select `edu_teacher`.*
+$sql = "SELECT `edu_teacher`.*
 from `edu_teacher` 
 where `edu_teacher`.`teacher_id` = '$teacher_id' and `edu_teacher`.`email` like '$email' and `edu_teacher`.`auth` like '$auth' ";
 $stmt = $database->executeQuery($sql);

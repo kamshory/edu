@@ -25,7 +25,7 @@ class TeacherAuth
 		global $cfg;
 		global $picoEdu;
 		if ($username != '') {
-			$sql = "select `edu_teacher`.`teacher_id`, `edu_teacher`.`username`, `edu_teacher`.`name`, `edu_teacher`.`gender`, 
+			$sql = "SELECT `edu_teacher`.`teacher_id`, `edu_teacher`.`username`, `edu_teacher`.`name`, `edu_teacher`.`gender`, 
 				`edu_teacher`.`birth_place`, `edu_teacher`.`birth_day`, `edu_teacher`.`email`, `edu_teacher`.`phone`, 
 				`edu_teacher`.`country_id`, `edu_teacher`.`state_id`, `edu_teacher`.`city_id`, `edu_teacher`.`school_id`, 
 				`edu_school`.`name` as `school_name`, `edu_school`.`school_code` as `school_code`, `edu_school`.`use_token`

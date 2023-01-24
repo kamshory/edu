@@ -36,7 +36,7 @@ if(!isset($_SESSION['set_time_token']))
 {
 	$setTimeToken = md5($_SERVER['REMOTE_ADDR'].'-'.time().'-'.mt_rand(111111, 999999));
 	$_SESSION['set_time_token'] = $setTimeToken;
-	// saveSessionManual($_SESSION);
+	
 }
 $setTimeToken = $_SESSION['set_time_token'];
 ?>

@@ -432,7 +432,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 
 $state_list = array();
 $city_list = array();
-$sql = "select `edu_school`.* 
+$sql = "SELECT `edu_school`.* 
 from `edu_school` 
 where 1
 and `edu_school`.`school_id` = '$school_id'
@@ -442,14 +442,14 @@ if($stmt->rowCount() > 0)
 {
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$sql = "select `state`.`state_id` as `v`, `state`.`name` as `l`
+$sql = "SELECT `state`.`state_id` as `v`, `state`.`name` as `l`
 from `state` where `state`.`country_id` = '".$data['country_id']."' 
 ";
 $stmtx = $database->executeQuery($sql);
 if ($stmtx->rowCount() > 0) {
 	$state_list = $stmtx->fetchAll(PDO::FETCH_ASSOC);
 }
-$sql = "select `city`.`city_id` as `v`, `city`.`name` as `l`
+$sql = "SELECT `city`.`city_id` as `v`, `city`.`name` as `l`
 from `city` where `city`.`country_id` = '".$data['country_id']."' 
 and (`city`.`state_id` = '".$data['state_id']."' or `city`.`state_id` = '' or `city`.`state_id` is null) 
 ";
@@ -740,7 +740,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`school_id` = `edu_school`.`school_id`) as `student`,
 (select count(distinct `edu_class`.`class_id`) from `edu_class` where `edu_class`.`school_id` = `edu_school`.`school_id`) as `class`,
 (select count(distinct `edu_teacher`.`teacher_id`) from `edu_teacher` where `edu_teacher`.`school_id` = `edu_school`.`school_id`) as `teacher`,
@@ -914,7 +914,7 @@ $sql_filter .= " and (`edu_school`.`name` like '%".addslashes($pagination->query
 $nt = '';
 
 
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`school_id` = `edu_school`.`school_id`) as `student`,
 (select count(distinct `edu_teacher`.`teacher_id`) from `edu_teacher` where `edu_teacher`.`school_id` = `edu_school`.`school_id`) as `teacher`,
 (select `state`.`name` from `state` where `state`.`state_id` = `edu_school`.`state_id`) as `state_id`,
@@ -923,7 +923,7 @@ from `edu_school`
 where 1 $sql_filter
 order by `edu_school`.`school_id` desc
 ";
-$sql_test = "select `edu_school`.*
+$sql_test = "SELECT `edu_school`.*
 from `edu_school`
 where 1 $sql_filter
 ";

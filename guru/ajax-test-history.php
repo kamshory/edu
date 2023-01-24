@@ -18,7 +18,7 @@ if(@$_GET['option'] == 'kick-student' && isset($_GET['test_id']) && isset($_GET[
 {
 	$id = kh_filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_UINT);
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_test_member`.* from `edu_test_member` where `test_member_id` = '$id' and `status` = '1'
+	$sql = "SELECT `edu_test_member`.* from `edu_test_member` where `test_member_id` = '$id' and `status` = '1'
 	";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
@@ -37,7 +37,7 @@ if(@$_GET['option'] == 'block-student' && isset($_GET['test_id']) && isset($_GET
 {
 	$id = kh_filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_UINT);
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_test_member`.* from `edu_test_member` where `test_member_id` = '$id' and `status` = '1'
+	$sql = "SELECT `edu_test_member`.* from `edu_test_member` where `test_member_id` = '$id' and `status` = '1'
 	";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
@@ -76,7 +76,7 @@ else if($test_status == '4')
 	$filter .= " and `edu_test_member`.`status` = '4' ";
 }
 
-$sql = "select `edu_test_member`.* , `edu_student`.`reg_number`,
+$sql = "SELECT `edu_test_member`.* , `edu_student`.`reg_number`,
 (select count(distinct `u`.`student_id`) from `edu_test_member` as `u` where `u`.`student_id` = `edu_test_member`.`student_id` and `u`.`school_id` = `edu_test_member`.`school_id` and `u`.`test_id` = `edu_test_member`.`test_id` and `u`.`test_member_id` != `edu_test_member`.`test_member_id` and `u`.`status` = '1' and `edu_test_member`.`status` = '1' and left(`u`.`time_enter`, 10) = left(`edu_test_member`.`time_enter`, 10)) as `duplikat_login`,
 `edu_student`.`name` as `name_student`,
 (select `edu_class`.`name` from `edu_class` where `edu_class`.`class_id` = `edu_student`.`class_id` and `edu_class`.`school_id` = `edu_test_member`.`school_id`) as `name_class`

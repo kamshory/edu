@@ -14,7 +14,7 @@ foreach($arr as $key=>$val)
 }
 $edit_key = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
+$sql = "SELECT `edu_school`.*, `edu_school`.`name` as `school_name`
 from `edu_school` 
 where 1 and `edu_school`.`school_id` = '$school_id'
 ";
@@ -97,7 +97,7 @@ h3{
 <div class="main">
 <?php
     $tokens = implode(",", $arr);
-    $sql = "select `edu_token`.* , `edu_student`.`name` as `student_name`, `edu_student`.`reg_number` as `reg_number`, 
+    $sql = "SELECT `edu_token`.* , `edu_student`.`name` as `student_name`, `edu_student`.`reg_number` as `reg_number`, 
 (select `edu_test`.`name` from `edu_test` where `edu_test`.`test_id` = `edu_token`.`test_id`) as `test_name`
 from `edu_token` 
 inner join(`edu_student`) on (`edu_student`.`student_id` = `edu_token`.`student_id`)

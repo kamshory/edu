@@ -91,7 +91,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 </thead>
 <tbody>
 <?php
-$sql = "select `version`.*
+$sql = "SELECT `version`.*
 from `version`
 where `change_log` != '' and `change_log` is not null
 order by `time_release` desc

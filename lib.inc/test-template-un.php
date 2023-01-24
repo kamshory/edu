@@ -16,7 +16,7 @@ if(!defined('DB_NAME'))
 <body>
 <?php
 $question_package = addslashes($question_package);
-$sql = "select `edu_question`.* , instr('$question_package', `edu_question`.`question_id`) as `order`
+$sql = "SELECT `edu_question`.* , instr('$question_package', `edu_question`.`question_id`) as `order`
 from `edu_question`
 where '$question_package' like concat('%[',`edu_question`.`question_id`,']%') 
 order by `order` asc
@@ -36,7 +36,7 @@ if($number_of_question)
 	}
 	$question_per_page = $question_per_page * 1;
 	
-	$sql = "select `edu_question`.* , instr('$question_package', `edu_question`.`question_id`) as `order`
+	$sql = "SELECT `edu_question`.* , instr('$question_package', `edu_question`.`question_id`) as `order`
 	from `edu_question`
 	where '$question_package' like concat('%[',`edu_question`.`question_id`,']%') 
 	order by `order`
@@ -50,7 +50,7 @@ if($number_of_question)
 		$question_set[] = $soal*1;
 		if($data['random'])
 		{
-			$sql2 = "select `edu_option`.* , rand() as `rand`
+			$sql2 = "SELECT `edu_option`.* , rand() as `rand`
 			from `edu_option`
 			where `edu_option`.`question_id` = '$soal'
 			order by `rand` asc
@@ -58,7 +58,7 @@ if($number_of_question)
 		}
 		else
 		{
-			$sql2 = "select `edu_option`.* , rand() as `rand`
+			$sql2 = "SELECT `edu_option`.* , rand() as `rand`
 			from `edu_option`
 			where `edu_option`.`question_id` = '$soal'
 			order by `order` asc

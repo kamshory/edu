@@ -13,7 +13,7 @@ class PicoEdo
 	{
 		$this->database = $database;
 	}
-	public function getvalidusername($username)
+	public function getValidUsername($username)
 	{
 		$username = preg_replace("/[^A-Za-z\d_]/i", "", $username); //NOSONAR
 		if (!@preg_match('#[a-z]#', $username)) {
@@ -118,7 +118,7 @@ class PicoEdo
 	}
 	public function get_country_name($country_id)
 	{
-		$sql = "select `name` from `country` where `country_id` = '$country_id' ";
+		$sql = "SELECT `name` from `country` where `country_id` = '$country_id' ";
 		$stmt = $this->database->executeQuery($sql);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		return @$data['name'];
@@ -180,7 +180,7 @@ class PicoEdo
 			}
 		}
 		$username = addslashes($username);
-		$sql = "select `member`.* 
+		$sql = "SELECT `member`.* 
 			from `member` 
 			where `name` like '$name' and `birth_day` like '$birth_day' 
 			";
@@ -218,9 +218,9 @@ class PicoEdo
 	}
 	public function isValidUsername($name)
 	{
-		$username = $this->getvalidusername($name);
+		$username = $this->getValidUsername($name);
 		if ($username != '') {
-			$sql = "select `member_id`, `email`, `username`
+			$sql = "SELECT `member_id`, `email`, `username`
 			from `member`
 			where `username` like '$username'
 			";
@@ -317,7 +317,7 @@ class PicoEdo
 
 	public function getArrayClass($school_id)
 	{
-		$sql = "select `class_id`, `name` from `edu_class` where `school_id` = '$school_id' ";
+		$sql = "SELECT `class_id`, `name` from `edu_class` where `school_id` = '$school_id' ";
 		$stmt = $this->database->executeQuery($sql);
 		$ret = array();
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -386,7 +386,7 @@ class PicoEdo
 			foreach ($arr as $question) {
 				$question_id = $question[0] * 1;
 				$option_id = $question[1] * 1;
-				$sql2 = "select `edu_option`.`question_id`, `edu_option`.`option_id`, 
+				$sql2 = "SELECT `edu_option`.`question_id`, `edu_option`.`option_id`, 
 				(select `edu_question`.`basic_competence` 
 					from `edu_question` 
 					where `edu_question`.`question_id` = `edu_option`.`question_id`) as `basic_competence`,
@@ -450,7 +450,7 @@ class PicoEdo
 	}
 	public function getBasicCompetence($test_id)
 	{
-		$sql = "select `basic_competence` from `edu_question` where `test_id` = '$test_id' group by `basic_competence` ";
+		$sql = "SELECT `basic_competence` from `edu_question` where `test_id` = '$test_id' group by `basic_competence` ";
 		$stmt = $this->database->executeQuery($sql);
 		if ($stmt->rowCount() > 0) {
 			$result = array();
@@ -539,7 +539,7 @@ class PicoEdo
 	}
 	public function getApplicationVersion()
 	{
-		$sql = "select `version_id` from `version` where `active` = '1' and `current_version` = '1' ";
+		$sql = "SELECT `version_id` from `version` where `active` = '1' and `current_version` = '1' ";
 		$stmt = $this->database->executeQuery($sql);
 		if ($stmt->rowCount() > 0) {
 			$data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -559,7 +559,7 @@ class PicoEdo
 	{
 		$min = pow(10, $length);
 		$max = ($min * 10) - 1;
-		$sql = "select `token` from `edu_token` where `active` = '1'
+		$sql = "SELECT `token` from `edu_token` where `active` = '1'
 		";
 		$stmt = $this->database->executeQuery($sql);
 		$active_token = array();
@@ -643,7 +643,7 @@ class PicoEdo
 
 	public function getTextScore($answer_id, $compress = false) //NOSONAR
 	{
-		$sql = "select `edu_answer`.`answer` from `edu_answer` where `edu_answer`.`answer_id` = '$answer_id' ";
+		$sql = "SELECT `edu_answer`.`answer` from `edu_answer` where `edu_answer`.`answer_id` = '$answer_id' ";
 		$stmt = $this->database->executeQuery($sql);
 		$result = array();
 		if ($stmt->rowCount() > 0) {
@@ -655,7 +655,7 @@ class PicoEdo
 				foreach ($arr as $question) {
 					$question_id = $question[0] * 1;
 					$option_id = $question[1] * 1;
-					$sql2 = "select `edu_option`.`question_id`, `edu_option`.`option_id`, 
+					$sql2 = "SELECT `edu_option`.`question_id`, `edu_option`.`option_id`, 
 				(select `edu_question`.`basic_competence` 
 					from `edu_question` 
 					where `edu_question`.`question_id` = `edu_option`.`question_id`) as `basic_competence`,
@@ -839,7 +839,7 @@ class PicoEdo
 
 	public function sortQuestion($test_id)
 	{
-		$sql = "select `question_id` from `edu_question` where `test_id` = '$test_id' order by `order` asc ";
+		$sql = "SELECT `question_id` from `edu_question` where `test_id` = '$test_id' order by `order` asc ";
 		$stmt = $this->database->executeQuery($sql);
 		$ret = array();
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -977,7 +977,7 @@ class PicoEdo
 		$school_program = addslashes($school_program);
 		$school_id = addslashes($school_id);
 
-		$sql = "select `edu_school_program`.`school_program_id` 
+		$sql = "SELECT `edu_school_program`.`school_program_id` 
 		from `edu_school_program`
 		where `edu_school_program`.`name` like '$school_program'
 		and `edu_school_program`.`school_id` = '$school_id'
@@ -1012,7 +1012,7 @@ class PicoEdo
 		$class = addslashes($class);
 		$school_id = addslashes($school_id);
 
-		$sql = "select `edu_class`.`class_id` 
+		$sql = "SELECT `edu_class`.`class_id` 
 		from `edu_class`
 		where `edu_class`.`name` like '$class'
 		and `edu_class`.`school_id` = '$school_id'
