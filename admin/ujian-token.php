@@ -11,7 +11,7 @@ if(count(@$_POST) && isset($_POST['save']))
 	{
 		$token_id = $token_id2;
 	}
-	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_NUMBER_INT);
+	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$class_id = kh_filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_STRING_NEW);
 	$student_id = kh_filter_input(INPUT_POST, 'student_id', FILTER_SANITIZE_STRING_NEW);
 	$time_create = $time_edit = $picoEdu->getLocalDateTime();
@@ -32,7 +32,7 @@ if(isset($_POST['set_inactive']) && isset($_POST['token_id']))
 			{
 				$token_id = addslashes($val);
 				$sql = "update `edu_token` set `active` = '0' where `token_id` = '$token_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
+				$database->executeUpdate($sql);
 			}
 		}
 	}
@@ -45,10 +45,10 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$oneday = date('Y-m-d H:i:s', time()-86400);
 	$sql = "DELETE FROM `edu_token` where `time_expire` < '$oneday'
 	";
-	$database->execute($sql);
+	$database->executeDelete($sql);
 	$sql = "update `edu_token` set `active` = '0' where `time_expire` < '$now'
 	";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	if($class_id)
 	{
 		if($student_id == 0)
@@ -74,7 +74,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 				`admin_create`, `admin_edit`, `active`) values
 				('$token_id', '$token', '$school_id', '$class_id', '$student_id', '$test_id', '$time_create', '$time_edit', '$time_expire', 
 				'$admin_create', '$admin_edit', '$active')";
-				$database->execute($sql);
+				$database->executeInsert($sql);
 			}
 			header("Location: ".basename($_SERVER['PHP_SELF'])."?class_id=$class_id&test_id=$test_id");
 		}
@@ -89,7 +89,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 			`admin_create`, `admin_edit`, `active`) values
 			('$token', '$school_id', '$class_id', '$student_id', '$test_id', '$time_create', '$time_edit', '$time_expire', 
 			'$admin_create', '$admin_edit', '$active')";
-			$database->execute($sql);
+			$database->executeInsert($sql);
 			header("Location: ".basename($_SERVER['PHP_SELF'])."?class_id=$class_id&test_id=$test_id");
 		}
 	}
@@ -272,14 +272,14 @@ and `edu_token`.`token_id` = '$edit_key'
 			include_once dirname(__FILE__) . "/lib.inc/footer.php";
 
 		} else {
-			$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_NUMBER_INT);
+			$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 			$class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 			$now = $picoEdu->getLocalDateTime();
 			$oneday = date('Y-m-d H:i:s', time() - 86400);
 			include_once dirname(__FILE__) . "/lib.inc/header.php";
 			if (isset($_POST['cleanup'])) {
 				$sql = "DELETE FROM `edu_invalid_signin` where `signin_type` = 'T' ";
-				$stmt = $database->executeQuery($sql);
+				$stmt = $database->executeDelete($sql);
 				$num_deleted = $stmt->rowCount();
 				if ($num_deleted) {
 					?>

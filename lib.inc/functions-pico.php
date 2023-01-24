@@ -405,7 +405,7 @@ function scrap($url)
 	}
 
 
-class destroy_directory
+class DirectoryDestroyer
 {
 	public $directory = '';
 	public function __construct($directory)
@@ -701,9 +701,5 @@ $database->connect();
 
 $picoEdu = new PicoEdo($database);
 
-if(!isset($pagination))
-{
-	$pagination = new stdClass();
-}
 
 ?>

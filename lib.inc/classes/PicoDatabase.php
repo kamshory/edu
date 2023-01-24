@@ -70,6 +70,55 @@ class PicoDatabase
 		}
 	}
 
+	public function executeInsert($sql)
+	{
+		$stmt = $this->conn->prepare($sql);
+		try {
+			$stmt->execute();
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage()."\r\nERROR &raquo; $sql";
+		}
+		return $stmt;
+	}
+	public function executeUpdate($sql)
+	{
+		$stmt = $this->conn->prepare($sql);
+		try {
+			$stmt->execute();
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage()."\r\nERROR &raquo; $sql";
+		}
+		return $stmt;
+	}
+	public function executeDelete($sql)
+	{
+		$stmt = $this->conn->prepare($sql);
+		try {
+			$stmt->execute();
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage()."\r\nERROR &raquo; $sql";
+		}
+		return $stmt;
+	}
+	public function executeTransaction($sql)
+	{
+		$stmt = $this->conn->prepare($sql);
+		try {
+			$stmt->execute();
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage()."\r\nERROR &raquo; $sql";
+		}
+		return $stmt;
+	}
+
 	/**
 	 * Generate 20 bytes unique ID
 	 * @return string 20 bytes

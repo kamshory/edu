@@ -14,8 +14,8 @@ $cfg->module_title = "Guru";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(count(@$_POST) && isset($_POST['save']))
 {
-	$teacher_id = kh_filter_input(INPUT_POST, 'teacher_id', FILTER_SANITIZE_NUMBER_UINT);
-	$teacher_id2 = kh_filter_input(INPUT_POST, 'teacher_id2', FILTER_SANITIZE_NUMBER_UINT);
+	$teacher_id = kh_filter_input(INPUT_POST, 'teacher_id', FILTER_SANITIZE_STRING_NEW);
+	$teacher_id2 = kh_filter_input(INPUT_POST, 'teacher_id2', FILTER_SANITIZE_STRING_NEW);
 	if(!isset($_POST['teacher_id']))
 	{
 		$teacher_id = $teacher_id2;
@@ -46,7 +46,7 @@ if(isset($_POST['set_active']) && isset($_POST['teacher_id']))
 		{
 			$teacher_id = addslashes($val);
 			$sql = "update `edu_teacher` set `active` = '1' where `teacher_id` = '$teacher_id' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeUpdate($sql);
 		}
 	}
 }
@@ -59,7 +59,7 @@ if(isset($_POST['set_inactive']) && isset($_POST['teacher_id']))
 		{
 			$teacher_id = addslashes($val);
 			$sql = "update `edu_teacher` set `active` = '0' where `teacher_id` = '$teacher_id' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeUpdate($sql);
 		}
 	}
 }
@@ -72,9 +72,9 @@ if(isset($_POST['delete']) && isset($_POST['teacher_id']))
 		{
 			$teacher_id = addslashes($val);
 			$sql = "DELETE FROM `edu_member_school` where `member_id` = '$teacher_id' and `role` = 'T' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeDelete($sql);
 			$sql = "update `edu_teacher` set `school_id` = '0' where `teacher_id` = '$teacher_id' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeUpdate($sql);
 		}
 	}
 }
@@ -133,18 +133,18 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 				'$gender', '$birth_place', '$birth_day', '$phone', '$email', '$password', '$password_initial', '$address', 
 				'$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', '1')
 				";
-				$database->execute($sql);
+				$database->executeInsert($sql);
 
 				$sql2 = "INSERT INTO `edu_member_school` 
 				(`member_id`, `school_id`, `role`, `time_create`, `active`) values
 				('$teacher_id', '$school_id', 'T', '$time_create', '1')
 				";
-				$database->execute($sql2);
+				$database->executeInsert($sql2);
 
 				$sql3 = "update `edu_teacher` set `school_id` = '$school_id' where `teacher_id` = '$teacher_id' 
 				and (`school_id` = '0' or `school_id` is null)
 				";
-				$database->execute($sql3);
+				$database->executeUpdate($sql3);
 				header("Location: " . basename($_SERVER['PHP_SELF']) . "?option=detail&teacher_id=$teacher_id");
 			}
 		}
@@ -157,28 +157,28 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 	`birth_place` = '$birth_place', `birth_day` = '$birth_day', `address` = '$address', `time_edit` = '$time_edit', 
 	`admin_edit` = '$admin_edit', `ip_edit` = '$ip_edit', `blocked` = '$blocked', `active` = '$active'
 	where `teacher_id` = '$teacher_id2' and `school_id` = '$school_id' ";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	
 	if($phone != '')
 	{
 		$sql = "update `edu_teacher` set 
 		`phone` = '$phone'
 		where `teacher_id` = '$teacher_id2' and `school_id` = '$school_id' ";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 	}
 	if($email != '')
 	{
 		$sql = "update `edu_teacher` set 
 		`email` = '$email'
 		where `teacher_id` = '$teacher_id2' and `school_id` = '$school_id' ";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 	}
 	if($password != '')
 	{
 		$sql = "update `edu_teacher` set 
 		`password` = md5(md5('$password')), `password_initial` = '$password'
 		where `teacher_id` = '$teacher_id2' and `school_id` = '$school_id' ";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 	}
 	header("Location:".basename($_SERVER['PHP_SELF'])."?option=detail&teacher_id=$teacher_id");
 }

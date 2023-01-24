@@ -1,22 +1,10 @@
 <?php
-include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
-include_once dirname(dirname(__FILE__))."/lib.inc/lib.test.php";
+include_once dirname(dirname(__FILE__))."/lib.inc/auth-guru.php";
 if(empty(@$school_id))
 {
-	include_once dirname(__FILE__)."/bukan-admin.php";
-	exit();
+include_once dirname(__FILE__)."/bukan-guru.php";
+exit();
 }
-if(empty(@$real_school_id))
-{
-	include_once dirname(__FILE__)."/belum-ada-sekolah.php";
-	exit();
-}
-$school_id = @$school_id . '';
-$real_school_id = @$real_school_id . '';
-
-$member_create = @$admin_login->admin_id . '';
-$member_edit = @$admin_login->admin_id . '';
-
 $cfg->module_title = "Ujian";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(count(@$_POST) && isset($_POST['save']))
@@ -30,12 +18,10 @@ if(count(@$_POST) && isset($_POST['save']))
 	$name = trim(kh_filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
 	if($name == '')
 	{
-		$name = "{NAMA UJIAN}";
+		$name = '{NAMA UJIAN}';
 	}
 	$class = kh_filter_input(INPUT_POST, 'classlist', FILTER_SANITIZE_SPECIAL_CHARS);
 	$subject = kh_filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_SPECIAL_CHARS);
-	$school_program_id = kh_filter_input(INPUT_POST, 'grade_id', FILTER_SANITIZE_STRING_NEW);
-	$teacher_id = kh_filter_input(INPUT_POST, 'teacher_id', FILTER_SANITIZE_SPECIAL_CHARS);
 	$description = kh_filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
 	$guidance = kh_filter_input(INPUT_POST, 'guidance', FILTER_SANITIZE_SPECIAL_CHARS);
 	$open = kh_filter_input(INPUT_POST, 'open', FILTER_SANITIZE_NUMBER_UINT);
@@ -63,8 +49,8 @@ if(count(@$_POST) && isset($_POST['save']))
 	$available_to = kh_filter_input(INPUT_POST, 'available_to', FILTER_SANITIZE_STRING_NEW);
 
 	$time_create = $time_edit = $picoEdu->getLocalDateTime();
-	$member_create = $member_edit = $admin_login->admin_id;
-	$role_create = $role_edit = 'A';
+	$member_create = $member_edit = $teacher_id;
+	$role_create = $role_edit = 'T';
 	$ip_create = $ip_edit = $_SERVER['REMOTE_ADDR'];
 
 	$active = kh_filter_input(INPUT_POST, 'active', FILTER_SANITIZE_NUMBER_UINT);
@@ -86,69 +72,51 @@ if(count(@$_POST) && isset($_POST['save']))
 	}
 	else
 	{
-		$duration = ((int) $duration)*60;
+		$duration = $duration*60;
 	}
 	if(stripos($alert_time, ":") !== false)
 	{
 		$arr = explode(":", $alert_time);
-		if(count($arr) == 2 || count($arr) == 3)
+		if(count($arr) == 2)
+		{
+			$alert_time = (3600*@ltrim($arr[0], '0')) + (60*@ltrim($arr[1], '0'));
+		}
+		else if(count($arr) == 3)
 		{
 			$alert_time = (3600*@ltrim($arr[0], '0')) + (60*@ltrim($arr[1], '0'));
 		}
 	}
-
-	if($time_answer_publication == '')
-	{
-		$time_answer_publication = 'null';
-	}
-	else
-	{
-		$time_answer_publication = "'$time_answer_publication'";
-	}
-
-	if($available_from == '')
-	{
-		$available_from = 'null';
-	}
-	else
-	{
-		$available_from = "'$available_from'";
-	}
-
-	if($available_to == '')
-	{
-		$available_to = 'null';
-	}
-	else
-	{
-		$available_to = "'$available_to'";
-	}
-
 }
 
 if(isset($_POST['set_active']) && isset($_POST['test_id']))
 {
 	$tests = @$_POST['test_id'];
-	if(isset($tests) && is_array($tests))
+	if(isset($tests))
 	{
-		foreach($tests as $key=>$val)
+		if(is_array($tests))
 		{
-			$test_id = addslashes($val);
-			$sql = "update `edu_test` set `active` = '1' where `test_id` = '$test_id' and `school_id` = '$school_id' ";
-			$database->executeUpdate($sql);
+			foreach($tests as $key=>$val)
+			{
+				$test_id = addslashes($val);
+				$sql = "update `edu_test` set `active` = '1' where `test_id` = '$test_id' and `school_id` = '$school_id' and `teacher_id` = '$auth_teacher_id' ";
+				$database->executeUpdate($sql);
+			}
 		}
 	}
 }
 if(isset($_POST['set_inactive']) && isset($_POST['test_id']))
 {
 	$tests = @$_POST['test_id'];
-	if(isset($tests) && is_array($tests))
+	if(isset($tests))
 	{
-		foreach($tests as $key=>$val)
+		if(is_array($tests))
 		{
-			$test_id = addslashes($val);
-			$sql = "update `edu_test` set `active` = '0' where `test_id` = '$test_id' and `school_id` = '$school_id' ";
-			$database->executeUpdate($sql);
+			foreach($tests as $key=>$val)
+			{
+				$test_id = addslashes($val);
+				$sql = "update `edu_test` set `active` = '0' where `test_id` = '$test_id' and `school_id` = '$school_id' and `teacher_id` = '$auth_teacher_id' ";
+				$database->executeUpdate($sql);
+			}
 		}
 	}
 }
@@ -160,21 +128,21 @@ if(isset($_POST['delete']) && isset($_POST['test_id']))
 		foreach($tests as $key=>$val)
 		{
 			$test_id = addslashes($val);
-			$sql = "select * from `edu_test` where `test_id` = '$test_id' and `school_id` = '$school_id' ";
+			$sql = "select * from `edu_test` where `test_id` = '$test_id' and `school_id` = '$school_id' and `teacher_id` = '$auth_teacher_id' ";
 			$stmt = $database->executeQuery($sql);
 			if($stmt->rowCount() > 0)
 			{
-				//$database->executeTransaction('start transaction');
+				$database->executeTransaction('start transaction');
 				$sql = "DELETE FROM `edu_answer` where `test_id` = '$test_id' ";
 				$database->executeDelete($sql);
 				$sql = "DELETE FROM `edu_question` where `test_id` = '$test_id' ";
 				$database->executeDelete($sql);
-				$sql = "DELETE FROM `edu_test` where `test_id` = '$test_id' and `school_id` = '$school_id' ";
+				$sql = "DELETE FROM `edu_test` where `test_id` = '$test_id' and `school_id` = '$school_id' and `teacher_id` = '$auth_teacher_id'";
 				$database->executeDelete($sql);
 				$dir = dirname(dirname(__FILE__))."/media.edu/school/$school_id/test/$test_id";
 				$destroyer = new DirectoryDestroyer($dir);
 				$destroyer->destroy();
-				//$database->executeTransaction("commit");
+				$database->executeTransaction("commit");
 			}
 		}
 	}
@@ -185,18 +153,19 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 {
 	$test_id = $database->generateNewId();
 	$sql = "INSERT INTO `edu_test` 
-	(`test_id`, `school_id`, `name`, `class`, `school_program_id`, `subject`, `teacher_id`, `description`, `guidance`, `open`, `has_limits`, `trial_limits`, `threshold`, `assessment_methods`, `number_of_question`, `number_of_option`, `question_per_page`, `random`, `duration`, `has_alert`, `alert_time`, `alert_message`, `autosubmit`, `standard_score`, `penalty`, `order`, `score_notification`, `publish_answer`, `time_answer_publication`, `test_availability`, `available_from`, `available_to`, `time_create`, `time_edit`, `member_create`, `role_create`, `member_edit`, `role_edit`, `ip_create`, `ip_edit`, `active`) values
-	('$test_id', '$school_id', '$name', '$class', '$school_program_id', '$subject', '$teacher_id', '$description', '$guidance', '$open', '$has_limits', '$trial_limits', '$threshold', '$assessment_methods', '$number_of_question', '$number_of_option', '$question_per_page', '$random', '$duration', '$has_alert', '$alert_time', '$alert_message', '$autosubmit', '$standard_score', '$penalty', '$order', '$score_notification', '$publish_answer', $time_answer_publication, '$test_availability', $available_from, $available_to, '$time_create', '$time_edit', '$member_create', '$role_create', '$member_edit', '$role_edit', '$ip_create', '$ip_edit', '$active')";
+	(`test_id`, `school_id`, `name`, `class`, `subject`, `teacher_id`, `description`, `guidance`, `open`, `has_limits`, `trial_limits`, `threshold`, `assessment_methods`, `number_of_question`, `number_of_option`, `question_per_page`, `random`, `duration`, `has_alert`, `alert_time`, `alert_message`, `autosubmit`, `standard_score`, `penalty`, `order`, `score_notification`, `publish_answer`, `time_answer_publication`, `test_availability`, `available_from`, `available_to`, `time_create`, `time_edit`, `member_create`, `role_create`, `member_edit`, `role_edit`, `ip_create`, `ip_edit`, `active`) values
+	('$test_id', '$school_id', '$name', '$class', '$subject', '$teacher_id', '$description', '$guidance', '$open', '$has_limits', '$trial_limits', '$threshold', '$assessment_methods', '$number_of_question', '$number_of_option', '$question_per_page', '$random', '$duration', '$has_alert', '$alert_time', '$alert_message', '$autosubmit', '$standard_score', '$penalty', '$order', '$score_notification', '$publish_answer', '$time_answer_publication', '$test_availability', '$available_from', '$available_to', '$time_create', '$time_edit', '$member_create', '$role_create', '$member_edit', '$role_edit', '$ip_create', '$ip_edit', '$active')";
 	$database->executeInsert($sql);
 
-
-	$id = kh_filter_input(INPUT_POST, 'collection', FILTER_SANITIZE_STRING_NEW);
-	if(!empty($id))
+	$id = kh_filter_input(INPUT_POST, 'collection', FILTER_SANITIZE_NUMBER_UINT);
+	if($id)
 	{
 		$selection = kh_filter_input(INPUT_POST, 'selection', FILTER_SANITIZE_STRING_NEW);
 		$selection_index = json_decode($selection);
 		include_once dirname(dirname(__FILE__))."/lib.inc/dom.php";
-		$time_create = $time_edit = $picoEdu->getLocalDateTime();		
+		$time_create = $time_edit = $picoEdu->getLocalDateTime();	
+		$member_create = $member_edit = $auth_admin_id;
+		
 		
 		$sql = "select * from `edu_test_collection` where `test_collection_id` = '$id' and `active` = '1' ";
 		$stmt = $database->executeQuery($sql);
@@ -211,13 +180,13 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 				$sql = "select `edu_test`.*, 
 				(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 				from `edu_test`
-				where `edu_test`.`test_id` = '$test_id' and `edu_test`.`school_id` = '$school_id'
+				where `edu_test`.`test_id` = '$test_id' and `edu_test`.`teacher_id` = '$auth_teacher_id'
 				";
 				$stmt = $database->executeQuery($sql);
 				if($stmt->rowCount() > 0)
 				{
 					$data = $stmt->fetch(PDO::FETCH_ASSOC);
-					
+			
 					$random = $data['random'];
 					$order = $data['order'];
 					$score_standar = $data['standard_score'];
@@ -289,16 +258,15 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 								$pertanyaan = str_replace($array_search, $array_replace, $pertanyaan);
 								$digest = md5($pertanyaan);
 								$pertanyaan = addslashes($pertanyaan);
-
+								
 								$question_id = $database->generateNewId();		
-
 								$sql1 = "INSERT INTO `edu_question` 
-								(`question_id`, `content`, `test_id`, `multiple_choice`, `order`, `random`, `numbering`, `digest`, `basic_competence`,
+								(`question_id`, `content`, `test_id`, `multiple_choice`, `order`, `random`, `numbering`, `digest`, `basic_competence`, 
 								`time_create`, `member_create`, `time_edit`, `member_edit`) values
 								('$question_id', '$pertanyaan', '$test_id', '1', '$order', '$random', '$numbering', '$digest', '$competence',
 								'$time_create', '$member_create', '$time_edit', '$member_edit'); 
 								";
-								$database->executeInsert($sql1);
+								$res1 = $database->executeInsert($sql1);
 								
 								if(count(@$question->answer->option) > 0)
 								{
@@ -333,15 +301,14 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 										$option = addslashes($option);
 										
 										$order = $index_option + 1;
-
 										$option_id = $database->generateNewId();
-										
+
 										$sql2 = "INSERT INTO `edu_option` 
 										(`option_id`, `question_id`, `content`, `order`, `score`, `time_create`, `member_create`, `time_edit`, `member_edit`) values
 										('$option_id', '$question_id', '$option', '$order', '$score', '$time_create', '$member_create', '$time_edit', '$member_edit'); 
 										";
 										
-										$database->executeInsert($sql2);
+										$res2 = $database->executeInsert($sql2);
 									}
 								}
 							}
@@ -359,17 +326,17 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 if(isset($_POST['save']) && @$_GET['option']=='edit')
 {
 	$sql = "update `edu_test` set 
-	`name` = '$name', `class` = '$class', `school_program_id` = '$school_program_id', `subject` = '$subject', `teacher_id` = '$teacher_id', 
-	`description` = '$description', `guidance` = '$guidance', `open` = '$open', `has_limits` = '$has_limits', `trial_limits` = '$trial_limits', 
-	`threshold` = '$threshold', `assessment_methods` = '$assessment_methods', `number_of_question` = '$number_of_question', 
-	`number_of_option` = '$number_of_option', `question_per_page` = '$question_per_page', `random` = '$random', `duration` = '$duration', 
-	`has_alert` = '$has_alert', `alert_time` = '$alert_time', `alert_message` = '$alert_message', `autosubmit` = '$autosubmit', 
-	`standard_score` = '$standard_score', `penalty` = '$penalty', 
-	`score_notification` = '$score_notification', `publish_answer` = '$publish_answer', `time_answer_publication` = $time_answer_publication, 
-	`test_availability` = '$test_availability', `available_from` = $available_from, `available_to` = $available_to, 
+	`name` = '$name', `class` = '$class', `subject` = '$subject', `teacher_id` = '$teacher_id', `description` = '$description', 
+	`guidance` = '$guidance', `open` = '$open', `has_limits` = '$has_limits', `trial_limits` = '$trial_limits', `threshold` = '$threshold', 
+	`assessment_methods` = '$assessment_methods', `number_of_question` = '$number_of_question', `number_of_option` = '$number_of_option', 
+	`question_per_page` = '$question_per_page', `random` = '$random', `duration` = '$duration', `has_alert` = '$has_alert', 
+	`alert_time` = '$alert_time', `alert_message` = '$alert_message', `autosubmit` = '$autosubmit', `standard_score` = '$standard_score', 
+	`penalty` = '$penalty', `score_notification` = '$score_notification', `publish_answer` = '$publish_answer', 
+	`time_answer_publication` = '$time_answer_publication', `test_availability` = '$test_availability', 
+	`available_from` = '$available_from', `available_to` = '$available_to', 
 	`time_create` = '$time_create', `time_edit` = '$time_edit', `member_create` = '$member_create', `role_create` = '$role_create', 
 	`member_edit` = '$member_edit', `role_edit` = '$role_edit', `ip_create` = '$ip_create', `ip_edit` = '$ip_edit', `active` = '$active'
-	where `test_id` = '$test_id2' and `school_id` = '$school_id'";
+	where `test_id` = '$test_id2' and `school_id` = '$school_id' and `teacher_id` = '$auth_teacher_id'";
 	$database->executeUpdate($sql);
 	header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&test_id=$test_id");
 }
@@ -378,23 +345,12 @@ if(@$_GET['option']=='add')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $collection = kh_filter_input(INPUT_GET, 'collection', FILTER_SANITIZE_NUMBER_UINT);
 $selection = kh_filter_input(INPUT_GET, 'selection', FILTER_SANITIZE_STRING_NEW);
-
-$name = "";
-if($collection)
-{
-	$sql = "select * from `edu_test_collection` where `test_collection_id` = '$collection' ";
-	$stmt = $database->executeQuery($sql);
-	if ($stmt->rowCount() > 0) {
-		$data = $stmt->fetch(PDO::FETCH_ASSOC);
-		$name = $data['name'];
-	}
-}
-
 $sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
-$stmt = $database->executeQuery($sqlc);
-if($stmt->rowCount() > 0)
+$stmtc = $database->executeQuery($sqlc);
+$arrc = array();
+if($stmtc->rowCount() > 0)
 {
-	$arrc = $stmt->fetch(PDO::FETCH_ASSOC);
+	$arrc = $stmtc->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 <style type="text/css">
@@ -413,54 +369,17 @@ input#duration{
   <table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
 		<tr>
 		<td>Nama Ujian</td>
-		<td><input type="text" class="input-text input-text-long" name="name" id="name" value="<?php echo $name;?>" autocomplete="off" required="required" /></td>
+		<td><input type="text" class="input-text input-text-long" name="name" id="name" autocomplete="off" required="required" /></td>
 		</tr>
 		<tr>
 		<td>Kelas
-		</td>
-        <td><input type="hidden" name="classlist" id="classlist" autocomplete="off" />
-        <input type="button" id="select-class" value="Atur Kelas" />
+		</td><td><input type="hidden" name="classlist" id="classlist" autocomplete="off" />
+        <input type="button" id="select-class" value="Pilih Kelas" />
         </td>
-		</tr>
-		<tr>
-		<td>Jurusan</td>
-        <td><select class="input-select" name="school_program_id" id="school_program_id">
-		<option value=""></option>
-		<?php 
-		$sql2 = "select `edu_school_program`.* from `edu_school_program` where `edu_school_program`.`school_id` = '$school_id' order by `name` asc ";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-          <option value="<?php echo $data2['school_program_id']; ?>"><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}
-		?>
-		</select></td>
 		</tr>
 		<tr>
 		<td>Mata Pelajaran
 		</td><td><input type="text" class="input-text input-text-long" name="subject" id="subject" autocomplete="off" /></td>
-		</tr>
-		<tr>
-		<td>Guru
-		</td><td><select class="input-select" name="teacher_id" id="teacher_id">
-		<option value=""></option>
-		<?php 
-		$sql2 = "select `edu_teacher`.* from `edu_teacher` where `edu_teacher`.`school_id` = '$school_id' order by `name` asc ";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-            <option value="<?php echo $data2['teacher_id']; ?>"><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}
-		?>
-		</select></td>
 		</tr>
 		<tr>
 		<td>Keterangan
@@ -540,11 +459,11 @@ input#duration{
 		</tr>
 		<tr>
 		<td>Nilai Standard</td>
-		<td><input type="number" step="any" class="input-text input-text-medium" name="standard_score" id="standard_score" autocomplete="off" /></td>
+		<td><input type="number" step="any" min="0" class="input-text input-text-medium" name="standard_score" id="standard_score" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Penalti
-		</td><td><input type="number" step="any" class="input-text input-text-medium" name="penalty" id="penalty" autocomplete="off" /></td>
+		</td><td><input type="number" step="any" min="0" class="input-text input-text-medium" name="penalty" id="penalty" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Notifikasi Nilai</td>
@@ -702,12 +621,10 @@ $(document).ready(function(e) {
 		selectClass();
 		e.preventDefault();
 	}); 
-	
 		
 });
-
 </script>
-<?php getDefaultValues($database, 'edu_test', array('open','has_limits','trial_limits','threshold','assessment_methods','number_of_question','number_of_option','question_per_page','random','duration','has_alert','alert_time','standard_score','penalty','score_notification','publish_answer','test_availability','active')); ?>
+<?php getDefaultValues($database, 'edu_test', array('name','class','subject','teacher_id','open','has_limits','trial_limits','threshold','assessment_methods','number_of_question','number_of_option','question_per_page','random','duration','has_alert','alert_time','standard_score','penalty','order','score_notification','publish_answer','time_answer_publication','test_availability','available_from','available_to','active')); ?>
 <?php
 include_once dirname(__FILE__)."/lib.inc/footer.php";
 
@@ -719,18 +636,18 @@ $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $sql = "select `edu_test`.* 
 from `edu_test` 
 where 1
-and `edu_test`.`test_id` = '$edit_key' and `edu_test`.`school_id` = '$school_id'
+and `edu_test`.`test_id` = '$edit_key' and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id'
 ";
 $stmt = $database->executeQuery($sql);
 if($stmt->rowCount() > 0)
 {
-	$data = $stmt->fetch(PDO::FETCH_ASSOC);
-
+$data = $stmt->fetch(PDO::FETCH_ASSOC);
 $sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
-$stmt = $database->executeQuery($sql);
-if($stmt->rowCount() > 0)
+$stmtc = $database->executeQuery($sqlc);
+$arrc = array();
+if($stmtc->rowCount() > 0)
 {
-	$arrc = $stmt->fetch(PDO::FETCH_ASSOC);	
+	$arrc = $stmtc->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 <style type="text/css">
@@ -873,46 +790,8 @@ $(document).ready(function(e) {
         </td>
 		</tr>
 		<tr>
-		<td>Jurusan</td>
-        <td><select class="input-select" name="school_program_id" id="school_program_id">
-		<option value=""></option>
-		<?php 
-		$sql2 = "select `edu_school_program`.* from `edu_school_program` where `edu_school_program`.`school_id` = '$school_id' order by `name` asc ";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-          <option value="<?php echo $data2['school_program_id']; ?>"<?php if ($data2['school_program_id'] == $data['school_program_id'])
-						echo ' selected="selected"'; ?>><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}
-		?>
-		</select></td>
-		</tr>
-		<tr>
 		<td>Mata Pelajaran
 		</td><td><input type="text" class="input-text input-text-long" name="subject" id="subject" value="<?php echo $data['subject'];?>" autocomplete="off" /></td>
-		</tr>
-		<tr>
-		<td>Guru</td>
-        <td><select class="input-select" name="teacher_id" id="teacher_id">
-		<option value=""></option>
-		<?php 
-		$sql2 = "select `edu_teacher`.* from `edu_teacher` where `edu_teacher`.`school_id` = '$school_id' order by `name` asc ";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-          <option value="<?php echo $data2['teacher_id']; ?>"<?php if ($data2['teacher_id'] == $data['teacher_id'])
-						echo ' selected="selected"'; ?>><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}
-		?>
-		</select></td>
 		</tr>
 		<tr>
 		<td>Keterangan
@@ -933,11 +812,11 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="has_limits" data-condition="<?php echo $data['has_limits'];?>" data-show-condition="1" data-hide-condition="0">
 		<td>Batas Percobaan</td>
-		<td><input type="number" class="input-text input-text-medium" name="trial_limits" id="trial_limits" value="<?php echo $data['trial_limits'];?>" autocomplete="off" /></td>
+		<td><input type="number" class="input-text input-text-medium" name="trial_limits" id="trial_limits" value="<?php echo ($data['trial_limits']);?>" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Nilai Kelulusan
-		</td><td><input type="number" step="any" class="input-text input-text-medium" name="threshold" id="threshold" value="<?php echo $data['threshold'];?>" autocomplete="off" /></td>
+		</td><td><input type="number" step="any" class="input-text input-text-medium" name="threshold" id="threshold" value="<?php echo ($data['threshold']);?>" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Metode Penilaian</td>
@@ -1008,7 +887,7 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="publish_answer" data-condition="<?php echo $data['publish_answer'];?>" data-show-condition="1" data-hide-condition="0">
 		<td>Pengumuman Kunci Jawaban</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="time_answer_publication" id="time_answer_publication" value="<?php echo $data['time_answer_publication'];?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="time_answer_publication" id="time_answer_publication" value="<?php echo ($data['time_answer_publication']);?>" autocomplete="off" /> </td>
 		</tr>
 		<tr>
 		<td>Ketersediaan Ujian
@@ -1020,11 +899,11 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="test_availability" data-condition="<?php echo $data['test_availability'];?>" data-show-condition="L" data-hide-condition="F">
 		<td>Tersedia Mulai</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_from" id="available_from" value="<?php echo $data['available_from'];?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_from" id="available_from" value="<?php echo ($data['available_from']);?>" autocomplete="off" /> </td>
 		</tr>
 		<tr class="toggle-tr" data-toggle="test_availability" data-condition="<?php echo $data['test_availability'];?>" data-show-condition="L" data-hide-condition="F">
 		<td>Tersedia Hingga</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_to" id="available_to" value="<?php echo $data['available_to'];?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_to" id="available_to" value="<?php echo ($data['available_to']);?>" autocomplete="off" /> </td>
 		</tr>
 		<tr>
 		<td>Aktif
@@ -1059,12 +938,12 @@ $sql = "select `edu_test`.* $nt,
 (select `member`.`name` from `member` where `member`.`member_id` = `edu_test`.`member_edit`) as `member_edit`
 from `edu_test` 
 where 1
-and `edu_test`.`test_id` = '$edit_key' and `edu_test`.`school_id` = '$school_id'
+and `edu_test`.`test_id` = '$edit_key' and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id'
 ";
 $stmt = $database->executeQuery($sql);
 if($stmt->rowCount() > 0)
 {
-	$data = $stmt->fetch(PDO::FETCH_ASSOC);
+$data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <form name="formedu_test" action="" method="post" enctype="multipart/form-data">
   <table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
@@ -1074,10 +953,7 @@ if($stmt->rowCount() > 0)
 		</tr>
 		<tr>
 		<td>Kelas
-		</td><td><?php 
-		$class = $picoEdu->textClass($array_class, $data['class']); 
-		$class_sort = $picoEdu->textClass($array_class, $data['class'], 2);
-		?><a href="#" class="class-list-control" data-class="<?php echo htmlspecialchars($class);?>"><?php echo $class_sort;?></a></td>
+		</td><td><?php $class = $picoEdu->textClass($array_class, $data['class']); $class_sort = $picoEdu->textClass($array_class, $data['class'], 2);?><a href="#" class="class-list-control" data-class="<?php echo htmlspecialchars($class);?>"><?php echo $class_sort;?></a></td>
 		</tr>
 		<tr>
 		<td>Mata Pelajaran
@@ -1109,14 +985,14 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Batas Percobaan</td>
-		<td><?php echo $data['trial_limits'];?></td>
+		<td><?php echo ($data['trial_limits']);?></td>
 		</tr>
         <?php
 		}
 		?>
 		<tr>
 		<td>Nilai Kelulusan
-		</td><td><?php echo $data['threshold'];?></td>
+		</td><td><?php echo ($data['threshold']);?></td>
 		</tr>
 		<tr>
 		<td>Metode Penilaian</td>
@@ -1133,7 +1009,7 @@ if($stmt->rowCount() > 0)
 		<td><?php echo $data['question_per_page'];?></td>
 		</tr>
 		<tr>
-		<td>Soal Diacak
+		<td>Acak
 		</td><td><?php echo ($data['random'])?"Ya":"Tidak";?></td>
 		</tr>
 		<tr>
@@ -1185,7 +1061,7 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Pengumuman Kunci Jawaban</td>
-		<td><?php echo $data['time_answer_publication'];?></td>
+		<td><?php echo ($data['time_answer_publication']);?></td>
 		</tr>
         <?php
 		}
@@ -1200,11 +1076,11 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Tersedia Mulai</td>
-		<td><?php echo $data['available_from'];?></td>
+		<td><?php echo ($data['available_from']);?></td>
 		</tr>
 		<tr>
 		<td>Tersedia Hingga</td>
-		<td><?php echo $data['available_to'];?></td>
+		<td><?php echo ($data['available_to']);?></td>
 		</tr>
         <?php
 		}
@@ -1219,11 +1095,11 @@ if($stmt->rowCount() > 0)
 		</tr>
 		<tr>
 		<td>Admin Buat</td>
-		<td><?php echo $data['member_create'];?> (<?php echo $data['role_create'];?>)</td>
+		<td><?php echo ($data['member_create']);?> (<?php echo ($data['role_create']);?>)</td>
 		</tr>
 		<tr>
 		<td>Admin Ubah</td>
-		<td><?php echo $data['member_edit'];?> (<?php echo $data['role_edit'];?>)</td>
+		<td><?php echo ($data['member_edit']);?> (<?php echo ($data['role_edit']);?>)</td>
 		</tr>
 		<tr>
 		<td>IP Buat</td>
@@ -1235,7 +1111,7 @@ if($stmt->rowCount() > 0)
 		</tr>
 		<tr>
 		<td>Aktif
-		</td><td><?php echo $data['active']?'Ya':'Tidak';?></td>
+		</td><td><?php echo ($data['active'])?'Ya':'Tidak';?></td>
 		</tr>
 		<tr>
 		<td></td>
@@ -1258,7 +1134,6 @@ else
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
-$teacher_id = kh_filter_input(INPUT_GET, 'teacher_id', FILTER_SANITIZE_STRING_NEW);
 $array_class = $picoEdu->getArrayClass($school_id);
 ?>
 <script type="text/javascript">
@@ -1283,8 +1158,7 @@ window.onload = function()
 <form id="searchform" name="form1" method="get" action="">
     <span class="search-label">Kelas</span> 
     <select class="input-select" name="class_id" id="class_id">
-    
-	<option value="">- Pilih Kelas -</option>
+    <option value="">- Pilih Kelas -</option>
     <?php 
 	$sql2 = "select * from `edu_class` where `school_id` = '$school_id' ";
 	echo $picoEdu->createFilterDb(
@@ -1305,34 +1179,7 @@ window.onload = function()
 			)
 		)
 	);
-	
-	?>
-    </select>
-    <span class="search-label">Guru</span>
-    <select class="input-select" name="teacher_id" id="teacher_id">
-    <option value="">- Pilih Guru -</option>
-    <?php 
-	$sql2 = "select * from `edu_teacher` where `school_id` = '$school_id' and `active` = '1' order by `name` asc ";	
-	echo $picoEdu->createFilterDb(
-		$sql2,
-		array(
-			'attributeList'=>array(
-				array('attribute'=>'value', 'source'=>'teacher_id')
-			),
-			'selectCondition'=>array(
-				'source'=>'teacher_id',
-				'value'=>$teacher_id
-			),
-			'caption'=>array(
-				'delimiter'=>' &raquo; ',
-				'values'=>array(
-					'reg_number',
-					'name'
-				)
-			)
-		)
-	);
-	
+
 	?>
     </select>
     <span class="search-label">Ujian</span>
@@ -1346,19 +1193,15 @@ window.onload = function()
 $sql_filter = "";
 $pagination->array_get = array();
 if($pagination->query){
-	$pagination->array_get[] = 'q';
-	$sql_filter .= " and (`edu_test`.`name` like '%".addslashes($pagination->query)."%' )";
+$pagination->array_get[] = 'q';
+$sql_filter .= " and (`edu_test`.`name` like '%".addslashes($pagination->query)."%' )";
 }
 if($class_id != '')
 {
 	$pagination->array_get[] = 'class_id';
 	$sql_filter .= " and (concat(',',`edu_test`.`class`,',') like '%,$class_id,%')";
 }
-if($teacher_id != 0)
-{
-	$sql_filter .= " and `edu_test`.`teacher_id` = '$teacher_id' ";
-	$pagination->array_get[] = 'teacher_id';
-}
+
 
 $nt = '';
 
@@ -1366,14 +1209,13 @@ $nt = '';
 $sql = "select `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`
 from `edu_test`
-where 1 and `edu_test`.`school_id` = '$school_id' $sql_filter
+where 1 and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id' $sql_filter
 order by `edu_test`.`test_id` desc
 ";
 $sql_test = "select `edu_test`.*
 from `edu_test`
-where 1 and `edu_test`.`school_id` = '$school_id' $sql_filter
+where 1 and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id' $sql_filter
 ";
-
 $stmt = $database->executeQuery($sql_test);
 $pagination->total_record = $stmt->rowCount();
 $stmt = $database->executeQuery($sql.$pagination->limit_sql);
@@ -1449,7 +1291,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&test_id=<?php echo $data['test_id'];?>"><?php echo ($data['open'])?'Ya':'Tidak';?></a></td>
       <td><a href="ujian-soal.php?option=detail&test_id=<?php echo $data['test_id'];?>"><?php echo $data['number_of_question'];?></a></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&test_id=<?php echo $data['test_id'];?>" data-availability="<?php echo $data['test_availability'];?>" data-from="<?php echo $data['available_from'];?>" data-to="<?php echo $data['available_to'];?>"><?php if($data['test_availability']=='F') echo 'Selamanya'; if($data['test_availability']=='L') echo 'Terbatas';?></a></td>
-      <td><?php echo $data['active']?'Ya':'Tidak';?></td>
+      <td><?php echo ($data['active'])?'Ya':'Tidak';?></td>
      </tr>
     <?php
 	}
@@ -1465,7 +1307,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
 <div class="button-area">
   <input type="submit" name="set_active" id="set_active" value="Aktifkan" class="com-button" />
   <input type="submit" name="set_inactive" id="set_inactive" value="Nonaktifkan" class="com-button" />
-  <input type="submit" name="delete" id="delete" value="Hapus" class="com-button delete-button" onclick="return confirm('Apakah Anda yakin akan menghapus ujian yang dipilih beserta seluruh soal dan file di dalamnya?');" />
+  <input type="submit" name="delete" id="delete" value="Hapus" class="com-button delete-button" onclick="return confirm('Apakah Anda yakin akan menghapus baris yang dipilih?');" />
   <input type="button" name="add" id="add" value="Tambah" class="com-button" onclick="window.location='<?php echo basename($_SERVER['PHP_SELF']);?>?option=add'" />
   </div>
 </form>
@@ -1480,7 +1322,7 @@ else if(@$_GET['q'])
 else
 {
 ?>
-<div class="warning">Data tidak ditemukan. <a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=add">Klik di sini untuk membuat baru.</a></div>
+<div class="warning">Data tidak ditemukan. <a href="ujian-daftar.php?option=add">Klik di sini untuk membuat baru.</a></div>
 <?php
 }
 ?>
