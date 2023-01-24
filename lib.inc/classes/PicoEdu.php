@@ -205,7 +205,7 @@ class PicoEdo
 			'$now', '$ip', '$now', '$ip', '$now', '1');
 			";
 			$this->log(__LINE__." ".$sql);
-			$this->database->execute($sql);
+			$this->database->executeInsert($sql);
 			
 			return array(
 				'member_id' => $member_id,
@@ -519,7 +519,7 @@ class PicoEdo
 			(`profil_id`, `school_id`, `name`, `value`) values
 			('$profil_id', '$school', '$name', '$value')";
 		}
-		$this->database->execute($sql);
+		$this->database->executeInsert($sql);
 	}
 	public function getProfile($school, $name, $default = "")
 	{
@@ -535,7 +535,7 @@ class PicoEdo
 	public function deleteProfile($school, $name)
 	{
 		$sql = "DELETE FROM `profile` where `name` = '$name' and `school_id` = '$school' ";
-		$this->database->executeQuery($sql);
+		$this->database->executeDelete($sql);
 	}
 	public function getApplicationVersion()
 	{
@@ -587,13 +587,13 @@ class PicoEdo
 		$sql = "DELETE FROM `edu_invalid_signin` 
 		where `member_id` = '$member_id' and `signin_type` = '$signin_type' and `time` < '$start_time'
 		";
-		$this->database->execute($sql);
+		$this->database->executeDelete($sql);
 
 		$sql = "INSERT INTO `edu_invalid_signin` 
 		(`member_id`, `signin_type`, `time`) values
 		('$member_id', '$signin_type', '$time')
 		";
-		$this->database->execute($sql);
+		$this->database->executeInsert($sql);
 
 		$sql = "select * 
 		from `edu_invalid_signin` 
@@ -733,14 +733,14 @@ class PicoEdo
 	(`school_id`, `student_id`, `test_id`, `sessions_id`, `time_enter`, `ip_enter`, `status`) values
 	('$school_id', '$student_id', '$test_id', '$sessions_id', '$time', '$ip', '1')
 	";
-		$this->database->execute($sql);
+		$this->database->executeInsert($sql);
 	}
 	public function logoutTest($school_id, $student_id, $test_id, $sessions_id, $time, $ip)
 	{
 		$sql = "update `edu_test_member` set `time_exit` = '$time', `ip_exit` = '$ip', `status` = '2'
 	where `school_id` = '$school_id' and `student_id` = '$student_id' and `test_id` = '$test_id' and `sessions_id` = '$sessions_id'
 	";
-		$this->database->execute($sql);
+		$this->database->executeUpdate($sql);
 	}
 
 	public function brToNewLineEncoded($content)
@@ -849,7 +849,7 @@ class PicoEdo
 		$order = 1;
 		foreach ($ret as $question_id) {
 			$sql = "update `edu_question` set `order` = '$order' where `question_id` = '$question_id' ";
-			$this->database->execute($sql);
+			$this->database->executeUpdate($sql);
 			$order++;
 		}
 	}
@@ -994,10 +994,10 @@ class PicoEdo
 		{
 			$school_program_id = $this->database->generateNewId();
 			$now = $this->getLocalDateTime();
-			$sql = "insert into `edu_school_program` 
+			$sql = "INSERT INTO `edu_school_program` 
 			(`school_program_id`, `school_id`, `name`, `time_create`, `time_edit`, `active`) values
 			('$school_program_id', '$school_id', '$school_program', '$now', '$now', true)";
-			$stmt = $this->database->executeQuery($sql);
+			$stmt = $this->database->executeInsert($sql);
 			if($stmt->rowCount() > 0)
 			{
 				return $school_program_id;
@@ -1029,10 +1029,10 @@ class PicoEdo
 		{
 			$class_id = $this->database->generateNewId();
 			$now = $this->getLocalDateTime();
-			$sql = "insert into `edu_class` 
+			$sql = "INSERT INTO `edu_class` 
 			(`class_id`, `school_id`, `name`, `time_create`, `time_edit`, `active`) values
 			('$class_id', '$school_id', '$class', '$now', '$now', true)";
-			$stmt = $this->database->executeQuery($sql);
+			$stmt = $this->database->executeInsert($sql);
 			if($stmt->rowCount() > 0)
 			{
 				return $class_id;

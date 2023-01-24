@@ -46,7 +46,7 @@ if (@$school_id != 0 && isset($_POST['question_text']) && isset($_POST['test_id'
 				mkdir($base_dir);
 			}
 			$base_src = "media.edu/school/$school_id/test/$test_id";
-			$database->execute('start transaction');
+			$database->executeTransaction('start transaction');
 			$oke = 1;
 			foreach ($clear_data as $question_no => $question) {
 				$object = parseQuestion($question);
@@ -73,7 +73,7 @@ if (@$school_id != 0 && isset($_POST['question_text']) && isset($_POST['test_id'
 					'$time_create', '$member_create', '$time_edit', '$member_edit', '1');
 					";
 					$picoEdu->log($sql1);
-					$stmt = $database->executeQuery($sql1);
+					$stmt = $database->executeInsert($sql1);
 					if ($stmt->rowCount() == 0) {
 						$oke = $oke * 0;
 					} else {
@@ -95,7 +95,7 @@ if (@$school_id != 0 && isset($_POST['question_text']) && isset($_POST['test_id'
 								('$option_id', '$question_id', '$content_option', '$order_option', '$score_option', 
 								'$time_create', '$member_create', '$time_edit', '$member_edit', '1');
 								";
-								$stmt2 = $database->executeQuery($sql2);
+								$stmt2 = $database->executeInsert($sql2);
 								if ($stmt2->rowCount() == 0) {
 									$oke = $oke * 0;
 								}
@@ -105,9 +105,9 @@ if (@$school_id != 0 && isset($_POST['question_text']) && isset($_POST['test_id'
 				}
 			}
 			if ($oke) {
-				$database->execute('commit');
+				$database->executeTransaction('commit');
 			} else {
-				$database->execute('rollback');
+				$database->executeTransaction('rollback');
 			}
 
 		}

@@ -7,9 +7,9 @@ if(isset($_POST['sort']))
 	foreach($arr as $key=>$val)
 	{
 		$order = $key+1;
-		$val = $val*1;
-		$sql = "update `edu_question` set `order` = '$order' where `question_id` = '$val'";// and `school_id` = '$school_id'; ";
-		$database->execute($sql);
+		$val = addslashes($val);
+		$sql = "update `edu_question` set `order` = '$order' where `question_id` = '$val'";
+		$database->executeUpdate($sql);
 	}
 }
 

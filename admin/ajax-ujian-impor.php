@@ -168,7 +168,7 @@ if(isset($_POST['from']) && isset($_POST['to']))
 									('$option_id', '$question_id', '$option', '$order2', '$score', '$time_create', '$member_create', '$time_edit', '$member_edit'); 
 									";
 									
-									$database->execute($sql2);
+									$database->executeInsert($sql2);
 								}
 							}
 						}

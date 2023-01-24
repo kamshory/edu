@@ -182,7 +182,7 @@ if(isset($_POST['import']) && isset($_POST['test_id']) && isset($_FILES['file'])
 									('$option_id', '$question_id', '$isi_option', '$order_option', '$score_option', 
 									'$time_create', '$member_create', '$time_edit', '$member_edit', '1');
 									";
-									$stmt2 = $database->executeQuery($sql2);
+									$stmt2 = $database->executeInsert($sql2);
 									if($stmt2->rowCount() == 0)
 									{
 										$oke = $oke * 0;
@@ -287,7 +287,7 @@ if(isset($_POST['import']) && isset($_POST['test_id']) && isset($_FILES['file'])
 								('$question_id', '$option', '$order2', '$score', '$time_create', '$member_create', '$time_edit', '$member_edit'); 
 								";
 
-								$database->execute($sql2);
+								$database->executeInsert($sql2);
 							}
 							
 						}

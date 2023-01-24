@@ -45,12 +45,12 @@ if(isset($_POST['save']) && count(@$_POST))
 	$sql1 = "update `edu_student` set `prevent_change_school` = '$prevent_change_school', `prevent_resign` = '$prevent_resign'
 	where `school_id` = '$school_id' 
 	";
-	$database->execute($sql1);
+	$database->executeUpdate($sql1);
 
 	$sql2 = "update `edu_school` set `prevent_change_school` = '$prevent_change_school', `prevent_resign` = '$prevent_resign'
 	where `school_id` = '$school_id' 
 	";
-	$database->execute($sql2);
+	$database->exeexecuteUpdatecute($sql2);
 
 	$time_create = $time_edit = $picoEdu->getLocalDateTime();
 	$admin_create = $admin_edit = $admin_login->admin_id;
@@ -62,12 +62,12 @@ if(isset($_POST['save']) && count(@$_POST))
 	`use_token` = '$use_token'
 	where `school_id` = '$school_id'
 	";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	$sql = "update `edu_school` set `state_id` = state_name_to_id('$state_id', `country_id`) where `school_id` = '$school_id' ";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	
 	$sql = "update `edu_school` set `city_id` = city_name_to_id('$city_id', `state_id`, `country_id`) where `school_id` = '$school_id' ";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	header("Location: ".basename($_SERVER['PHP_SELF']));
 		
 }

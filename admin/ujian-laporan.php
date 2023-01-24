@@ -25,7 +25,7 @@ if(isset($_POST['set_active']) && isset($_POST['answer_id']))
 			{
 				$answer_id = addslashes($val);
 				$sql = "update `edu_answer` set `active` = '1' where `answer_id` = '$answer_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
+				$database->executeUpdate($sql);
 			}
 		}
 	}
@@ -42,7 +42,7 @@ if(isset($_POST['set_inactive']) && isset($_POST['answer_id']))
 			{
 				$answer_id = addslashes($val);
 				$sql = "update `edu_answer` set `active` = '0' where `answer_id` = '$answer_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
+				$database->executeUpdate($sql);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ if(isset($_POST['delete']) && isset($_POST['answer_id']))
 			{
 				$answer_id = addslashes($val);
 				$sql = "DELETE FROM `edu_answer` where `answer_id` = '$answer_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
+				$database->executeDelete($sql);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ if(isset($_POST['recalculation']) && isset($_POST['answer_id']))
 				$score = $picoEdu->getTextScore($answer_id, true);
 				$score_str = addslashes(json_encode($score));
 				$sql = "update `edu_answer` set `competence_score` = '$score_str' where `answer_id` = '$answer_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
+				$database->executeUpdate($sql);
 			}
 		}
 	}
@@ -88,26 +88,26 @@ if(isset($_POST['recalculation']) && isset($_POST['answer_id']))
 
 if(@$_GET['option']=='export' && isset($_GET['test_id']))
 {
-$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$bc_array = $picoEdu->getBasicCompetence($test_id);
+	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
+	$bc_array = $picoEdu->getBasicCompetence($test_id);
 
-$class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
-$nt = '';
-$sql = "select `edu_test`.* $nt, 
-(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
-(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`) as `koleksi_question`
-from `edu_test` 
-where 1
-and `edu_test`.`test_id` = '$test_id' and `edu_test`.`school_id` = '$school_id'
-";
-$stmt = $database->executeQuery($sql);
+	$class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
+	$nt = '';
+	$sql = "select `edu_test`.* $nt, 
+	(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
+	(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`) as `koleksi_question`
+	from `edu_test` 
+	where 1
+	and `edu_test`.`test_id` = '$test_id' and `edu_test`.`school_id` = '$school_id'
+	";
+	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
 	{
-	$data = $stmt->fetch(PDO::FETCH_ASSOC);
-$assessment_methods = $data['assessment_methods'];
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		$assessment_methods = $data['assessment_methods'];
 
-header("Content-Type: application/vnd.xls");
-header("Content-Disposition: attachment; filename=\"".str_replace(" ", "-", strtolower($data['name'])).".xls\"");
+		header("Content-Type: application/vnd.xls");
+		header("Content-Disposition: attachment; filename=\"".str_replace(" ", "-", strtolower($data['name'])).".xls\"");
 
 echo '
 <!DOCTYPE html>
@@ -323,7 +323,7 @@ $array_class = $picoEdu->getArrayClass($school_id);
 				where `answer_id` = '".$data['answer_id']."' and `student_id` = '".$data['student_id']."' 
 				";
 				$bc_score = $picoEdu->changeIndexScore($bc_score);
-				$database->execute($sql);
+				$database->executeUpdate($sql);
 			}
 		  foreach($bc_array as $k=>$v)
 		  {
@@ -489,7 +489,7 @@ else
 		set `competence_score` = '".addslashes(json_encode($bc_score))."' 
 		where `answer_id` = '".$data['answer_id']."' and `student_id` = '".$data['student_id']."' 
 		";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 	}
 }
 if(count($bc_score))

@@ -33,16 +33,13 @@ if(count(@$_POST))
 if(isset($_POST['set_active']) && isset($_POST['school_program_id']))
 {
 	$school_program = @$_POST['school_program_id'];
-	if(isset($school_program))
+	if(isset($school_program) && is_array($school_program))
 	{
-		if(is_array($school_program))
+		foreach($school_program as $key=>$val)
 		{
-			foreach($school_program as $key=>$val)
-			{
-				$school_program_id = addslashes($val);
-				$sql = "update `edu_school_program` set `active` = '1' where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
-			}
+			$school_program_id = addslashes($val);
+			$sql = "update `edu_school_program` set `active` = '1' where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
+			$database->executeUpdate($sql);
 		}
 	}
 }
@@ -55,7 +52,7 @@ if(isset($_POST['set_inactive']) && isset($_POST['school_program_id']))
 		{
 			$school_program_id = addslashes($val);
 			$sql = "update `edu_school_program` set `active` = '0' where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeUpdate($sql);
 		}
 	}
 }
@@ -68,7 +65,7 @@ if(isset($_POST['delete']) && isset($_POST['school_program_id']))
 		{
 			$school_program_id = addslashes($val);
 			$sql = "DELETE FROM `edu_school_program` where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
-			$database->execute($sql);
+			$database->executeDelete($sql);
 		}
 	}
 }
@@ -80,7 +77,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$sql = "INSERT INTO `edu_school_program` 
 	(`school_program_id`, `school_id`, `name`, `order`, `default`, `time_create`, `time_edit`, `admin_create`, `admin_edit`, `ip_create`, `ip_edit`, `active`) values
 	('$school_program_id', '$school_id', '$name', '$order', '$default', '$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', '$active')";
-	$database->execute($sql);
+	$database->executeInsert($sql);
 	$id = $database->getDatabaseConnection()->lastInsertId();
 	if($id == 0)
 	{
@@ -93,7 +90,7 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 	$sql = "update `edu_school_program` set 
 	`name` = '$name', `order` = '$order', `default` = '$default', `time_create` = '$time_create', `time_edit` = '$time_edit', `admin_create` = '$admin_create', `admin_edit` = '$admin_edit', `ip_create` = '$ip_create', `ip_edit` = '$ip_edit', `active` = '$active'
 	where `school_program_id` = '$school_program_id2'";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&school_program_id=$school_program_id");
 }
 if(@$_GET['option']=='add')

@@ -257,21 +257,21 @@ if(isset($_POST['extract']))
 		$change_log = addslashes($change_log);
 		
 		$sql = "start transaction;";
-		$database->execute($sql);
+		$database->executeTransaction($sql);
 		
 		$sql = "REPLACE INTO `version` 
 		(`version_id`, `name`, `time_release`, `time_update`, `change_log`, `current_version`, `active`) VALUES
 		('$version_id', '$name', '$time_release', '$time_update', '$change_log', 0, 1);
 		";
-		$database->execute($sql);
+		$database->executeReplace($sql);
 		
 		$sql = "UPDATE `version` set `current_version` = 0;";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 		$sql = "UPDATE `version` set `current_version` = 1 where `version_id` = '$version_id';";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 		
 		$sql = "commit;";
-		$database->execute($sql);
+		$database->executeTransaction($sql);
 	}
 	
 	header("Location: ".basename($_SERVER['PHP_SELF'])."?step=3");

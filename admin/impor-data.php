@@ -100,7 +100,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 					'$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', 1);
 					";
 
-					$stmt = $database->executeQuery($sql);
+					$stmt = $database->executeInsert($sql);
 					if($stmt->rowCount() == 0)
 					{
 						$myschool = false;
@@ -151,7 +151,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 
 				if ($stmt2->rowCount() == 0) {
 					$sqlInsert = $picoEdu->generateCreateMmeberFromAdmin($admin_id);
-					$stmt2 = $database->executeQuery($sqlInsert);
+					$stmt2 = $database->executeInsert($sqlInsert);
 					if ($stmt2->rowCount() > 0) {
 						$stmt2 = $database->executeQuery($sql);
 					}
@@ -193,7 +193,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							'$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', '0', '1');
 							";
 							try {
-								$database->execute($sql);
+								$database->executeInsert($sql);
 							} catch (PDOException $e) {
 								// Do nothing
 							}
@@ -204,7 +204,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							WHERE `admin_id` = '$admin_id'
 							";
 							try {
-								$database->execute($sql2);
+								$database->executeUpdate($sql2);
 							} catch (PDOException $e) {
 								// Do nothing
 							}
@@ -214,7 +214,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							('$admin_id', '$school_id', 'A', '$time_create', '1')
 							";
 							try {
-								$database->execute($sql2);
+								$database->executeInsert($sql2);
 							} catch (PDOException $e) {
 								// Do nothing
 							}
@@ -297,13 +297,13 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 									'$ip_create', '$ip_edit', '0', '1');
 									";
 
-									$database->execute($sql);
+									$database->executeInsert($sql);
 
 									$sql2 = "INSERT INTO `edu_member_school` 
 									(`member_id`, `school_id`, `role`, `time_create`, `active`) values
 									('$admin_id', '$school_id', 'A', '$time_create', '1')
 									";
-									$database->execute($sql2);
+									$database->executeInsert($sql2);
 								} else {
 									// Do nothing
 								}
@@ -377,7 +377,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 										('$class_id', '$token_class', '$school_id', '$class_code', '$grade_id', '$school_program_id', '$name', 
 										'$time_create', '$time_edit', '$ip_create', '$ip_edit', '$admin_create', '$admin_edit', '$order', 0, 1)
 										";
-										$database->execute($sql);
+										$database->executeInsert($sql);
 									}
 								}
 							}
@@ -391,12 +391,11 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 						`admin_create` = '$admin_create', `admin_edit` = '$admin_edit'
 						where `school_id` = '$school_id'; 
 						";
-						$database->execute($sql);
+						$database->executeUpdate($sql);
 
 						// import data student
 						// mulai
 
-						$picoEdu->log(__LINE__);
 
 						$objWorksheet = PHPExcel_IOFactory::load($path);
 						try {
@@ -408,24 +407,17 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							$fieldArray = array();
 							$row = 1;
 
-							$picoEdu->log(__LINE__);
 							for ($col = 0; $col < $highestColumnIndex; ++$col) {
-								$picoEdu->log(__LINE__);
 								$fieldArray[$col] = strtolower($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 							}
-							$picoEdu->log(__LINE__);
 
 							for ($row = 2; $row <= $highestRow + 3; ++$row) {
-								$picoEdu->log(__LINE__);
 								$data = array();
 								for ($col = 0; $col < $highestColumnIndex; ++$col) {
-									$picoEdu->log(__LINE__);
 									$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
 								}
-								$picoEdu->log(__LINE__);
 								$reg_number = $picoEdu->filterSanitizeDoubleSpace(@$data['reg_number']);
 								$reg_number_national = $picoEdu->filterSanitizeDoubleSpace(@$data['reg_number_national']);
-								$picoEdu->log(print_r($data, true));
 								$name = $picoEdu->filterSanitizeName(@$data['name']);
 
 								$class = addslashes(trim(@$data['class']));
@@ -453,16 +445,12 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 								$email = trim($email, " ._-/\\ ");
 								$email = $picoEdu->filterEmailAddress($email);
 
-								$picoEdu->log(__LINE__);
 								if ($name == '') {
-									$picoEdu->log(__LINE__);
 									continue;
 								}
 								if ($email == '') {
-									$picoEdu->log(__LINE__);
 									$email = $picoEdu->generateAltEmail('planetbiru.com', ($reg_number_national != '') ? 'st_' . $reg_number_national . '_' . $school_id : '', ($reg_number != '') ? 'st_' . $reg_number . '_' . $school_id : '', ($phone != '') ? 'ph_' . $country_id . '_' . $phone : '');
 								}
-								$picoEdu->log(__LINE__);
 
 								$user_data = array();
 								$user_data['name'] = $name;
@@ -474,19 +462,13 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 								$user_data['address'] = $address;
 								$user_data['country_id'] = $country_id;
 								$user_data['language'] = $language;
-								$picoEdu->log(__LINE__);
-								$picoEdu->log(__LINE__ . " name = " . $name);
 								if ($name != '') {
-									$picoEdu->log(__LINE__);
 									if ($picoEdu->checkStudent($school_id, $reg_number, $reg_number_national, $name)) {
-										$picoEdu->log(__LINE__);
 										continue;
 									}
-									$picoEdu->log(__LINE__);
 									$chk = $picoEdu->getExistsingUser($user_data);
 									$student_id = $chk['member_id'];
 									$username = $chk['username'];
-									$picoEdu->log(__LINE__);
 
 									$db_fixed = 'NULL';
 									if(!empty($birth_day))
@@ -506,34 +488,25 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 									'$address', '$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', 0, 1)
 									";
 
-									$picoEdu->log(__LINE__);
-									$picoEdu->log($sql);
 
-									$database->execute($sql);
+									$database->executeInsert($sql);
 
 									$sql2 = "INSERT INTO `edu_member_school` 
 									(`member_id`, `school_id`, `role`, `class_id`, `time_create`, `active`) values
 									('$student_id', '$school_id', 'S', '$class_id', '$time_create', '1')
 									";
 
-									$picoEdu->log(__LINE__);
-									$picoEdu->log($sql2);
-
-									$database->execute($sql2);
+									$database->executeInsert($sql2);
 
 									$sql3 = "update `edu_student` set `school_id` = '$school_id' where `student_id` = '$student_id' 
 									and (`school_id` = '0' or `school_id` is null)
 									";
 
-									$picoEdu->log(__LINE__);
-									$picoEdu->log($sql3);
 
-									$database->execute($sql3);
+									$database->executeUpdate($sql3);
 								} else {
-									$picoEdu->log(__LINE__);
 									break;
 								}
-								$picoEdu->log(__LINE__);
 							}
 
 							$sql = "update `edu_student` 
@@ -541,22 +514,17 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							where `edu_class`.`class_id` = `edu_student`.`class_id`),
 							`prevent_change_school` = '1', `prevent_resign` = '1' 
 							where `edu_student`.`school_id` = '$school_id' ";
-							$database->execute($sql);
+							$database->executeUpdate($sql);
 
-							$picoEdu->log(__LINE__);
-							$picoEdu->log($sql);
 
 							$sql1 = "update `edu_school` set `prevent_change_school` = '1', `prevent_resign` = '1'
 							where `school_id` = '$school_id' 
 							";
 
-							$picoEdu->log(__LINE__);
-							$picoEdu->log($sql1);
-
-							$database->execute($sql1);
+							
+							$database->executeUpdate($sql1);
 						} catch (Exception $e) {
 							// Do nothing
-							$picoEdu->log($e->getMessage());
 						}
 						// import data student
 						// selesai
@@ -647,20 +615,20 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 									'$gender', '$birth_place', $db_fixed, '$phone', '$email', '$password', '$password_initial', '$address', 
 									'$time_create', '$time_edit', '$admin_create', '$admin_edit', '$ip_create', '$ip_edit', 1)
 									";
-									$database->execute($sql);
+									$database->executeInsert($sql);
 
 									$sql2 = "INSERT INTO `edu_member_school` 
 									(`member_id`, `school_id`, `role`, `time_create`, `active`) values
 									('$teacher_id', '$school_id', 'T', '$time_create', '1')
 									";
-									$database->execute($sql2);
+									$database->executeInsert($sql2);
 
 									$sql3 = "update `edu_teacher` 
 									set `school_id` = '$school_id' 
 									where `teacher_id` = '$teacher_id' 
 									and (`school_id` = '0' or `school_id` is null)
 									";
-									$database->execute($sql3);
+									$database->executeUpdate($sql3);
 								} else {
 									break;
 								}
@@ -675,7 +643,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 						`ip_import_last` = '$ip_edit'
 						where `school_id` = '$school_id'
 						";
-						$database->execute($sql3);
+						$database->executeUpdate($sql3);
 
 						// import data teacher
 						// delete file

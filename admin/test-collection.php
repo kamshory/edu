@@ -46,20 +46,20 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$sql = "INSERT INTO `edu_test_collection` 
 	(`test_collection_id`, `name`, `grade_id`, `file_name`, `file_path`, `file_size`, `file_md5`, `file_sha1`, `time_create`, `time_edit`, `ip_create`, `ip_edit`, `taken`, `active`) values
 	('$test_collection_id', '$name', '$grade_id', '$file_name', '$file_path', '$file_size', '$file_md5', '$file_sha1', '$time_create', '$time_edit', '$ip_create', '$ip_edit', '$taken', '$active')";
-	$database->execute($sql);
-	$id = $database->getDatabaseConnection()->lastInsertId();
-	if($id == 0)
+	$database->executeInsert($sql);
+
+	if(empty($test_collection_id))
 	{
-		$id = kh_filter_input(INPUT_POST, "test_collection_id", FILTER_SANITIZE_NUMBER_UINT);
+		$test_collection_id = kh_filter_input(INPUT_POST, "test_collection_id", FILTER_SANITIZE_STRING_NEW);
 	}
-	header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&test_collection_id=$id");
+	header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&test_collection_id=$test_collection_id");
 }
 if(isset($_POST['save']) && @$_GET['option']=='edit')
 {
 	$sql = "update `edu_test_collection` set 
 	`name` = '$name', `grade_id` = '$grade_id', `file_name` = '$file_name', `file_path` = '$file_path', `file_size` = '$file_size', `file_md5` = '$file_md5', `file_sha1` = '$file_sha1', `time_create` = '$time_create', `time_edit` = '$time_edit', `ip_create` = '$ip_create', `ip_edit` = '$ip_edit', `taken` = '$taken', `active` = '$active'
 	where `test_collection_id` = '$test_collection_id2'";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&test_collection_id=$test_collection_id");
 }
 if(@$_GET['option']=='add')

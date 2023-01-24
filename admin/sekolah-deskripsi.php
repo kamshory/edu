@@ -39,7 +39,7 @@ if(isset($_POST['save']))
 	`description` = '$description'
 	where `school_id` = '$school_id'
 	";
-	$database->execute($sql);
+	$database->executeUpdate($sql);
 	header("Location: ".basename($_SERVER['PHP_SELF']));
 		
 }
