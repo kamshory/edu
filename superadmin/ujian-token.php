@@ -1,23 +1,33 @@
 <?php
-include_once dirname(dirname(__FILE__))."/lib.inc/auth-guru.php";
-
-$cfg->module_title = "Token";
-include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
-if(count(@$_POST))
+include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
+if($admin_login->admin_level != 1)
 {
+	include_once dirname(__FILE__)."/bukan-super-admin.php";
+	exit();
+}
+$admin_id = $admin_login->admin_id;
+
+$cfg->module_title = "Token Ujian";
+include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
+if(count(@$_POST) && isset($_POST['save']))
+{
+	if(isset($_POST['school_id']))
+	{
+		$school_id = kh_filter_input(INPUT_POST, 'school_id', FILTER_SANITIZE_STRING_NEW);
+	}
 	$token_id = kh_filter_input(INPUT_POST, 'token_id', FILTER_SANITIZE_NUMBER_INT);
 	$token_id2 = kh_filter_input(INPUT_POST, 'token_id2', FILTER_SANITIZE_NUMBER_INT);
 	if(!isset($_POST['token_id']))
 	{
 		$token_id = $token_id2;
 	}
-	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
+	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_NUMBER_INT);
 	$class_id = kh_filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_STRING_NEW);
 	$student_id = kh_filter_input(INPUT_POST, 'student_id', FILTER_SANITIZE_STRING_NEW);
 	$time_create = $time_edit = $picoEdu->getLocalDateTime();
 	$time_expire = kh_filter_input(INPUT_POST, 'time_expire', FILTER_SANITIZE_STRING_NEW);
-	$teacher_create = $teacher_id;
-	$teacher_edit = $teacher_id;
+	$admin_create = $admin_id;
+	$admin_edit = $admin_id;
 	$active = 1;
 }
 
@@ -40,7 +50,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 {
 	$now = $picoEdu->getLocalDateTime();
 	$oneday = date('Y-m-d H:i:s', time()-86400);
-	$sql = "DELETE FROM `edu_token` where `time_expire` < '$oneday'
+	$sql = "delete from `edu_token` where `time_expire` < '$oneday'
 	";
 	$database->executeDelete($sql);
 	$sql = "update `edu_token` set `active` = '0' where `time_expire` < '$now'
@@ -53,17 +63,17 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 			// membuat token untuk semua siswa
 			$sql = "select `student_id` from `edu_student` where `class_id` = '$class_id' and `active` = '1'
 			";
-			$stmtx = $database->executeQuery($sql);
+			$stmt = $database->executeQuery($sql);
 			$students = array();
-			if($stmtx->rowCount() > 0)
+			if($stmt->rowCount() > 0)
 			{
-				$rowsx = $stmtx->fetchAll(PDO::FETCH_ASSOC);
-				foreach($rowsx as $data)
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach($rows as $data)
 				{
 					$students[] = $data['student_id'];
 				}
 			}
-			
+
 			$count = count($students);
 			$tokens = $picoEdu->generateToken($count, 6);
 			foreach($tokens as $idx=>$val)
@@ -73,9 +83,9 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 				$token_id = $database->generateNewId();
 				$sql = "INSERT INTO `edu_token` 
 				(`token_id`, `token`, `school_id`, `class_id`, `student_id`, `test_id`, `time_create`, `time_edit`, `time_expire`, 
-				`teacher_create`, `teacher_edit`, `active`) values
+				`admin_create`, `admin_edit`, `active`) values
 				('$token_id', '$token', '$school_id', '$class_id', '$student_id', '$test_id', '$time_create', '$time_edit', '$time_expire', 
-				'$teacher_create', '$teacher_edit', '$active')";
+				'$admin_create', '$admin_edit', '$active')";
 				$database->executeInsert($sql);
 			}
 			header("Location: ".basename($_SERVER['PHP_SELF'])."?class_id=$class_id&test_id=$test_id");
@@ -88,10 +98,10 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 			$token = $tokens[0];
 			$token_id = $database->generateNewId();
 			$sql = "INSERT INTO `edu_token` 
-			(`token_id1, `token`, `school_id`, `class_id`, `student_id`, `test_id`, `time_create`, `time_edit`, `time_expire`, 
-			`teacher_create`, `teacher_edit`, `active`) values
+			(`token_id`, `token`, `school_id`, `class_id`, `student_id`, `test_id`, `time_create`, `time_edit`, `time_expire`, 
+			`admin_create`, `admin_edit`, `active`) values
 			('$token_id', '$token', '$school_id', '$class_id', '$student_id', '$test_id', '$time_create', '$time_edit', '$time_expire', 
-			'$teacher_create', '$teacher_edit', '$active')";
+			'$admin_create', '$admin_edit', '$active')";
 			$database->executeInsert($sql);
 			header("Location: ".basename($_SERVER['PHP_SELF'])."?class_id=$class_id&test_id=$test_id");
 		}
@@ -104,9 +114,13 @@ include_once dirname(__FILE__)."/cetak-ujian-token.php";
 else if(@$_GET['option']=='add')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
+$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 ?>
 <script type="text/javascript">
 $(document).ready(function(e) {
+    $(document).on('change', '#school_id', function(e){
+		window.location = '<?php echo basename($_SERVER['PHP_SELF']);?>?option=add&school_id='+$(this).val();
+	});
     $(document).on('change', '#class_id', function(e){
 		var class_id = $(this).val();
 		$('#student_id').empty().append('<option value="">- Semua Siswa -</option>');
@@ -129,12 +143,33 @@ $(document).ready(function(e) {
 <form name="formedu_token" id="formedu_token" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this, 'Wajib')">
   <table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
 		<tr>
+		<td>Sekolah</td>
+		<td><select class="input-select" name="school_id" id="school_id" required="required">
+		<option value="">- Pilih Sekolah -</option>
+		<?php 
+		$sql = "select * from `edu_school`
+		where `active` = '1'
+		order by `school_grade_id` asc
+		";
+		$stmt2 = $database->executeQuery($sql2);
+		if ($stmt2->rowCount() > 0) {
+			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($rows2 as $data2) {
+				?>
+            <option value="<?php echo $data2['school_id']; ?>"<?php echo ($data2['school_id'] == $school_id) ? ' selected="selected"' : ''; ?>><?php echo $data2['name']; ?></option>
+            <?php
+			}
+		}
+		?>
+		</select></td>
+		</tr>
+		<tr>
 		<td>Ujian</td>
 		<td><select class="input-select" name="test_id" id="test_id" required="required">
-		<option value=""></option>
+		<option value="">- Pilih Ujian -</option>
 		<?php 
 		$sql = "select * from `edu_test`
-		where 1 and `school_id` = '$school_id' and `teacher_id` = '$teacher_id'
+		where 1 and `school_id` = '$school_id'
 		and (`test_availability` = 'F' or `available_to` > '$now')
 		order by `test_id` desc
 		";
@@ -146,14 +181,14 @@ $(document).ready(function(e) {
             <option value="<?php echo $data2['test_id']; ?>"><?php echo $data2['name']; ?></option>
             <?php
 			}
-		}		
+		}	
 		?>
 		</select></td>
 		</tr>
 		<tr>
 		<td>Kelas</td>
 		<td><select class="input-select" name="class_id" id="class_id" required="required">
-		<option value=""></option>
+		<option value="">- Pilih Kelas -</option>
 		<?php 
 		$sql2 = "select * from `edu_class`
 		where `active` = '1' and `school_id` = '$school_id'
@@ -192,8 +227,8 @@ $(document).ready(function(e) {
 		<td><input type="text" class="input-text input-text-datetime" name="time_expire" id="time_expire" value="<?php echo date('Y-m-d H:i:s', time()+3600);?>" autocomplete="off" required="required" /></td>
 		</tr>
 		<tr>
-		<td>&nbsp;</td>
-		<td><input type="submit" name="save" id="save" class="com-button" value="Simpan" onclick="return confirm('Apakah Anda yakin akan membuat token ini?')" /> 
+		<td></td>
+		<td><input type="submit" name="save" id="save" class="com-button" value="Simpan" onclick="return confirm('Apakah Anda yahin akan membuat token ini?')" /> 
         <input type="button" name="showall" id="showall" value="Tampilkan Semua" class="com-button" onclick="window.location='<?php echo basename($_SERVER['PHP_SELF']);?>'" /></td>
 		</tr>
 	</table>
@@ -219,9 +254,9 @@ where 1 and `school_id` = '$school_id'
 and `edu_token`.`token_id` = '$edit_key'
 ";
 $stmt = $database->executeQuery($sql);
-if($stmt->rowCount() > 0)
-{
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
+	if($stmt->rowCount() > 0)
+	{
+	$data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <form name="formedu_token" action="" method="post" enctype="multipart/form-data">
   <table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
@@ -266,7 +301,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		<td><?php echo ($data['active'])?'Ya':'Tidak';?></td>
 		</tr>
 		<tr>
-		<td>&nbsp;</td>
+		<td></td>
 		<td><input type="button" name="edit" id="edit" class="com-button" value="Ubah" onclick="window.location='<?php echo basename($_SERVER['PHP_SELF']);?>?option=edit&token_id=<?php echo $data['token_id'];?>'" /> <input type="button" name="showall" id="showall" value="Tampilkan Semua" class="com-button" onclick="window.location='<?php echo basename($_SERVER['PHP_SELF']);?>'" /></td>
 		</tr>
 	</table>
@@ -284,17 +319,17 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 }
 else
 {
-$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
+$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_NUMBER_INT);
 $class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 $now = $picoEdu->getLocalDateTime();
 $oneday = date('Y-m-d H:i:s', time()-86400);
 include_once dirname(__FILE__)."/lib.inc/header.php";
 if(isset($_POST['cleanup']))
 {
-	$sql = "DELETE FROM `edu_invalid_signin` where `signin_type` = 'T' ";
-	$stmt = $database->executeDelete($sql);
+	$sql = "delete from `edu_invalid_signin` where `signin_type` = 'T' ";
+	$res = $database->executeQuery($sql);
 	$num_deleted = $stmt->rowCount();
-	if($num_deleted)
+	if($num_deleted > 0)
 	{
 	?>
     <div class="info">Sebanyak <?php echo $num_deleted;?> token salah yang dimasukkan siswa telah berhasil dihapus.</div>
@@ -336,7 +371,7 @@ function printToken(frm)
 	<option value=""></option>
     <?php
 	$sql = "select * from `edu_test`
-	where 1 and `school_id` = '$school_id' and `teacher_id` = '$teacher_id'
+	where 1 and `school_id` = '$school_id'
 	and (`test_availability` = 'F' or `available_to` > '$now')
 	order by `test_id` desc
 	";
@@ -345,8 +380,8 @@ function printToken(frm)
 		$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($rows2 as $data2) {
 			?>
-        <option value="<?php echo $data['test_id']; ?>"<?php if ($test_id == $data['test_id'])
-				  echo ' selected="selected"'; ?>><?php echo $data['name']; ?></option>
+        <option value="<?php echo $data2['test_id']; ?>"<?php if ($test_id == $data2['test_id'])
+				  echo ' selected="selected"'; ?>><?php echo $data2['name']; ?></option>
         <?php
 		}
 	}
@@ -405,7 +440,7 @@ if($test_id != 0)
 $pagination->array_get[] = 'test_id';
 $sql_filter .= " and `edu_token`.`test_id` = '$test_id' ";
 }
-if($test_id != 0 || $class_id != 0)
+if($test_id == 0 && $class_id == 0)
 {
 	$pagination->limit_sql = "";
 }
@@ -419,7 +454,7 @@ $sql = "select `edu_token`.* $nt,
 (select `edu_class`.`name` from `edu_class` where `edu_class`.`class_id` = `edu_token`.`class_id`) as `class_name`,
 (select `edu_test`.`name` from `edu_test` where `edu_test`.`test_id` = `edu_token`.`test_id`) as `test_name`
 from `edu_token`
-where 1 and `school_id` = '$school_id' and `edu_token`.`teacher_create` = '$teacher_id' $sql_filter
+where 1 and `school_id` = '$school_id' $sql_filter
 order by `edu_token`.`token_id` desc
 ";
 $sql_test = "select `edu_token`.*
@@ -479,7 +514,7 @@ if($test_id == 0 && $class_id == 0)
 <?php
 }
 ?>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="row-table">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="row-table hide-some-cell">
   <thead>
     <tr>
       <td width="16"><input type="checkbox" name="control-token_id" id="control-token_id" class="checkbox-selector" data-target=".token_id" value="1"></td>
