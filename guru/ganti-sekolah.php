@@ -4,7 +4,7 @@ $cfg->module_title = "Pilih Sekolah";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(@$_GET['option']=='select')
 {
-	$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_NUMBER_INT);
+	$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 	$sql = "select `edu_school`.* 
 	from `edu_member_school`
 	inner join(`edu_school`) on(`edu_school`.`school_id` = `edu_member_school`.`school_id`)
@@ -23,7 +23,7 @@ if(@$_GET['option']=='select')
 if(@$_GET['option']=='detail')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
-$edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_NUMBER_INT);
+$edit_key = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
 $sql = "select `edu_school`.* $nt,
 (select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`school_id` = `edu_school`.`school_id`) as `student`,

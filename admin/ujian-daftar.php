@@ -22,7 +22,7 @@ include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(count(@$_POST) && isset($_POST['save']))
 {
 	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$test_id2 = kh_filter_input(INPUT_POST, 'test_id2', FILTER_SANITIZE_NUMBER_UINT);
+	$test_id2 = kh_filter_input(INPUT_POST, 'test_id2', FILTER_SANITIZE_STRING_NEW);
 	if(!isset($_POST['test_id']))
 	{
 		$test_id = $test_id2;

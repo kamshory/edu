@@ -243,8 +243,8 @@ else
 	
 }
 $ke = array();
-$res = mysql_query($sql);
-if(mysql_num_rows($res))
+$stmt = $database->executeQuery($sql);
+if($stmt->rowCount() > 0)
 {
 $array_class = $picoEdu->getArrayClass($school_id);
 ?>
@@ -281,7 +281,8 @@ $array_class = $picoEdu->getArrayClass($school_id);
 	<?php
 	$i=0;
 	$no = $pagination->offset;
-	while(($data=mysql_fetch_assoc($res)))
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($rows as $data)
 	{
 	$j=$i%2;
 	$no++;
@@ -364,62 +365,62 @@ timediff(`edu_answer`.`end`,`edu_answer`.`start`) as `duration_test` ,
 from `edu_test`
 left join (`edu_answer`) on (`edu_answer`.`test_id` = `edu_test`.`test_id`)
 where `edu_answer`.`answer_id` = '$answer_id' ";
-$result=mysql_query($sql);
 
-if(mysql_num_rows($result))
+$stmt = $database->executeQuery($sql);
+if($stmt->rowCount() > 0)
 {
-$info = mysql_fetch_assoc($result);
+$info = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $cfg->base_assets;?>lib.assets/theme/default/css/test.css" />
 <div class="test-info">
 <table width="100%" border="0">
   <tr>
     <td width="10%">NIS</td>
-    <td width="15%"><?php echo ($info['student_id']);?></td>
+    <td width="15%"><?php echo $info['student_id'];?></td>
     <td width="10%">Metode Penilaian</td>
     <td width="15%"><?php if($info['assessment_methods'] == 'H') echo 'Nilai Tertinggi'; if($info['assessment_methods'] == 'N') echo 'Nilai Terbaru';?></td>
     <td width="10%">Dibuka</td>
     <td width="15%"><?php if($info['available_from'] != '0000-00-00 00:00:00' && $info['available_from'] != '') echo translateDate(date('j M Y H:i', strtotime($info['available_from']))); else echo '-';?></td>
     <td width="10%">Benar</td>
-    <td width="15%"><?php echo ($info['true']);?></td>
+    <td width="15%"><?php echo $info['true'];?></td>
   </tr>
   <tr>
     <td>Nama Siswa</td>
-    <td><?php echo ($info['student_name']);?></td>
+    <td><?php echo $info['student_name'];?></td>
     <td>Jumlah Soal</td>
-    <td><?php echo ($info['number_of_question']);?></td>
+    <td><?php echo $info['number_of_question'];?></td>
     <td>Ditutup</td>
     <td><?php if($info['available_to'] != '0000-00-00 00:00:00' && $info['available_to'] != '') echo translateDate(date('j M Y H:i', strtotime($info['available_to']))); else echo '-';?></td>
     <td>Salah</td>
-    <td><?php echo ($info['false']);?></td>
+    <td><?php echo $info['false'];?></td>
   </tr>
   <tr>
     <td>Kelas</td>
     <td><?php $class = $picoEdu->textClass($array_class, $info['class']); $class_sort = $picoEdu->textClass($array_class, $info['class'], 2);?><a href="#" class="class-list-control" data-class="<?php echo htmlspecialchars($class);?>"><?php echo $class_sort;?></a></td>
     <td>Sekor Benar</td>
-    <td><?php echo ($info['standard_score']);?></td>
+    <td><?php echo $info['standard_score'];?></td>
     <td>Pengumuman Hasil</td>
     <td><?php if($info['publish_answer']) echo translateDate(date('j M Y H:i', strtotime($info['time_answer_publication']))); else echo '-';?></td>
     <td>Nilai Awal</td>
-    <td><?php echo ($info['initial_score']);?></td>
+    <td><?php echo $info['initial_score'];?></td>
   </tr>
   <tr>
     <td>Ujian</td>
-    <td><?php echo ($info['name']);?></td>
+    <td><?php echo $info['name'];?></td>
     <td>Penalti</td>
-    <td><?php echo ($info['penalty']);?></td>
+    <td><?php echo $info['penalty'];?></td>
     <td>Tanggal Ujian</td>
     <td><?php echo translateDate(date('j M Y H:i', strtotime($info['start'])));?></td>
     <td>Nilai Akhir</td>
-    <td><?php echo ($info['final_score']);?></td>
+    <td><?php echo $info['final_score'];?></td>
   </tr>
   <tr>
     <td>Mata Pelajaran</td>
-    <td><?php echo ($info['subject']);?></td>
+    <td><?php echo $info['subject'];?></td>
     <td>Waktu Tersedia</td>
-    <td><?php echo implode(':', secondsToTime($info['duration']));?></td>
+    <td><?php echo implode(':', $picoEdu->secondsToTime($info['duration']));?></td>
     <td>Durasi Pengerjaan</td>
-    <td><?php echo ($info['duration_test']);?></td>
+    <td><?php echo $info['duration_test'];?></td>
     <td>Persen</td>
     <td><?php echo $picoEdu->numberFormatTrans($info['percent']);?></td>
   </tr>
@@ -554,16 +555,16 @@ left join (`edu_test`) on (`edu_test`.`test_id` = `edu_question`.`test_id`)
 where `edu_answer`.`answer_id` = '$answer_id' 
 group by `edu_question`.`question_id` 
 order by `pos` asc ";
-$result=mysql_query($sql);
-
-if(mysql_num_rows($result))
+$stmt = $database->executeQuery($sql);
+if($stmt->rowCount() > 0)
 {
 ?>
 <ol class="test-question">
 <?php
 $i=0;
 $no = $pagination->offset;
-while(($data=mysql_fetch_assoc($result)))
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach($rows as $data)
 {
 $j=$i%2;
 $no++;
@@ -578,14 +579,15 @@ $answer = $data['answer'];
 $sql2 = "select `edu_option`.* , '$answer' like concat('%,',`edu_option`.`option_id`,']%') as `my_answer`
 from `edu_option` 
 where  `edu_option`.`question_id` = '$qid' group by  `edu_option`.`option_id` order by  `edu_option`.`order` asc";
-$result2=mysql_query($sql2);
-if(mysql_num_rows($result2))
+$stmt2 = $database->executeQuery($sql2);
+if($stmt2->rowCount() > 0)
 {
 ?>
 <div class="option">
 <ol class="listoption" style="list-style-type:<?php echo $data['numbering'];?>">
 <?php
-while(($data2=mysql_fetch_assoc($result2)))
+$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+foreach($rows2 as $data2)
 {
 ?>
 <li>
@@ -595,7 +597,7 @@ while(($data2=mysql_fetch_assoc($result2)))
 <div class="list-option-item<?php echo ($data2['my_answer'])?' list-option-item-selected':'';?>">
 <div class="option-content">
 <?php
-echo ($data2['content']);
+echo $data2['content'];
 ?>
 </div>
 </div>
@@ -713,11 +715,14 @@ from `edu_test`
 where (`edu_test`.`active` = '1' or `edu_test`.`active` = '0')
 and `edu_test`.`test_id` = '$test_id'
 ";
-$res = mysql_query($sql);
-$data = mysql_fetch_assoc($res);
-$threshold = $data['threshold'];
-$assessment_methods = $data['assessment_methods'];
-
+$threshold = 0;
+$assessment_methods = '';
+$stmtx = $database->executeQuery($sql);
+if ($stmtx->rowCount() > 0) {
+	$data = $stmtx->fetch(PDO::FETCH_ASSOC);
+	$threshold = $data['threshold'];
+	$assessment_methods = $data['assessment_methods'];
+}
 
 $pagination->array_get = array();
 $pagination->array_get[] = 'class_id';
@@ -741,7 +746,7 @@ if($q != "")
 $array_class = $picoEdu->getArrayClass($school_id);
 ?>
 <div class="horizontal-bar">
-Ujian: <?php echo $data['name'];?>;<?php if($data['subject']!=''){?> Mata Pelajaran: <?php echo $data['subject'];?>;<?php } if($data['class'] != ''){?> Kelas: <?php $class = $picoEdu->textClass($array_class, $data['class']); $class_sort = $picoEdu->textClass($array_class, $data['class'], 2);?><a href="#" class="class-list-control" data-class="<?php echo htmlspecialchars($class);?>"><?php echo $class_sort;?></a>;<?php }?> Soal: <?php echo $data['number_of_question'];?>; Durasi: <?php echo implode(':', secondsToTime($data['duration']));?>
+Ujian: <?php echo $data['name'];?>;<?php if($data['subject']!=''){?> Mata Pelajaran: <?php echo $data['subject'];?>;<?php } if($data['class'] != ''){?> Kelas: <?php $class = $picoEdu->textClass($array_class, $data['class']); $class_sort = $picoEdu->textClass($array_class, $data['class'], 2);?><a href="#" class="class-list-control" data-class="<?php echo htmlspecialchars($class);?>"><?php echo $class_sort;?></a>;<?php }?> Soal: <?php echo $data['number_of_question'];?>; Durasi: <?php echo implode(':', $picoEdu->secondsToTime($data['duration']));?>
 </div>
 
 <?php
@@ -808,7 +813,7 @@ $stmt = $database->executeQuery($sql_test);
 $pagination->total_record = $stmt->rowCount();
 $stmt = $database->executeQuery($sql.$pagination->limit_sql);
 $pagination->total_record_with_limit = $stmt->rowCount();
-if(mysql_num_rows($res))
+if($pagination->total_record_with_limit > 0)
 {
 $pagination->start = $pagination->offset+1;
 $pagination->end = $pagination->offset+$pagination->total_record_with_limit;
@@ -869,7 +874,8 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
 	<?php
 	$i=0;
 	$no = $pagination->offset;
-	while(($data=mysql_fetch_assoc($res)))
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($rows as $data)
 	{
 	$j=$i%2;
 	$no++;
@@ -1086,7 +1092,8 @@ $array_class = $picoEdu->getArrayClass($school_id);
 	<?php
 	$i=0;
 	$no = $pagination->offset;
-	while(($data=mysql_fetch_assoc($res)))
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($rows as $data)
 	{
 	$j=$i%2;
 	$no++;

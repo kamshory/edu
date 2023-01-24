@@ -18,7 +18,7 @@ $my_admin = $admin_create = $admin_edit = $admin_login->admin_id;
 
 if(count(@$_POST) && isset($_POST['save']))
 {
-	$admin_id = $admin_id2 = kh_filter_input(INPUT_POST, 'admin_id2', FILTER_SANITIZE_NUMBER_UINT);
+	$admin_id = $admin_id2 = kh_filter_input(INPUT_POST, 'admin_id2', FILTER_SANITIZE_STRING_NEW);
 	$name = kh_filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 	$gender = kh_filter_input(INPUT_POST, 'gender', FILTER_SANITIZE_SPECIAL_CHARS);
 	$birth_place = kh_filter_input(INPUT_POST, 'birth_place', FILTER_SANITIZE_SPECIAL_CHARS);
