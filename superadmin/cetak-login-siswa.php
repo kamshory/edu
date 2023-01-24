@@ -7,6 +7,13 @@ if($admin_login->admin_level != 1)
 }
 $school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 $class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
+$url = 'http://192.168.0.11/';
+require_once dirname(dirname(__FILE__)) . "/lib.inc/phpqrcode/phpqrcode.php";
+ob_start();
+QRCode::png($url, null);
+$imageString = base64_encode( ob_get_contents() );
+ob_end_clean();
+
 $nt = '';
 $sql = "select `edu_class`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_class`.`school_id`) as `school_name`
@@ -15,10 +22,11 @@ where `edu_class`.`school_id` = '$school_id'
 and `edu_class`.`class_id` = '$class_id'  
 ";
 $stmt = $database->executeQuery($sql);
+
 if($stmt->rowCount() > 0)
 {
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
-$class_id = $data['class_id'];
+  $data = $stmt->fetch(PDO::FETCH_ASSOC);
+  $class_id = $data['class_id'];
 }
 else
 {
@@ -28,9 +36,10 @@ from `edu_school`
 where `edu_school`.`school_id` = '$school_id'
 ";
 $stmt = $database->executeQuery($sql);
+
 if($stmt->rowCount() > 0)
 {
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
+  $data = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 }
 ?><!DOCTYPE html>
@@ -39,7 +48,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <base href="<?php echo $cfg->base_url;?>">
 <link rel="shortcut icon" type="image/jpeg" href="<?php echo $cfg->base_assets;?>lib.assets/theme/default/css/images/favicon.png" />
-<title>Username dan Password Siswa - <?php echo $cfg->app_name;?></title>
+<title>Username dan Password Siswa - <?php echo $cfg->app_name;?><?php echo rtrim(' - '.@$data['name'], ' - ');?></title>
 <style type="text/css">
 body{
 	margin:0;
@@ -74,13 +83,21 @@ h3{
 }
 .user-item{
 	margin:15px 0;
+  padding: 10px 0px 10px 120px;
+  position: relative;
+}
+.user-item .image{
+  position: absolute;
+  margin-left: -110px;
+  margin-top: -25px;
+  vertical-align: top;
 }
 .cut-here {
     height: 0px;
     border-bottom: 1px dashed #333333;
     margin: 18px 15px 18px 15px;
     display: block;
-	position:relative;
+	  position:relative;
 }
 .cut-here::before {
     content: '\2702';
@@ -97,6 +114,7 @@ h3{
     top: -7px;
     right: -15px;
 }
+
 </style>
 </head>
 
@@ -128,11 +146,19 @@ $sql = "select `edu_student`.*
 from `edu_student` 
 where 1 and `edu_student`.`school_id` = '$school_id' and `edu_student`.`active` = '1' $filter
 order by `edu_student`.`name` asc ";
-$res = mysql_query($sql);
-while(($data = mysql_fetch_assoc($res)))
-{
-?>
+$stmt = $database->executeQuery($sql);
+
+if ($stmt->rowCount() > 0) {
+  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  foreach($rows as $data) {
+    ?>
+
+<div class="cut-here"></div>
+
 <div class="user-item">
+  <div class="image">
+    <img src="data:image/png;base64,<?php echo $imageString;?>" alt="">
+  </div>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="main-table">
   <tr>
     <td width="18%">URL</td>
@@ -142,18 +168,16 @@ while(($data = mysql_fetch_assoc($res)))
     <td width="15%">Password</td>
   </tr>
   <tr>
-    <td><?php echo trim($cfg->base_url, "/");?></td>
-    <td><?php echo $data['reg_number'];?></td>
-    <td><?php echo $data['name'];?></td>
-    <td><?php echo $data['username'];?></td>
-    <td><?php echo $data['password_initial'];?></td>
+    <td><?php echo trim($url, "/"); ?></td>
+    <td><?php echo $data['reg_number']; ?></td>
+    <td><?php echo $data['name']; ?></td>
+    <td><?php echo $data['username']; ?></td>
+    <td><?php echo $data['password_initial']; ?></td>
   </tr>
 </table>
 </div>
-
-<div class="cut-here"></div>
-
 <?php
+  }
 }
 ?>
 </div>

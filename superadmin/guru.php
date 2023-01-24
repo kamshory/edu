@@ -492,14 +492,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
   <input type="submit" name="set_active" id="set_active" value="Aktifkan" class="com-button" />
   <input type="submit" name="set_inactive" id="set_inactive" value="Nonaktifkan" class="com-button" />
   <input type="submit" name="delete" id="delete" value="Hapus" class="com-button delete-button" onclick="return confirm('Apakah Anda yakin akan menghapus baris yang dipilih?');" />
-  <?php 
-  if($school_id != 0)
-  {
-  ?>
   <input type="button" name="print" id="print" value="Cetak Password" class="com-button" onclick="window.open('<?php echo basename($_SERVER['PHP_SELF']);?>?option=print-password&school_id=<?php echo $school_id;?>')" />
-  <?php
-  }
-  ?>
   </div>
 </form>
 <?php
