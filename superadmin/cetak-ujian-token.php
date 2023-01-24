@@ -10,19 +10,10 @@ $tokens = kh_filter_input(INPUT_GET, 'tokens', FILTER_SANITIZE_STRING_NEW);
 $arr = explode(",", $tokens);
 foreach($arr as $key=>$val)
 {
-	$val = preg_replace("/[^\d]/i", "", $val);
-	$arr[$key] = abs($val*1);
+	$arr[$key] = "'".addslashes($val)."'";
 }
 $edit_key = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
-from `edu_school` 
-where 1 and `edu_school`.`school_id` = '$school_id'
-";
-$stmt = $database->executeQuery($sql);
-if($stmt->rowCount() > 0)
-{
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -94,22 +85,22 @@ h3{
 <div class="all">
 <div class="header">
 <h1>Token Ujian</h1>
-<h3><?php echo $data['school_name'];?></h3>
 </div>
 <div class="main">
 <?php
 $tokens = implode(",", $arr);
 $sql = "select `edu_token`.* , `edu_student`.`name` as `student_name`, `edu_student`.`reg_number` as `reg_number`, 
+(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_token`.`teacher_create`) as `teacher_name`,
 (select `edu_test`.`name` from `edu_test` where `edu_test`.`test_id` = `edu_token`.`test_id`) as `test_name`
 from `edu_token` 
 inner join(`edu_student`) on (`edu_student`.`student_id` = `edu_token`.`student_id`)
-where `edu_token`.`school_id` = '$school_id' 
-and `edu_token`.`token_id` in ($tokens)
+where `edu_token`.`token_id` in ($tokens)
 order by `edu_student`.`reg_number` asc ";
-$res = mysql_query($sql);
-while(($data = mysql_fetch_assoc($res)))
-{
-?>
+$stmt = $database->executeQuery($sql);
+    if ($stmt->rowCount() > 0) {
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($rows as $data) {
+        ?>
 
 <div class="cut-here"></div>
 <div class="user-item">
@@ -122,21 +113,22 @@ while(($data = mysql_fetch_assoc($res)))
     <td width="15%">Kedaluarsa</td>
   </tr>
   <tr>
-    <td><?php echo $data['test_name'];?></td>
-    <td><?php echo $data['reg_number'];?></td>
-    <td><?php echo $data['student_name'];?></td>
-    <td><?php echo $data['token'];?></td>
-    <td><?php echo translateDate(date('d M H:i', strtotime($data['time_expire'])));?></td>
+    <td><?php echo $data['test_name']; ?></td>
+    <td><?php echo $data['reg_number']; ?></td>
+    <td><?php echo $data['student_name']; ?></td>
+    <td><?php echo $data['token']; ?></td>
+    <td><?php echo translateDate(date('d M H:i', strtotime($data['time_expire']))); ?></td>
   </tr>
 </table>
 </div>
 <?php
-}
+      }
+    }
 ?>
 </div>
 </div>
 </body>
 </html>
 <?php
-}
+
 ?>

@@ -11,6 +11,7 @@ $sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
 from `edu_school` 
 where 1 and `edu_school`.`school_id` = '$school_id'
 ";
+
 $stmt = $database->executeQuery($sql);
 if ($stmt->rowCount() > 0) {
   $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -90,10 +91,11 @@ h3{
 <div class="main">
 <?php
     $sql = "select `edu_teacher`.* 
-from `edu_teacher` 
-where `edu_teacher`.`school_id` = '$school_id' 
-order by `edu_teacher`.`name` asc ";
-    $stmt = $database->executeQuery(PDO::FETCH_ASSOC);
+    from `edu_teacher` 
+    where `edu_teacher`.`school_id` = '$school_id' 
+    order by `edu_teacher`.`name` asc 
+    ";
+    $stmt = $database->executeQuery($sql);
     if ($stmt->rowCount() > 0) {
       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       foreach ($rows as $data) {

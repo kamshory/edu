@@ -21,7 +21,7 @@ if(count(@$_POST) && isset($_POST['save']))
 	{
 		$token_id = $token_id2;
 	}
-	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_NUMBER_INT);
+	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$class_id = kh_filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_STRING_NEW);
 	$student_id = kh_filter_input(INPUT_POST, 'student_id', FILTER_SANITIZE_STRING_NEW);
 	$time_create = $time_edit = $picoEdu->getLocalDateTime();
@@ -147,19 +147,28 @@ $(document).ready(function(e) {
 		<td><select class="input-select" name="school_id" id="school_id" required="required">
 		<option value="">- Pilih Sekolah -</option>
 		<?php 
-		$sql = "select * from `edu_school`
+		$sql2 = "select * from `edu_school`
 		where `active` = '1'
 		order by `school_grade_id` asc
 		";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-            <option value="<?php echo $data2['school_id']; ?>"<?php echo ($data2['school_id'] == $school_id) ? ' selected="selected"' : ''; ?>><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}
+		echo $picoEdu->createFilterDb(
+			$sql2,
+			array(
+				'attributeList'=>array(
+					array('attribute'=>'value', 'source'=>'school_id')
+				),
+				'selectCondition'=>array(
+					'source'=>'school_id',
+					'value'=>$school_id
+				),
+				'caption'=>array(
+					'delimiter'=>' &raquo; ',
+					'values'=>array(
+						'name'
+					)
+				)
+			)
+		);
 		?>
 		</select></td>
 		</tr>
@@ -168,20 +177,29 @@ $(document).ready(function(e) {
 		<td><select class="input-select" name="test_id" id="test_id" required="required">
 		<option value="">- Pilih Ujian -</option>
 		<?php 
-		$sql = "select * from `edu_test`
+		$sql2 = "select * from `edu_test`
 		where 1 and `school_id` = '$school_id'
 		and (`test_availability` = 'F' or `available_to` > '$now')
 		order by `test_id` desc
 		";
-		$stmt2 = $database->executeQuery($sql2);
-		if ($stmt2->rowCount() > 0) {
-			$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($rows2 as $data2) {
-				?>
-            <option value="<?php echo $data2['test_id']; ?>"><?php echo $data2['name']; ?></option>
-            <?php
-			}
-		}	
+		echo $picoEdu->createFilterDb(
+			$sql2,
+			array(
+				'attributeList'=>array(
+					array('attribute'=>'value', 'source'=>'test_id')
+				),
+				'selectCondition'=>array(
+					'source'=>'test_id',
+					'value'=>null
+				),
+				'caption'=>array(
+					'delimiter'=>' &raquo; ',
+					'values'=>array(
+						'name'
+					)
+				)
+			)
+		);
 		?>
 		</select></td>
 		</tr>
@@ -202,7 +220,7 @@ $(document).ready(function(e) {
 				),
 				'selectCondition'=>array(
 					'source'=>'class_id',
-					'value'=>$data['class_id']
+					'value'=>null
 				),
 				'caption'=>array(
 					'delimiter'=>' &raquo; ',
@@ -319,7 +337,7 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 }
 else
 {
-$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_NUMBER_INT);
+$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $class_id = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 $now = $picoEdu->getLocalDateTime();
 $oneday = date('Y-m-d H:i:s', time()-86400);
@@ -327,7 +345,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 if(isset($_POST['cleanup']))
 {
 	$sql = "delete from `edu_invalid_signin` where `signin_type` = 'T' ";
-	$res = $database->executeQuery($sql);
+	$res = $database->executeDelete($sql);
 	$num_deleted = $stmt->rowCount();
 	if($num_deleted > 0)
 	{
@@ -375,16 +393,24 @@ function printToken(frm)
 	and (`test_availability` = 'F' or `available_to` > '$now')
 	order by `test_id` desc
 	";
-	$stmt2 = $database->executeQuery($sql);
-	if ($stmt2->rowCount() > 0) {
-		$rows2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($rows2 as $data2) {
-			?>
-        <option value="<?php echo $data2['test_id']; ?>"<?php if ($test_id == $data2['test_id'])
-				  echo ' selected="selected"'; ?>><?php echo $data2['name']; ?></option>
-        <?php
-		}
-	}
+	echo $picoEdu->createFilterDb(
+		$sql2,
+		array(
+			'attributeList'=>array(
+				array('attribute'=>'value', 'source'=>'test_id')
+			),
+			'selectCondition'=>array(
+				'source'=>'test_id',
+				'value'=>$test_id
+			),
+			'caption'=>array(
+				'delimiter'=>' &raquo; ',
+				'values'=>array(
+					'name'
+				)
+			)
+		)
+	);
 	?>
 </select>
 <span class="search-label">Kelas</span>
@@ -449,7 +475,6 @@ $nt = '';
 
 $sql = "select `edu_token`.* $nt,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_token`.`admin_create`) as `admin_create_name`,
-(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_token`.`teacher_create`) as `teacher_create_name`,
 (select `edu_student`.`name` from `edu_student` where `edu_student`.`student_id` = `edu_token`.`student_id`) as `student_name`,
 (select `edu_class`.`name` from `edu_class` where `edu_class`.`class_id` = `edu_token`.`class_id`) as `class_name`,
 (select `edu_test`.`name` from `edu_test` where `edu_test`.`test_id` = `edu_token`.`test_id`) as `test_name`

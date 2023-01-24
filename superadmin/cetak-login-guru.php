@@ -5,16 +5,7 @@ if($admin_login->admin_level != 1)
 	include_once dirname(__FILE__)."/bukan-super-admin.php";
 	exit();
 }
-$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
-$nt = '';
-$sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
-from `edu_school` 
-where 1 and `edu_school`.`school_id` = '$school_id'
-";
-$stmt = $database->executeQuery($sql);
-if($stmt->rowCount() > 0)
-{
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -58,26 +49,26 @@ h3{
 	margin:15px 0;
 }
 .cut-here {
-    height: 0px;
-    border-bottom: 1px dashed #333333;
-    margin: 18px 15px 18px 15px;
-    display: block;
-	position:relative;
+  height: 0px;
+  border-bottom: 1px dashed #333333;
+  margin: 18px 15px 18px 15px;
+  display: block;
+  position:relative;
 }
 .cut-here::before {
-    content: '\2702';
-    font-size: 12px;
-    position: absolute;
-    top: -9px;
-    left: -15px;
+  content: '\2702';
+  font-size: 12px;
+  position: absolute;
+  top: -9px;
+  left: -15px;
 }
 .cut-here::after {
-	transform:rotate(180deg);
-    content: '\2702';
-    font-size: 12px;
-    position: absolute;
-    top: -7px;
-    right: -15px;
+  transform:rotate(180deg);
+  content: '\2702';
+  font-size: 12px;
+  position: absolute;
+  top: -7px;
+  right: -15px;
 }
 </style>
 </head>
@@ -86,19 +77,22 @@ h3{
 <div class="all">
 <div class="header">
 <h1>Username dan Password Guru</h1>
-<h3><?php echo $data['school_name'];?></h3>
 </div>
 <div class="main">
 <?php
-$sql = "select `edu_teacher`.* 
-from `edu_teacher` 
-where `edu_teacher`.`school_id` = '$school_id' 
-order by `edu_teacher`.`name` asc ";
-$res = mysql_query($sql);
+    $sql = "select `edu_teacher`.* 
+    from `edu_teacher` 
+    where `edu_teacher`.`active` = true
+    order by `edu_teacher`.`name` asc 
+    ";
+    $stmt = $database->executeQuery($sql);
+    if ($stmt->rowCount() > 0) {
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($rows as $data) {
+        ?>
 
-while(($data = mysql_fetch_assoc($res)))
-{
-?>
+<div class="cut-here"></div>
+
 <div class="user-item">
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="main-table">
   <tr>
@@ -117,16 +111,14 @@ while(($data = mysql_fetch_assoc($res)))
   </tr>
 </table>
 </div>
-
-<div class="cut-here"></div>
-
 <?php
-}
-?>
+      }
+      ?>
 </div>
 </div>
 </body>
 </html>
 <?php
-}
+    }
+
 ?>
