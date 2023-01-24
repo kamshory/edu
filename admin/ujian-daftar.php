@@ -1,16 +1,22 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/lib.test.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 	include_once dirname(__FILE__)."/bukan-admin.php";
 	exit();
 }
-if(@$real_school_id == 0)
+if(empty(@$real_school_id))
 {
 	include_once dirname(__FILE__)."/belum-ada-sekolah.php";
 	exit();
 }
+$school_id = @$school_id . '';
+$real_school_id = @$real_school_id . '';
+
+$member_create = @$admin_login->admin_id . '';
+$member_edit = @$admin_login->admin_id . '';
+
 $cfg->module_title = "Ujian";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(count(@$_POST) && isset($_POST['save']))
@@ -123,16 +129,13 @@ if(count(@$_POST) && isset($_POST['save']))
 if(isset($_POST['set_active']) && isset($_POST['test_id']))
 {
 	$tests = @$_POST['test_id'];
-	if(isset($tests))
+	if(isset($tests) && is_array($tests))
 	{
-		if(is_array($tests))
+		foreach($tests as $key=>$val)
 		{
-			foreach($tests as $key=>$val)
-			{
-				$test_id = addslashes($val);
-				$sql = "update `edu_test` set `active` = '1' where `test_id` = '$test_id' and `school_id` = '$school_id' ";
-				$database->execute($sql);
-			}
+			$test_id = addslashes($val);
+			$sql = "update `edu_test` set `active` = '1' where `test_id` = '$test_id' and `school_id` = '$school_id' ";
+			$database->execute($sql);
 		}
 	}
 }
@@ -193,9 +196,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 		$selection = kh_filter_input(INPUT_POST, 'selection', FILTER_SANITIZE_STRING_NEW);
 		$selection_index = json_decode($selection);
 		include_once dirname(dirname(__FILE__))."/lib.inc/dom.php";
-		$time_create = $time_edit = $picoEdu->getLocalDateTime();	
-		$member_create = $member_edit = $auth_teacher_id;
-		
+		$time_create = $time_edit = $picoEdu->getLocalDateTime();		
 		
 		$sql = "select * from `edu_test_collection` where `test_collection_id` = '$id' and `active` = '1' ";
 		$stmt = $database->executeQuery($sql);
@@ -932,11 +933,11 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="has_limits" data-condition="<?php echo $data['has_limits'];?>" data-show-condition="1" data-hide-condition="0">
 		<td>Batas Percobaan</td>
-		<td><input type="number" class="input-text input-text-medium" name="trial_limits" id="trial_limits" value="<?php echo ($data['trial_limits']);?>" autocomplete="off" /></td>
+		<td><input type="number" class="input-text input-text-medium" name="trial_limits" id="trial_limits" value="<?php echo $data['trial_limits'];?>" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Nilai Kelulusan
-		</td><td><input type="number" step="any" class="input-text input-text-medium" name="threshold" id="threshold" value="<?php echo ($data['threshold']);?>" autocomplete="off" /></td>
+		</td><td><input type="number" step="any" class="input-text input-text-medium" name="threshold" id="threshold" value="<?php echo $data['threshold'];?>" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Metode Penilaian</td>
@@ -1007,7 +1008,7 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="publish_answer" data-condition="<?php echo $data['publish_answer'];?>" data-show-condition="1" data-hide-condition="0">
 		<td>Pengumuman Kunci Jawaban</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="time_answer_publication" id="time_answer_publication" value="<?php echo ($data['time_answer_publication']);?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="time_answer_publication" id="time_answer_publication" value="<?php echo $data['time_answer_publication'];?>" autocomplete="off" /> </td>
 		</tr>
 		<tr>
 		<td>Ketersediaan Ujian
@@ -1019,11 +1020,11 @@ $(document).ready(function(e) {
 		</tr>
 		<tr class="toggle-tr" data-toggle="test_availability" data-condition="<?php echo $data['test_availability'];?>" data-show-condition="L" data-hide-condition="F">
 		<td>Tersedia Mulai</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_from" id="available_from" value="<?php echo ($data['available_from']);?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_from" id="available_from" value="<?php echo $data['available_from'];?>" autocomplete="off" /> </td>
 		</tr>
 		<tr class="toggle-tr" data-toggle="test_availability" data-condition="<?php echo $data['test_availability'];?>" data-show-condition="L" data-hide-condition="F">
 		<td>Tersedia Hingga</td>
-		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_to" id="available_to" value="<?php echo ($data['available_to']);?>" autocomplete="off" /> </td>
+		<td><input type="datetime-local" class="input-text input-text-datetime" name="available_to" id="available_to" value="<?php echo $data['available_to'];?>" autocomplete="off" /> </td>
 		</tr>
 		<tr>
 		<td>Aktif
@@ -1108,14 +1109,14 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Batas Percobaan</td>
-		<td><?php echo ($data['trial_limits']);?></td>
+		<td><?php echo $data['trial_limits'];?></td>
 		</tr>
         <?php
 		}
 		?>
 		<tr>
 		<td>Nilai Kelulusan
-		</td><td><?php echo ($data['threshold']);?></td>
+		</td><td><?php echo $data['threshold'];?></td>
 		</tr>
 		<tr>
 		<td>Metode Penilaian</td>
@@ -1184,7 +1185,7 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Pengumuman Kunci Jawaban</td>
-		<td><?php echo ($data['time_answer_publication']);?></td>
+		<td><?php echo $data['time_answer_publication'];?></td>
 		</tr>
         <?php
 		}
@@ -1199,11 +1200,11 @@ if($stmt->rowCount() > 0)
 		?>
 		<tr>
 		<td>Tersedia Mulai</td>
-		<td><?php echo ($data['available_from']);?></td>
+		<td><?php echo $data['available_from'];?></td>
 		</tr>
 		<tr>
 		<td>Tersedia Hingga</td>
-		<td><?php echo ($data['available_to']);?></td>
+		<td><?php echo $data['available_to'];?></td>
 		</tr>
         <?php
 		}
@@ -1218,11 +1219,11 @@ if($stmt->rowCount() > 0)
 		</tr>
 		<tr>
 		<td>Admin Buat</td>
-		<td><?php echo ($data['member_create']);?> (<?php echo ($data['role_create']);?>)</td>
+		<td><?php echo $data['member_create'];?> (<?php echo $data['role_create'];?>)</td>
 		</tr>
 		<tr>
 		<td>Admin Ubah</td>
-		<td><?php echo ($data['member_edit']);?> (<?php echo ($data['role_edit']);?>)</td>
+		<td><?php echo $data['member_edit'];?> (<?php echo $data['role_edit'];?>)</td>
 		</tr>
 		<tr>
 		<td>IP Buat</td>

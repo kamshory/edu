@@ -1,7 +1,7 @@
 <?php
 include_once dirname(__FILE__)."/functions.php";
-include dirname(__FILE__)."/conf.php";
-include dirname(__FILE__)."/auth.php";
+include dirname(__FILE__)."/conf.php"; //NOSONAR
+include dirname(__FILE__)."/auth.php"; //NOSONAR
 if(!$userlogin)
 {
 	include_once dirname(__FILE__)."/tool-login-form.php";
@@ -15,6 +15,8 @@ if(empty($dir))
 {
 	$dir =  'base';
 }
+
+
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -28,7 +30,7 @@ if(empty($dir))
 <script type="text/javascript" src="../../../lib.assets/script/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../../../lib.assets/script/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../../../lib.assets/script/jquery-ui/jquery-ui.datetimepicker.addon.min.js"></script>
-<script type="text/javascript" src="../../../lib.assets/script/overlay-dialog.min.js"></script>
+<script type="text/javascript" src="js/overlay-dialog.min.js"></script>
 <script type="text/javascript">
 var vrel = '<?php echo $cfg->rooturl;?>/';
 var vabs = 'base/';
@@ -55,7 +57,8 @@ window.onload = function(){
 	$(document).on('change', '.checkbox-selector', function(){
 		selectAll($(this)[0].checked);
 	});
-	if(document.images){var preload = new Image(16,16);preload.src = 'style/images/loading.gif';}
+	if(document.images){var preload = new Image(16,16);
+	preload.src = 'style/images/loading.gif';}
 	setTimeout(function(){
 	initContextMenuFile();
 	initContextMenuDir();

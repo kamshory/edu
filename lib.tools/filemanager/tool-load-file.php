@@ -18,7 +18,7 @@ if(@$cfg->thumbnail_on_load)
 
 $dir2 = path_decode(kh_filter_input(INPUT_GET, 'dir'), $cfg->rootdir);
 if(!is_dir($dir2)){
-$dir2 = path_decode('base', $cfg->rootdir);	
+	$dir2 = path_decode('base', $cfg->rootdir);	
 }
 $arrfile = array();
 $arrdir = array();
@@ -110,6 +110,7 @@ if(file_exists($dir2) && ($handle = opendir($dir2)))
 	}
 }
 
+
 $sortby = kh_filter_input(INPUT_GET, 'sortby', FILTER_SANITIZE_STRING_NEW);
 if(!in_array($sortby, array('name', 'filesize', 'type', 'permission', 'filemtime')))
 {
@@ -131,8 +132,9 @@ if($sortorder == '')
 
 
 $_order = array();
-foreach ($arrdir as &$row){
-$_order[] = &$row['name'];
+foreach ($arrdir as &$row) //NOSONAR
+{
+	$_order[] = &$row['name'];
 }
 array_multisort($_order, SORT_ASC, SORT_STRING, $arrdir);
 
@@ -154,7 +156,7 @@ $_order2[] = &$row['name'];
 }
 array_multisort($_order, ($sortorder=='desc')?SORT_DESC:SORT_ASC, $_order2, SORT_ASC, SORT_STRING, $arrfile);
 
-if(!empty($arrdir) || empty($arrfile))
+if(!empty($arrdir) || !empty($arrfile))
 {
 	if(@$_GET['thumbnail'])
 	{

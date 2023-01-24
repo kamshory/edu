@@ -1,12 +1,12 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/dom.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 include_once dirname(__FILE__)."/bukan-admin.php";
 exit();
 }
-if(@$real_school_id == 0)
+if(empty(@$real_school_id))
 {
 include_once dirname(__FILE__)."/belum-ada-sekolah.php";
 exit();

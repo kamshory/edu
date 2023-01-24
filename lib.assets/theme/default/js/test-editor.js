@@ -161,6 +161,7 @@ function pasteHandler(e)
 	
 
 function simpansoal(frm){
+	console.log('aaaaa')
 	// cek isian
 	var emptyeditor = 0;
 	$('.htmleditor').each(function(index){

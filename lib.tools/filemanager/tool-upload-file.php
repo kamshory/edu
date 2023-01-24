@@ -42,7 +42,7 @@ foreach($_FILES["images"]["error"] as $key => $error){
 			$info = getimagesize($targetdir."/".$name);
 			compressImageFile($targetdir."/".$name, $authblogid);
 			deleteforbidden($targetdir);
-			if(stripos($info['mime'],'image')!==false)
+			if($info !== false && is_array($info) && isset($info['mime']) && stripos($info['mime'], 'image')!==false)
 			{
 				if(!$cfg->allow_upload_image)
 				{

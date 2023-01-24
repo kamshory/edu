@@ -1,11 +1,11 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 	include_once dirname(__FILE__)."/bukan-admin.php";
 	exit();
 }
-if(@$real_school_id == 0)
+if(empty(@$real_school_id))
 {
 	include_once dirname(__FILE__)."/belum-ada-sekolah.php";
 	exit();
@@ -18,8 +18,6 @@ $array_class = $picoEdu->getArrayClass($school_id);
 <link rel="stylesheet" type="text/css" href="<?php echo $cfg->base_assets;?>lib.assets/theme/default/css/test-import.css">
 <link rel="stylesheet" type="text/css" href="<?php echo $cfg->base_assets;?>lib.assets/theme/default/css/test.css">
 <script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/test-import.js"></script>
-
-
 <div class="collection-list">
 	<div class="collection-selector">
     	<div class="grade-selector">

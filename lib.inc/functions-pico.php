@@ -347,15 +347,12 @@ function scrap($url)
 				break;
 			case "lower-latin":
 				return chr(96 + $index);
-				break;
 			case "lower-roman":
 				return strtolower(ar_rom($index));
-				break;
 			case "square":
 				break;
 			case "upper-alpha":
 				return chr(64 + $index);
-				break;
 			case "upper-latin":
 				return chr(64 + $index);
 			case "upper-roman":
@@ -508,21 +505,41 @@ function kh_filter_input($type, $variable_name, $filter = FILTER_DEFAULT, $optio
 	}
 	if ($filter == FILTER_SANITIZE_NUMBER_FLOAT) {
 		$val = preg_replace("/[^Ee\+\-\.\d]/i", "", $val); //NOSONAR
+		if(empty($val))
+		{
+			$val = 0;
+		}
 	}
 	if ($filter == FILTER_SANITIZE_NUMBER_INT) {
 		$val = preg_replace("/[^\+\-\d]/i", "", $val); //NOSONAR
+		if(empty($val))
+		{
+			$val = 0;
+		}
 		$val = (int) $val;
 	}
 	if ($filter == FILTER_SANITIZE_NUMBER_UINT) {
 		$val = preg_replace("/[^\+\-\d]/i", "", $val); //NOSONAR
+		if(empty($val))
+		{
+			$val = 0;
+		}
 		$val = (int) $val;
 		$val = abs($val);
 	}
 	if ($filter == FILTER_SANITIZE_NUMBER_OCTAL) {
 		$val = preg_replace("/[^0-7]/i", "", $val); //NOSONAR
+		if(empty($val))
+		{
+			$val = 0;
+		}
 	}
 	if ($filter == FILTER_SANITIZE_NUMBER_HEXADECIMAL) {
 		$val = preg_replace("/[^A-Fa-f\d]/i", "", $val); //NOSONAR
+		if(empty($val))
+		{
+			$val = 0;
+		}
 	}
 	if ($filter == FILTER_SANITIZE_COLOR) {
 		$val = preg_replace("/[^A-Fa-f\d]/i", "", $val); //NOSONAR
@@ -550,7 +567,7 @@ function kh_filter_input($type, $variable_name, $filter = FILTER_DEFAULT, $optio
 	if ($filter == FILTER_SANITIZE_ENCODED) {
 		$val = rawurlencode($val);
 	}
-	if ($filter == FILTER_SANITIZE_STRIPPED || $filter == FILTER_SANITIZE_STRING_NEW) {
+	if ($filter == FILTER_SANITIZE_STRING_NEW) {
 		$val = trim(strip_tags($val), "\r\n\t "); //NOSONAR
 		$val = str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $val); //NOSONAR
 	}
@@ -578,7 +595,6 @@ function kh_filter_input($type, $variable_name, $filter = FILTER_DEFAULT, $optio
 		$filter == FILTER_SANITIZE_SPECIAL_CHARS ||
 		$filter == FILTER_SANITIZE_STRING_NEW ||
 		$filter == FILTER_SANITIZE_STRING_NEW_INLINE ||
-		$filter == FILTER_SANITIZE_STRIPPED ||
 		$filter == FILTER_SANITIZE_URL
 	) {
 		$val = my_addslashes($val);
@@ -684,5 +700,10 @@ $database = new PicoDatabase(
 $database->connect();
 
 $picoEdu = new PicoEdo($database);
+
+if(!isset($pagination))
+{
+	$pagination = new stdClass();
+}
 
 ?>

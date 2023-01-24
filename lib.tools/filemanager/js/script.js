@@ -302,6 +302,12 @@ function initContextMenuDir() {
 	});
 }
 
+function previewSVG(url)
+{	
+	let previewURL = '../../' + url;
+	playVideo(previewURL, 'iframe');
+}
+
 function contextMenuListFile(filetype, filepath, fileurl, attr) {
 	filepath = addslashes(filepath);
 	fileurl = addslashes(fileurl);
@@ -369,6 +375,24 @@ function contextMenuListFile(filetype, filepath, fileurl, attr) {
 			{ 'caption': 'Move File', 'linkurl': 'javascript:moveFile(\'' + filepath + '\')', 'classname': 'move' },
 			{ 'caption': 'Delete File', 'linkurl': 'javascript:deleteFile(\'' + filepath + '\')', 'classname': 'delete' },
 			{ 'caption': 'Read PDF Document', 'linkurl': 'javascript:previewPDF(\'' + fileurl + '\')', 'classname': 'preview' },
+			{ 'caption': 'Compress File', 'linkurl': 'javascript:compressFile(\'' + filepath + '\')', 'classname': 'compress' },
+			{ 'caption': 'Set Permission', 'linkurl': 'javascript:changePermission(\'' + filepath + '\')', 'classname': 'permission' },
+			{ 'caption': 'Download File', 'linkurl': '../../../' + fileurl + '" target="_blank', 'classname': 'download' },
+			{ 'caption': 'Force Download File', 'linkurl': 'javascript:forceDownloadFile(\'' + filepath + '\')', 'classname': 'download' },
+			{ 'caption': 'File Properties', 'linkurl': 'javascript:propertyFile(\'' + filepath + '\')', 'classname': 'property' }
+		];
+	}
+	else if (filetype.indexOf('svg') != -1) {
+		cm = [
+			{ 'caption': 'Select File', 'linkurl': 'javascript:selectFile(\'' + fileurl + '\')', 'classname': 'select' },
+			{ 'caption': 'Copy File', 'linkurl': 'javascript:copyFile(\'' + filepath + '\')', 'classname': 'copy' },
+			{ 'caption': 'Cut File', 'linkurl': 'javascript:cutFile(\'' + filepath + '\')', 'classname': 'cut' },
+			{ 'caption': 'Rename File', 'linkurl': 'javascript:renameFile(\'' + filepath + '\')', 'classname': 'rename' },
+			{ 'caption': 'Move File', 'linkurl': 'javascript:moveFile(\'' + filepath + '\')', 'classname': 'move' },
+			{ 'caption': 'Delete File', 'linkurl': 'javascript:deleteFile(\'' + filepath + '\')', 'classname': 'delete' },
+			{ 'caption': 'Preview SVG', 'linkurl': 'javascript:previewSVG(\'' + fileurl + '\')', 'classname': 'preview' },
+			{ 'caption': 'Edit as Text', 'linkurl': 'javascript:editFile(\'' + filepath + '\')', 'classname': 'edit' },
+			{ 'caption': 'Edit Code', 'linkurl': 'code-editor.php?filepath=' + encodeURIComponent(filepath) + '" target="_blank', 'classname': 'edit' },
 			{ 'caption': 'Compress File', 'linkurl': 'javascript:compressFile(\'' + filepath + '\')', 'classname': 'compress' },
 			{ 'caption': 'Set Permission', 'linkurl': 'javascript:changePermission(\'' + filepath + '\')', 'classname': 'permission' },
 			{ 'caption': 'Download File', 'linkurl': '../../../' + fileurl + '" target="_blank', 'classname': 'download' },

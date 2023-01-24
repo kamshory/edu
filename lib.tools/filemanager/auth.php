@@ -2,7 +2,7 @@
 include_once dirname(dirname(dirname(__FILE__)))."/lib.inc/auth-admin.php";
 if(@$member_login->member_id == 0)
 {
-	if(@$school_id == 0)
+	if(empty(@$school_id))
 	{
 		include_once dirname(dirname(dirname(__FILE__)))."/lib.inc/auth-guru.php";
 	}

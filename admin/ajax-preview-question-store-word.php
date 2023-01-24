@@ -1,7 +1,7 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/lib.test.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 exit();
 }

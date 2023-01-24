@@ -51,6 +51,7 @@
                 processData: false,
                 contentType: false,
                 success: function(answer) {
+                    console.log(answer)
                     if (answer == 'SUCCESS') {
                         $('#response').html('File has been uploaded.');
                         openDir();

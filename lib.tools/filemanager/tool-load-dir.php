@@ -10,7 +10,7 @@ $rooturl = $cfg->rootdir;
 $seldir = kh_filter_input(INPUT_GET, 'dir', FILTER_SANITIZE_STRING_NEW);
 $dir2 = path_decode(kh_filter_input(INPUT_GET, 'seldir'), $cfg->rootdir);
 if(!is_dir($dir2)){
-$dir2 = path_decode('', $cfg->rootdir);	
+	$dir2 = path_decode('', $cfg->rootdir);	
 }
 $arrdir = array();
 if(file_exists($dir2) && ($handle = opendir($dir2)))
@@ -62,7 +62,7 @@ foreach ($arrdir as &$row){
 $_order[] = &$row['name'];
 }
 array_multisort($_order, SORT_ASC, SORT_STRING, $arrdir);
-if(count($arrdir))
+if(!empty($arrdir))
 {
 ?>
 <ul>

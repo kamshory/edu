@@ -1,11 +1,11 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 	include_once dirname(__FILE__)."/bukan-admin.php";
 	exit();
 }
-if(@$real_school_id == 0)
+if(empty(@$real_school_id))
 {
 include_once dirname(__FILE__)."/belum-ada-sekolah.php";
 exit();
@@ -155,7 +155,7 @@ if(isset($_POST['savetext']) && @$_GET['option']=='add')
 
 if(isset($_POST['save']) && @$_GET['option']=='add')
 {
-	$test_id = kh_filter_input(INPUT_POST, 'ujian', FILTER_SANITIZE_NUMBER_UINT);
+	$test_id = kh_filter_input(INPUT_POST, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$number_of_option = kh_filter_input(INPUT_POST, 'number_of_option', FILTER_SANITIZE_NUMBER_UINT);
 	$numbering = kh_filter_input(INPUT_POST, 'numbering', FILTER_SANITIZE_STRING_NEW);
 	$random = kh_filter_input(INPUT_POST, 'random', FILTER_SANITIZE_NUMBER_UINT);
@@ -167,74 +167,79 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$question = UTF8ToEntities($question);
 	$question = addslashes(removeparagraphtag(extractImageData($question, $direktori, $prefiks))); 	
 	$question = $picoEdu->brToNewLineEncoded($question);
-	$picoEdu->$picoEdu->sortQuestion($test_id);
+	$picoEdu->sortQuestion($test_id);
 	$sql1 = "select `edu_test`.*, 
 	(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 	from `edu_test`
 	where `edu_test`.`test_id` = '$test_id'
 	";
-	$stmt2 = $database->executeQuery($sql);
+	$order = 1;
+	$stmt1 = $database->executeQuery($sql1);
 	if($stmt1->rowCount() > 0)
 	{
 		$data1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 		$order = $data1['order'] + 1;
-		$time_create = $picoEdu->getLocalDateTime();
-		$time_edit = $picoEdu->getLocalDateTime();
+	}
+	else
+	{
+		$order = 1;
+	}
+	$time_create = $picoEdu->getLocalDateTime();
+	$time_edit = $picoEdu->getLocalDateTime();
+	
+	$member_create = $admin_login->admin_id;
+	$member_edit = $admin_login->admin_id;
+	
+	$digest = md5($question);
+	$sql3 = "select * from `edu_question` where `digest` = '$digest' and `test_id` = '$test_id' ";
+	$stmt3 = $database->executeQuery($sql3);
+	if($stmt3->rowCount() == 0)
+	{
+		$database->executeQuery('start transaction');
+		$question_id = $database->generateNewId();
+
+		$sql = "INSERT INTO `edu_question` 
+		(`question_id`, `content`, `test_id`, `multiple_choice`, `random`, `numbering`, `digest`, `order`,
+		`time_create`, `member_create`, `time_edit`, `member_edit`) values
+		('$question_id', '$question', '$test_id', '1', '$random', '$numbering', '$digest', '$order',
+		'$time_create', '$member_create', '$time_edit', '$member_edit'); ";
+		$database->execute($sql);
 		
-		$member_create = $kamsObj->adminLogin->login;
-		$member_edit = $kamsObj->adminLogin->login;
-		
-		$digest = md5($question);
-		$sql = "select * from `edu_question` where `digest` = '$digest' and `test_id` = '$test_id' ";
-		$stmt3 = $database->executeQuery($sql);
-		if($stmt3->rowCount() == 0)
+
+		$oke = 1;
+		for($i=1;$i<=$number_of_option;$i++)
 		{
-			$database->executeQuery('start transaction');
-			$question_id = $database->generateNewId();
-
-			$sql = "INSERT INTO `edu_question` 
-			(`question_id`, `content`, `test_id`, `multiple_choice`, `random`, `numbering`, `digest`, `order`,
-			`time_create`, `member_create`, `time_edit`, `member_edit`) values
-			('$option_id', '$question', '$test_id', '1', '$random', '$numbering', '$digest', '$order',
-			'$time_create', '$member_create', '$time_edit', '$member_edit'); ";
-			$database->execute($sql);
-
-			$order = 0;
-			$oke = 1;
-			for($i=1;$i<=$number_of_option;$i++)
-			{
-				$order++;
-				$id2 = $i;
+			$order++;
+			$id2 = $i;
+				
+			$option = kh_filter_input(INPUT_POST, 'option_'.$id2);
+			$option = UTF8ToEntities($option);
+			$option = addslashes(removeparagraphtag(extractImageData($option, $direktori, $prefiks)));
+			$option = $picoEdu->brToNewLineEncoded($option);
 					
-				$option = kh_filter_input(INPUT_POST, 'option_'.$id2);
-				$option = UTF8ToEntities($option);
-				$option = addslashes(removeparagraphtag(extractImageData($option, $direktori, $prefiks)));
-				$option = $picoEdu->brToNewLineEncoded($option);
-						
-				$score = kh_filter_input(INPUT_POST, 'score_'.$id2, FILTER_SANITIZE_NUMBER_FLOAT);
-				$option_id = $database->generateNewId();
+			$score = kh_filter_input(INPUT_POST, 'score_'.$id2, FILTER_SANITIZE_NUMBER_FLOAT);
+			$option_id = $database->generateNewId();
 
-				$sql = "INSERT INTO `edu_option` 
-				(`option_id`, `question_id`, `content`, `order`, `score`, `time_create`, `member_create`, `time_edit`, `member_edit`) values
-				('$option_id', '$question_id', '$option', '$order', '$score', '$time_create', '$member_create', '$time_edit', '$member_edit'); ";
-				$stmt4 = $database->executeQuery($sql);
-				if($stmt4->rowCount() > 0)
-				{
-					$oke = $oke*1;
-				}
-				else
-				{
-					$oke = 0;
-				}
-			}
-			if($oke)
+			$sql = "INSERT INTO `edu_option` 
+			(`option_id`, `question_id`, `content`, `order`, `score`, `time_create`, `member_create`, `time_edit`, `member_edit`) values
+			('$option_id', '$question_id', '$option', '$order', '$score', '$time_create', '$member_create', '$time_edit', '$member_edit'); ";
+			$stmt4 = $database->executeQuery($sql);
+			if($stmt4->rowCount() > 0)
 			{
-				$database->execute('commit');
+				$oke = $oke*1;
 			}
 			else
 			{
-				$database->execute('rollback');
+				$oke = 0;
 			}
+		}
+		if($oke)
+		{
+			$database->execute('commit');
+		}
+		else
+		{
+			$database->execute('rollback');
 		}
 	}
 }
@@ -367,7 +372,7 @@ $stmt = $database->executeQuery($sql);
 <?php
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $cfg->base_assets;?>lib.assets/theme/default/css/test.css" />
-<form id="form2" name="form2" method="post" action="" onsubmit="return simpansoal(this);">
+<form id="form2" name="form2" method="post" action="" >
 <script type="text/javascript" src="lib.assets/script/tiny_mce/jquery.tinymce.js"></script>
 <script type="text/javascript">
 var base_assets = '<?php echo $cfg->base_assets;?>';
@@ -376,7 +381,7 @@ var test_id = '<?php echo $test_id;?>';
 var maxScore = '<?php echo $data['standard_score'];?>';
 var baseTestURLLength = <?php echo strlen("media.edu/school/$school_id/test/$test_id/");?>;	
 </script>
-<script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/test-editor.min.js"></script>
+<script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/test-editor.js"></script>
 <div class="question-area">
 <?php
 $numbering = 'upper-alpha';
