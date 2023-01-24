@@ -113,7 +113,7 @@ if(isset($_POST['delete']) && isset($_POST['test_collection_id']))
 		{
 			$data = $stmt->fetch(PDO::FETCH_ASSOC);
 			$file_path = $data['file_path'];
-			$sql = "delete from `edu_test_collection` where `test_collection_id` = '$test_collection_id' ";
+			$sql = "DELETE FROM `edu_test_collection` where `test_collection_id` = '$test_collection_id' ";
 			$database->execute($sql);
 			$real_path = dirname(dirname(__FILE__))."/media.edu/question-collection/data/".$file_path;
 			if(file_exists($real_path))

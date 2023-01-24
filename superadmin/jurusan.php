@@ -60,7 +60,7 @@ if(isset($_POST['delete']) && isset($_POST['school_program_id']))
 		foreach($school_program as $key=>$val)
 		{
 			$school_program_id = addslashes($val);
-			$sql = "delete from `edu_school_program` where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
+			$sql = "DELETE FROM `edu_school_program` where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
 			$database->executeUpdate($sql);
 		}
 	}

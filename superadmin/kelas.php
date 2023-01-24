@@ -50,7 +50,7 @@ if (isset($_POST['delete']) && isset($_POST['class_id'])) {
 	if (isset($classs) && is_array($classs)) {
 		foreach ($classs as $key => $val) {
 			$class_id = addslashes($val);
-			$sql = "delete from `edu_class` where `class_id` = '$class_id'  ";
+			$sql = "DELETE FROM `edu_class` where `class_id` = '$class_id'  ";
 			$database->executeDelete($sql);
 		}
 	}

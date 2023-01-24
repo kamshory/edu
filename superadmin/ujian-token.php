@@ -50,7 +50,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 {
 	$now = $picoEdu->getLocalDateTime();
 	$oneday = date('Y-m-d H:i:s', time()-86400);
-	$sql = "delete from `edu_token` where `time_expire` < '$oneday'
+	$sql = "DELETE FROM `edu_token` where `time_expire` < '$oneday'
 	";
 	$database->executeDelete($sql);
 	$sql = "update `edu_token` set `active` = '0' where `time_expire` < '$now'
@@ -344,7 +344,7 @@ $oneday = date('Y-m-d H:i:s', time()-86400);
 include_once dirname(__FILE__)."/lib.inc/header.php";
 if(isset($_POST['cleanup']))
 {
-	$sql = "delete from `edu_invalid_signin` where `signin_type` = 'T' ";
+	$sql = "DELETE FROM `edu_invalid_signin` where `signin_type` = 'T' ";
 	$stmt = $database->executeDelete($sql);
 	$num_deleted = $stmt->rowCount();
 	if($num_deleted > 0)
