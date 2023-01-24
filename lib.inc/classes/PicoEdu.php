@@ -585,19 +585,19 @@ class PicoEdo
 		$start_time = date('Y-m-d H:i:s', strtotime($time) - $time_limit);
 
 		$sql = "DELETE FROM `edu_invalid_signin` 
-		where `member_id` = '$member_id' and `signin_type` = '$signin_type' and `time` < '$start_time'
+		where `member_id` = '$member_id' and `signin_type` = '$signin_type' and `signin_time` < '$start_time'
 		";
 		$this->database->executeDelete($sql);
 
 		$sql = "INSERT INTO `edu_invalid_signin` 
-		(`member_id`, `signin_type`, `time`) values
+		(`member_id`, `signin_type`, `signin_time`) values
 		('$member_id', '$signin_type', '$time')
 		";
 		$this->database->executeInsert($sql);
 
 		$sql = "select * 
 		from `edu_invalid_signin` 
-		where `member_id` = '$member_id' and `signin_type` = '$signin_type' and `time` >= '$start_time'
+		where `member_id` = '$member_id' and `signin_type` = '$signin_type' and `signin_time` >= '$start_time'
 		";
 		$stmt = $this->database->executeQuery($sql);
 
@@ -1040,5 +1040,18 @@ class PicoEdo
 			return null;
 		}
 
+	}
+
+	public function getSchoolGradeName($grade_id)
+	{
+		$arr = array(
+			'1'=>'Play Group',
+			'2'=>'Taman Kanak-Kanak',
+			'3'=>'SD Sederajat',
+			'4'=>'SMP Sederajat',
+			'5'=>'SMA Sederajat',
+			'6'=>'Perguruan Tinggi'
+		);
+		return isset($arr[$grade_id]) ? $arr[$grade_id] : '';
 	}
 }

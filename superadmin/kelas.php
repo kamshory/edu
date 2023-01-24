@@ -255,7 +255,7 @@ if($stmt->rowCount() > 0)
 				</tr>
 				<tr>
 					<td>Kode Kelas</td>
-					<td><?php echo ($data['class_code']);?></td>
+					<td><?php echo $data['class_code'];?></td>
 				</tr>
 				<tr>
 					<td>Tingkat
@@ -267,7 +267,7 @@ if($stmt->rowCount() > 0)
 				</tr>
 				<tr>
 					<td>Jurusan</td>
-					<td><?php echo ($data['school_program_id']);?></td>
+					<td><?php echo $data['school_program_id'];?></td>
 				</tr>
 				<tr>
 					<td>Nama Kelas
@@ -300,7 +300,7 @@ if($stmt->rowCount() > 0)
 				</tr>
 				<tr>
 					<td>Order</td>
-					<td><?php echo ($data['order']);?></td>
+					<td><?php echo $data['order'];?></td>
 				</tr>
 				<tr>
 					<td>Aktif

@@ -16,17 +16,17 @@ if(empty(@$school_id))
 
 if(isset($_GET['info_id']))
 {
-	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_UINT);
+	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 	$sql_filter_info = " and `edu_info`.`info_id` = '$info_id' ";
 
 	$sql = "SELECT `edu_info`.*, `member`.`name` as `creator`
 	from `edu_info` 
 	left join(`member`) on(`member`.`member_id` = `edu_info`.`admin_create`) 
 	where `edu_info`.`active` = '1' $sql_filter_info ";
-	$res = mysql_query($sql);
-	if(mysql_num_rows($res))
+	$stmt = $database->executeQuery($sql);
+	if($stmt->rowCount() > 0)
 	{
-		$data = mysql_fetch_assoc($res);
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$cfg->page_title = $data['name'];
 
 		$obj = parseHtmlData('<html><body>'.($data['content']).'</body></html>');
@@ -172,7 +172,8 @@ if($pagination->total_record_with_limit)
         <link rel="stylesheet" type="text/css" href="<?php echo $cfg->base_assets;?>lib.assets/fonts/roboto/font.css">
         <div class="article-list">
 	<?php
-	while(($data = mysql_fetch_assoc($res)))
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($rows as $data)
 	{
 
 		$obj = parseHtmlData('<html><body>'.($data['content']).'</body></html>');

@@ -778,7 +778,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		</tr>
 		<tr>
 		<td>Jenjang</td>
-		<td><?php if($data['school_grade_id'] == 1) echo 'Play Group'; if($data['school_grade_id'] == 2) echo 'Taman Kanak-Kanak'; if($data['school_grade_id'] == 3) echo 'SD Sederajat'; if($data['school_grade_id'] == 4) echo 'SMP Sederajat'; if($data['school_grade_id'] == 5) echo 'SMA Sederajat'; if($data['school_grade_id'] == 6) echo 'Perguruan Tinggi';?></td>
+		<td><?php echo $picoEdu->getSchoolGradeName($data['school_grade_id']);?></td>
 		</tr>
 		<tr>
 		<td>N/S</td>
@@ -1003,7 +1003,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=edit&school_id=<?php echo $data['school_id'];?>"><img src="lib.tools/images/trans.gif" class="icon-16 icon-edit-16" alt="Edit" border="0" /></a></td>
       <td align="right"><?php echo $no;?></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_id=<?php echo $data['school_id'];?>"><?php echo $data['name'];?></a></td>
-      <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_id=<?php echo $data['school_id'];?>"><?php if($data['school_grade_id'] == 1) echo 'Play Group'; if($data['school_grade_id'] == 2) echo 'Taman Kanak-Kanak'; if($data['school_grade_id'] == 3) echo 'SD Sederajat'; if($data['school_grade_id'] == 4) echo 'SMP Sederajat'; if($data['school_grade_id'] == 5) echo 'SMA Sederajat'; if($data['school_grade_id'] == 6) echo 'Perguruan Tinggi';?></a></td>
+      <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_id=<?php echo $data['school_id'];?>"><?php echo $picoEdu->getSchoolGradeName($data['school_grade_id']);?></a></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_id=<?php echo $data['school_id'];?>"><?php if($data['public_private']=='U') echo 'Negeri'; if($data['public_private']=='I') echo 'Swasta';?></a></td>
       <td><?php echo ($data['open'])?'Ya':'Tidak';?></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_id=<?php echo $data['school_id'];?>"><?php echo $data['principal'];?></a></td>

@@ -109,12 +109,12 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 }
 if(@$_GET['option']=='print')
 {
-include_once dirname(__FILE__)."/cetak-ujian-token.php";
+	include_once dirname(__FILE__)."/cetak-ujian-token.php";
 }
 else if(@$_GET['option']=='add')
 {
-include_once dirname(__FILE__)."/lib.inc/header.php";
-$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
+	include_once dirname(__FILE__)."/lib.inc/header.php";
+	$school_id = kh_filter_input(INPUT_GET, 'school_id', FILTER_SANITIZE_STRING_NEW);
 ?>
 <script type="text/javascript">
 $(document).ready(function(e) {
@@ -345,7 +345,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 if(isset($_POST['cleanup']))
 {
 	$sql = "delete from `edu_invalid_signin` where `signin_type` = 'T' ";
-	$res = $database->executeDelete($sql);
+	$stmt = $database->executeDelete($sql);
 	$num_deleted = $stmt->rowCount();
 	if($num_deleted > 0)
 	{
