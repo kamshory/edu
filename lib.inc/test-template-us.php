@@ -3,7 +3,7 @@ if(!defined('DB_NAME'))
 {
 	exit();
 }
-$dur_obj = secondsToTime($data['duration']);
+$dur_obj = $picoEdu->secondsToTime($data['duration']);
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

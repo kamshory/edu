@@ -118,7 +118,7 @@ $error_message = "";
 
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-admin.php";
 $cfg->repo_domain = "http://repo.edu.planetbiru.com";
-$program_version = trim(getApplicationVersion());
+$program_version = trim($picoEdu->getApplicationVersion());
 $cfg->module_title = "Update Program";
 if(isset($_POST['download']) && isset($_POST['version']))
 {
@@ -210,8 +210,8 @@ if(isset($_POST['extract']))
 					{
 						$sql = $val['query'];
 						$delimiter = $val['delimiter'];
-						$res = mysql_query($sql);
-						if(!$res)
+						$stmt = $database->executeUpdate($sql);
+						if($stmt->rowCount() == 0)
 						{
 							$oke2 = $oke2 * 0;
 						}

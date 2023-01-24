@@ -476,7 +476,8 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
     <tbody>
     <?php
 	$no = $pagination->offset;
-	while(($data = mysql_fetch_assoc($res)))
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach($rows as $data)
 	{
 	$no++;
 	?>

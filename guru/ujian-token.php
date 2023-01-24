@@ -53,12 +53,17 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 			// membuat token untuk semua siswa
 			$sql = "select `student_id` from `edu_student` where `class_id` = '$class_id' and `active` = '1'
 			";
-			$res = mysql_query($sql);
+			$stmtx = $database->executeQuery($sql);
 			$students = array();
-			while(($data = mysql_fetch_assoc($res)))
+			if($stmtx->rowCount() > 0)
 			{
-				$students[] = $data['student_id'];
+				$rowsx = $stmtx->fetchAll(PDO::FETCH_ASSOC);
+				foreach($rowsx as $data)
+				{
+					$students[] = $data['student_id'];
+				}
 			}
+			
 			$count = count($students);
 			$tokens = $picoEdu->generateToken($count, 6);
 			foreach($tokens as $idx=>$val)
