@@ -597,7 +597,7 @@ foreach($rows2 as $data2)
 <div class="list-option-item<?php echo ($data2['my_answer'])?' list-option-item-selected':'';?>">
 <div class="option-content">
 <?php
-echo ($data2['content']);
+echo $data2['content'];
 ?>
 </div>
 </div>
