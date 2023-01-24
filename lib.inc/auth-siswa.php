@@ -31,4 +31,3 @@ if($student_login->student_id)
 	$class_id = $student_login->class_id;
 	$use_token = $student_login->use_token;
 }
-?>

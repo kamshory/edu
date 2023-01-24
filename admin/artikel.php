@@ -177,7 +177,7 @@ var base_assets = '<?php echo $cfg->base_assets;?>';
 <script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/article-editor.min.js"></script>
 
 <?php
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmt = $database->executeQuery($sqlc);
 $arrc = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -225,7 +225,7 @@ if($stmt->rowCount() > 0)
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <?php
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmt = $database->executeQuery($sqlc);
 $arrc = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -265,7 +265,7 @@ if(isset($school_id))
 {
 	$sql_filter_article .= " and `edu_article`.`school_id` = '$school_id' ";
 }
-$sql = "select `edu_article`.*, `member`.`name` as `creator`
+$sql = "SELECT `edu_article`.*, `member`.`name` as `creator`
 from `edu_article` 
 left join(`member`) on(`member`.`member_id` = `edu_article`.`member_create`) 
 where (`edu_article`.`school_id` = '$school_id') $sql_filter_article ";
@@ -401,14 +401,14 @@ $sql_filter .= " and (`edu_article`.`school_id` = '$school_id' )";
 
 $nt = '';
 
-$sql = "select `edu_article`.* , `edu_teacher`.`name` as `teacher_create`, `edu_admin`.`name` as `admin_create`
+$sql = "SELECT `edu_article`.* , `edu_teacher`.`name` as `teacher_create`, `edu_admin`.`name` as `admin_create`
 from `edu_article` 
 left join(`edu_teacher`) on(`edu_teacher`.`teacher_id` = `edu_article`.`member_create`) 
 left join(`edu_admin`) on(`edu_admin`.`admin_id` = `edu_article`.`member_create`) 
 where 1 $sql_filter 
 order by `edu_article`.`article_id` desc
 ";
-$sql_test = "select `edu_article`.`article_id` 
+$sql_test = "SELECT `edu_article`.`article_id` 
 from `edu_article` 
 where 1 $sql_filter 
 order by `edu_article`.`article_id` desc

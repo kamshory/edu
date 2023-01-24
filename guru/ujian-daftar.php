@@ -177,7 +177,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 			if(file_exists($file_path))
 			{
 	
-				$sql = "select `edu_test`.*, 
+				$sql = "SELECT `edu_test`.*, 
 				(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 				from `edu_test`
 				where `edu_test`.`test_id` = '$test_id' and `edu_test`.`teacher_id` = '$auth_teacher_id'
@@ -345,7 +345,7 @@ if(@$_GET['option']=='add')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $collection = kh_filter_input(INPUT_GET, 'collection', FILTER_SANITIZE_NUMBER_UINT);
 $selection = kh_filter_input(INPUT_GET, 'selection', FILTER_SANITIZE_STRING_NEW);
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmtc = $database->executeQuery($sqlc);
 $arrc = array();
 if($stmtc->rowCount() > 0)
@@ -633,7 +633,7 @@ else if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* 
+$sql = "SELECT `edu_test`.* 
 from `edu_test` 
 where 1
 and `edu_test`.`test_id` = '$edit_key' and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id'
@@ -642,7 +642,7 @@ $stmt = $database->executeQuery($sql);
 if($stmt->rowCount() > 0)
 {
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmtc = $database->executeQuery($sqlc);
 $arrc = array();
 if($stmtc->rowCount() > 0)
@@ -932,7 +932,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 $array_class = $picoEdu->getArrayClass($school_id);
 $edit_key = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher_id`,
 (select `member`.`name` from `member` where `member`.`member_id` = `edu_test`.`member_create`) as `member_create`,
 (select `member`.`name` from `member` where `member`.`member_id` = `edu_test`.`member_edit`) as `member_edit`
@@ -1206,13 +1206,13 @@ if($class_id != '')
 $nt = '';
 
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`
 from `edu_test`
 where 1 and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id' $sql_filter
 order by `edu_test`.`test_id` desc
 ";
-$sql_test = "select `edu_test`.*
+$sql_test = "SELECT `edu_test`.*
 from `edu_test`
 where 1 and `edu_test`.`school_id` = '$school_id' and `edu_test`.`teacher_id` = '$auth_teacher_id' $sql_filter
 ";

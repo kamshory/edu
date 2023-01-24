@@ -51,7 +51,7 @@ $array_class = $picoEdu->getArrayClass($school_id);
 				{
 					$filter = "";
 				}
-				$sql = "select `edu_test_collection`.* from `edu_test_collection` 
+				$sql = "SELECT `edu_test_collection`.* from `edu_test_collection` 
 				where `edu_test_collection`.`active` = '1' $filter
 				order by `test_collection_id` desc
 				";
@@ -83,7 +83,7 @@ $array_class = $picoEdu->getArrayClass($school_id);
         	<div class="test-selector-inner">
         	<?php
 
-			$sql = "select `edu_test`.*,
+			$sql = "SELECT `edu_test`.*,
 			(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`,
 			(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `question`
 			from `edu_test`

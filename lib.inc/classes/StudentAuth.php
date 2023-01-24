@@ -25,7 +25,7 @@ class StudenAuth
 		global $cfg;
 		global $picoEdu;
 		if ($username != '') {
-			$sql = "select `edu_student`.`student_id`, `edu_student`.`username`, `edu_student`.`name`, `edu_student`.`gender`, 
+			$sql = "SELECT `edu_student`.`student_id`, `edu_student`.`username`, `edu_student`.`name`, `edu_student`.`gender`, 
 			`edu_student`.`birth_place`, `edu_student`.`birth_day`, `edu_student`.`email`, `edu_student`.`phone`, `edu_student`.`country_id`, 
 			`edu_student`.`state_id`, `edu_student`.`city_id`, `edu_student`.`school_id`, `edu_student`.`class_id`,
 			`edu_school`.`name` as `school_name`, `edu_school`.`school_code` as `school_code`, `edu_school`.`use_token`

@@ -12,7 +12,7 @@ if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'teacher_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_teacher`.* $nt
+$sql = "SELECT `edu_teacher`.* $nt
 from `edu_teacher` 
 where `edu_teacher`.`active` = '1' and `edu_teacher`.`school_id` = '$school_id'
 and `edu_teacher`.`teacher_id` = '$edit_key'
@@ -128,12 +128,12 @@ $sql_filter .= " and (`edu_teacher`.`name` like '%".addslashes($pagination->quer
 
 $nt = '';
 
-$sql = "select `edu_teacher`.* $nt
+$sql = "SELECT `edu_teacher`.* $nt
 from `edu_teacher`
 where `edu_teacher`.`active` = '1' and `edu_teacher`.`school_id` = '$school_id' $sql_filter
 order by `edu_teacher`.`teacher_id` asc
 ";
-$sql_test = "select `edu_teacher`.*
+$sql_test = "SELECT `edu_teacher`.*
 from `edu_teacher`
 where `edu_teacher`.`active` = '1' and `edu_teacher`.`school_id` = '$school_id' $sql_filter
 ";

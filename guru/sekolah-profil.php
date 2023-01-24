@@ -9,7 +9,7 @@ $cfg->module_title = "Profil Sekolah";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $nt = '';
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select `country`.`name` from `country` where `country`.`country_id` = `edu_school`.`country_id`) as `country_id`,
 (select `state`.`name` from `state` where `state`.`state_id` = `edu_school`.`state_id`) as `state_id`,
 (select `city`.`name` from `city` where `city`.`city_id` = `edu_school`.`city_id`) as `city_id`

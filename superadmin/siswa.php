@@ -107,7 +107,7 @@ if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'student_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_student`.* 
+$sql = "SELECT `edu_student`.* 
 from `edu_student` 
 where 1
 and `edu_student`.`student_id` = '$edit_key'
@@ -244,7 +244,7 @@ else if(@$_GET['option']=='detail')
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $edit_key = kh_filter_input(INPUT_GET, 'student_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_student`.* ,
+$sql = "SELECT `edu_student`.* ,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_student`.`school_id` limit 0,1) as `school_name`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_student`.`admin_create`) as `admin_create`,
 (select `edu_admin`.`name` from `edu_admin` where `edu_admin`.`admin_id` = `edu_student`.`admin_edit`) as `admin_edit`,
@@ -456,7 +456,7 @@ if($class_id != 0)
 $nt = '';
 
 
-$sql = "select `edu_student`.* , 
+$sql = "SELECT `edu_student`.* , 
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_student`.`school_id` limit 0,1) as `school_name`,
 `edu_class`.`name` as `class_id`, `edu_class`.`order` as `order`
 from `edu_student`
@@ -464,7 +464,7 @@ left join(`edu_class`) on(`edu_class`.`class_id` = `edu_student`.`class_id`)
 where 1 $sql_filter
 order by `edu_student`.`school_id` desc, `edu_student`.`name` asc
 ";
-$sql_test = "select `edu_student`.*
+$sql_test = "SELECT `edu_student`.*
 from `edu_student`
 where 1 $sql_filter
 ";

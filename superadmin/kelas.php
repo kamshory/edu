@@ -98,7 +98,7 @@ if (@$_GET['option'] == 'add') {
 			<select name="school_program_id" id="school_program_id">
 				<option value=""></option>
 				<?php
-				$sql2 = "select `edu_school_program`.*
+				$sql2 = "SELECT `edu_school_program`.*
 				from `edu_school_program`
 				where `edu_school_program`.`school_id` = '$school_id' and `active` = '1' 
 				order by `edu_school_program`.`name` asc
@@ -141,7 +141,7 @@ if (@$_GET['option'] == 'add') {
 } else if (@$_GET['option'] == 'edit') {
 	include_once dirname(__FILE__) . "/lib.inc/header.php";
 	$edit_key = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_class`.* 
+	$sql = "SELECT `edu_class`.* 
 	from `edu_class` 
 	where 1
 	and `edu_class`.`class_id` = '$edit_key'
@@ -182,7 +182,7 @@ if (@$_GET['option'] == 'add') {
 						<select name="school_program_id" id="school_program_id">
 							<option value=""></option>
 							<?php
-							$sql2 = "select `edu_school_program`.*
+							$sql2 = "SELECT `edu_school_program`.*
 							from `edu_school_program`
 							where `edu_school_program`.`school_id` = '$school_id' and `active` = '1' 
 							order by `edu_school_program`.`name` asc
@@ -233,7 +233,7 @@ if (@$_GET['option'] == 'add') {
 	include_once dirname(__FILE__) . "/lib.inc/header.php";
 	$edit_key = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 	$nt = '';
-	$sql = "select `edu_class`.* $nt,
+	$sql = "SELECT `edu_class`.* $nt,
 (select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_class`.`school_id` limit 0,1) as `school_name`,
 (select `edu_school_program`.`name` from `edu_school_program` where `edu_school_program`.`school_program_id` = `edu_class`.`school_program_id` limit 0,1) as `school_program_id`,
 (select `edu_admin1`.`name` from `edu_admin` as `edu_admin1` where `edu_admin1`.`admin_id` = `edu_class`.`admin_create` limit 0,1) as `admin_create`,
@@ -374,7 +374,7 @@ if($stmt->rowCount() > 0)
 		$nt = '';
 
 
-		$sql = "select `edu_class`.* $nt,
+		$sql = "SELECT `edu_class`.* $nt,
 		(select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_class`.`school_id` limit 0,1) as `school_name`,
 		(select `edu_school_program`.`name` from `edu_school_program` where `edu_school_program`.`school_program_id` = `edu_class`.`school_program_id` limit 0,1) as `school_program_id`,
 		(select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`class_id` = `edu_class`.`class_id`) as `num_student`
@@ -382,7 +382,7 @@ if($stmt->rowCount() > 0)
 		where 1 $sql_filter
 		order by `edu_class`.`school_id` desc, `edu_class`.`order` asc
 		";
-				$sql_test = "select `edu_class`.*
+				$sql_test = "SELECT `edu_class`.*
 		from `edu_class`
 		where 1 $sql_filter
 		";

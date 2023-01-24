@@ -11,7 +11,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 	$_SESSION['teacher_username'] = $username;
 	$_SESSION['teacher_password'] = $password;
 									 
-	$sql = "select `username`, `teacher_id`
+	$sql = "SELECT `username`, `teacher_id`
 	from `edu_teacher`
 	where (
 		(`email` like '$email' and `email` != '')
@@ -32,7 +32,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$_SESSION['teacher_username'] = $data['username'];
 		$_SESSION['teacher_password'] = $password;
-		// saveSessionManual($_SESSION);
+		
 		if(isset($_POST['ref']))
 		{
 			$ref = $_POST['ref'];

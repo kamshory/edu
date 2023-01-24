@@ -43,7 +43,7 @@ if(isset($_POST['savetext']) && @$_GET['option']=='add')
 	// Format Plain
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$picoEdu->sortQuestion($test_id);
-	$sql = "select `edu_test`.*, 
+	$sql = "SELECT `edu_test`.*, 
 	(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 	from `edu_test`
 	where `edu_test`.`test_id` = '$test_id'
@@ -168,7 +168,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$question = addslashes(removeparagraphtag(extractImageData($question, $direktori, $prefiks))); 	
 	$question = $picoEdu->brToNewLineEncoded($question);
 	$picoEdu->sortQuestion($test_id);
-	$sql1 = "select `edu_test`.*, 
+	$sql1 = "SELECT `edu_test`.*, 
 	(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 	from `edu_test`
 	where `edu_test`.`test_id` = '$test_id'
@@ -253,7 +253,7 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 	$basic_competence = preg_replace("/[^0-9]/i", ".", $basic_competence);
 	$basic_competence = trim(str_replace("..", ".", $basic_competence), " . ");
 
-	$sql = "select `test_id` from `edu_question` where `question_id` = '$question_id' ";
+	$sql = "SELECT `test_id` from `edu_question` where `question_id` = '$question_id' ";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
 	{
@@ -333,7 +333,7 @@ exit();
 }
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* ,
+$sql = "SELECT `edu_test`.* ,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `collection`
 from `edu_test` where `test_id` = '$test_id' ";
 $stmt = $database->executeQuery($sql);
@@ -465,7 +465,7 @@ else if(@$_GET['option']=='edit')
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$test_id = $data['test_id'];
 
-		$sql = "select `edu_test`.* ,
+		$sql = "SELECT `edu_test`.* ,
 		(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `collection`
 		from `edu_test` where `test_id` = '$test_id' ";
 
@@ -612,7 +612,7 @@ else if(isset($_GET['test_id']))
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* ,
+$sql = "SELECT `edu_test`.* ,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `collection`
 from `edu_test` where `test_id` = '$test_id' and `school_id` = '$school_id'
 ";
@@ -706,7 +706,7 @@ foreach($rows as $data)
 	{
 		$data['content'] = "<p>".$data['content']."</p>";
 	}
-	$obj = parsehtmldata('<html><body>'.($data['content']).'</body></html>');
+	$obj = parseHtmlData('<html><body>'.($data['content']).'</body></html>');
 	$arrparno = array();
 	$arrparlen = array();
 	$cntmax = ""; // do not remove
@@ -738,7 +738,7 @@ foreach($rows as $data)
 		}
 	}
 	
-	$sql2 = "select `edu_option`.*,
+	$sql2 = "SELECT `edu_option`.*,
 	(select count(distinct `edu_answer`.`answer_id`) 
 		from `edu_answer` 
 		where `edu_answer`.`answer` like concat('%,',`edu_option`.`option_id`,']%')
@@ -1107,7 +1107,7 @@ if($class_id != '')
 $nt = '';
 
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`)*1 as `number_of_question`
 from `edu_test`

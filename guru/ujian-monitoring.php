@@ -12,7 +12,7 @@ if(@$_GET['option'] == 'kick-student' && isset($_GET['test_id']) && isset($_GET[
 {
 	$id = kh_filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_UINT);
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_peserta_test`.* from `edu_peserta_test` where `id` = '$id' and `status` = '1'
+	$sql = "SELECT `edu_peserta_test`.* from `edu_peserta_test` where `id` = '$id' and `status` = '1'
 	";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
@@ -32,7 +32,7 @@ if(@$_GET['option'] == 'block-student' && isset($_GET['test_id']) && isset($_GET
 {
 	$id = kh_filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_UINT);
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-	$sql = "select `edu_peserta_test`.* from `edu_peserta_test` where `id` = '$id' and `status` = '1'
+	$sql = "SELECT `edu_peserta_test`.* from `edu_peserta_test` where `id` = '$id' and `status` = '1'
 	";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
@@ -57,7 +57,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 
 $test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 $status = kh_filter_input(INPUT_GET, 'status', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* ,
+$sql = "SELECT `edu_test`.* ,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `number_of_real_question`
 from `edu_test` where `test_id` = '$test_id' ";
 $stmt = $database->executeQuery($sql);
@@ -258,7 +258,7 @@ if($class_id != '')
 $nt = '';
 
 
-$sql = "select `edu_test`.* $nt,
+$sql = "SELECT `edu_test`.* $nt,
 (select count(distinct `edu_test_member`.`student_id`) from `edu_test_member` where `edu_test_member`.`test_id` = `edu_test`.`test_id`) as `student`,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`)*1 as `number_of_question`
 from `edu_test`

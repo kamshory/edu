@@ -37,7 +37,7 @@ if(isset($_POST['savetext']) && @$_GET['option']=='add')
 	// Format Plain
 	$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
 	$picoEdu->sortQuestion($test_id);
-	$sql = "select `edu_test`.*, 
+	$sql = "SELECT `edu_test`.*, 
 	(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 	from `edu_test`
 	where `edu_test`.`test_id` = '$test_id'
@@ -149,7 +149,7 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 	$numbering = kh_filter_input(INPUT_POST, 'numbering', FILTER_SANITIZE_STRING_NEW);
 	$random = kh_filter_input(INPUT_POST, 'random', FILTER_SANITIZE_NUMBER_UINT);
 
-	$sql = "select `test_id` from `edu_question` where `question_id` = '$question_id' ";
+	$sql = "SELECT `test_id` from `edu_question` where `question_id` = '$question_id' ";
 	$stmt = $database->executeQuery($sql);
 	if($stmt->rowCount() > 0)
 	{
@@ -217,7 +217,7 @@ if(@$_GET['option']=='edit')
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$test_id = $data['test_id'];
 
-		$sql = "select `edu_test`.* ,
+		$sql = "SELECT `edu_test`.* ,
 		(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `collection`
 		from `edu_test` where `test_id` = '$test_id' ";
 		$stmt3 = $database->executeQuery($sql);
@@ -518,7 +518,7 @@ else if(isset($_GET['test_id']))
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-$sql = "select `edu_test`.* ,
+$sql = "SELECT `edu_test`.* ,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `collection`
 from `edu_test` where `test_id` = '$test_id' 
 ";
@@ -610,7 +610,7 @@ foreach($rows as $data)
 	{
 		$data['content'] = "<p>".$data['content']."</p>";
 	}
-	$obj = parsehtmldata('<html><body>'.($data['content']).'</body></html>');
+	$obj = parseHtmlData('<html><body>'.($data['content']).'</body></html>');
 	$arrparno = array();
 	$arrparlen = array();
 	$cntmax = ""; // do not remove
@@ -642,7 +642,7 @@ foreach($rows as $data)
 		}
 	}
 	
-	$sql2 = "select `edu_option`.*,
+	$sql2 = "SELECT `edu_option`.*,
 	(select count(distinct `edu_answer`.`answer_id`) 
 		from `edu_answer` 
 		where `edu_answer`.`answer` like concat('%,',`edu_option`.`option_id`,']%')
@@ -1069,7 +1069,7 @@ function buildMenu(id)
 				$nt = '';
 
 
-				$sql = "select `edu_test`.* $nt,
+				$sql = "SELECT `edu_test`.* $nt,
 				(select `edu_school`.`name` from `edu_school` where `edu_school`.`school_id` = `edu_test`.`school_id` limit 0,1) as `school_name`,
 				(select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_test`.`teacher_id`) as `teacher`,
 				(select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` group by `edu_question`.`test_id`)*1 as `number_of_question`
@@ -1078,7 +1078,7 @@ function buildMenu(id)
 				order by `edu_test`.`test_id` desc
 				";
 
-				$sql_test = "select `edu_test`.`test_id`
+				$sql_test = "SELECT `edu_test`.`test_id`
 				from `edu_test`
 				where 1 $sql_filter
 				";

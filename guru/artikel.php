@@ -136,7 +136,7 @@ if(isset($_POST['delete']) && isset($_POST['article_id']))
 		foreach($articles as $article_id)
 		{
 			$article_id = addslashes($article_id);
-			$sql = "select `article_id` from `edu_article` 
+			$sql = "SELECT `article_id` from `edu_article` 
 			where `article_id` = '$article_id' and `school_id` = '$school_id' and `edu_article`.`member_create` = '$teacher_id' ";
 			$stmt = $database->executeQuery($sql);
 			if($stmt->rowCount() > 0)
@@ -169,7 +169,7 @@ var base_assets = '<?php echo $cfg->base_assets;?>';
 <script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/article-editor.min.js"></script>
 
 <?php
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmtc = $database->executeQuery($sqlc);
 $arrc = array();
 if($stmtc->rowCount() > 0)
@@ -221,7 +221,7 @@ if($stmt->rowCount() > 0)
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <?php
-$sqlc = "select `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
+$sqlc = "SELECT `class_id`, `name` from `edu_class` where `active` = '1' and `school_id` = '$school_id' and `name` != '' order by `order` asc ";
 $stmtc = $database->executeQuery($sqlc);
 $arrc = array();
 if($stmtc->rowCount() > 0)
@@ -274,7 +274,7 @@ if(isset($school_id))
 {
 	$sql_filter_article .= " and `edu_article`.`school_id` = '$school_id' ";
 }
-$sql = "select `edu_article`.*, `member`.`name` as `creator`
+$sql = "SELECT `edu_article`.*, `member`.`name` as `creator`
 from `edu_article` 
 left join(`member`) on(`member`.`member_id` = `edu_article`.`member_create`) 
 where (`edu_article`.`member_create` = '$teacher_id' or `edu_article`.`active` = '1') $sql_filter_article ";
@@ -417,13 +417,13 @@ $sql_filter .= " and (`edu_article`.`school_id` = '$school_id' )";
 
 $nt = '';
 
-$sql = "select `edu_article`.* , `member`.`name` as `creator`
+$sql = "SELECT `edu_article`.* , `member`.`name` as `creator`
 from `edu_article` 
 left join(`member`) on(`member`.`member_id` = `edu_article`.`member_create`) 
 where (`edu_article`.`member_create` = '$teacher_id' or `edu_article`.`active` = '1') $sql_filter 
 order by `edu_article`.`article_id` desc
 ";
-$sql_test = "select `edu_article`.`article_id` 
+$sql_test = "SELECT `edu_article`.`article_id` 
 from `edu_article` 
 where (`edu_article`.`member_create` = '$teacher_id' or `edu_article`.`active` = '1') $sql_filter 
 order by `edu_article`.`article_id` desc

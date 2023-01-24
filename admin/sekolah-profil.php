@@ -88,7 +88,7 @@ include_once dirname(__FILE__)."/lib.inc/header.php";
 
 $state_list = array();
 $city_list = array();
-$sql = "select `edu_school`.* 
+$sql = "SELECT `edu_school`.* 
 from `edu_school` 
 where 1
 and `edu_school`.`school_id` = '$school_id'
@@ -98,13 +98,13 @@ if($stmt->rowCount() > 0)
 {
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$sql = "select `state`.`state_id` as `v`, `state`.`name` as `l`
+$sql = "SELECT `state`.`state_id` as `v`, `state`.`name` as `l`
 from `state` where `state`.`country_id` = '".$data['country_id']."' 
 ";
 $stmt = $database->executeQuery($sql);
 $state_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "select `city`.`city_id` as `v`, `city`.`name` as `l`
+$sql = "SELECT `city`.`city_id` as `v`, `city`.`name` as `l`
 from `city` where `city`.`country_id` = '".$data['country_id']."' 
 and (`city`.`state_id` = '".$data['state_id']."' or `city`.`state_id` = '' or `city`.`state_id` is null) 
 ";
@@ -383,7 +383,7 @@ else
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $nt = '';
-$sql = "select `edu_school`.* $nt,
+$sql = "SELECT `edu_school`.* $nt,
 (select count(distinct `edu_student`.`student_id`) from `edu_student` where `edu_student`.`school_id` = `edu_school`.`school_id`) as `student`,
 (select `country`.`name` from `country` where `country`.`country_id` = `edu_school`.`country_id`) as `country_id`,
 (select `state`.`name` from `state` where `state`.`state_id` = `edu_school`.`state_id`) as `state_id`,

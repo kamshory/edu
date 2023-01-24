@@ -31,7 +31,7 @@ class MemberAuth
 	{
 		global $cfg;
 		global $picoEdu;
-		$sql = "select `member_id`, `username`, `name`, `gender`, `birth_place`, `birth_day`, `email`, `phone`, `url`, `show_compass`,
+		$sql = "SELECT `member_id`, `username`, `name`, `gender`, `birth_place`, `birth_day`, `email`, `phone`, `url`, `show_compass`,
 		`autoplay_360`, `autorotate_360`, `img_360_compress`, `picture_hash`, `background`, `language`, `country_id`, `state_id`, `city_id`, `circle_avatar`
 		from `member` 
 		where `username` = '$username' and `password` = md5('$password') 

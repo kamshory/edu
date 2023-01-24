@@ -89,7 +89,7 @@ h3{
 <div class="main">
 <?php
 $tokens = implode(",", $arr);
-$sql = "select `edu_token`.* , `edu_student`.`name` as `student_name`, `edu_student`.`reg_number` as `reg_number`, 
+$sql = "SELECT `edu_token`.* , `edu_student`.`name` as `student_name`, `edu_student`.`reg_number` as `reg_number`, 
 (select `edu_teacher`.`name` from `edu_teacher` where `edu_teacher`.`teacher_id` = `edu_token`.`teacher_create`) as `teacher_name`,
 (select `edu_test`.`name` from `edu_test` where `edu_test`.`test_id` = `edu_token`.`test_id`) as `test_name`
 from `edu_token` 

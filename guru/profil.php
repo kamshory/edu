@@ -43,14 +43,13 @@ if(isset($_POST['save']) && @$_GET['option']=='edit')
 		where `member_id` = '$teacher_id'  ";
 		$database->executeUpdate($sql);
 		$_SESSION['password'] = md5($password);
-		$ksession->forcesave();
 	}
 	header("Location: profil.php");
 }
 if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
-$sql = "select `edu_teacher`.* , `edu_school`.`name` as `school_name`
+$sql = "SELECT `edu_teacher`.* , `edu_school`.`name` as `school_name`
 from `edu_teacher` 
 left join(`edu_school`) on(`edu_school`.`school_id` = `edu_teacher`.`school_id`)
 where `edu_teacher`.`school_id` = '$school_id'
@@ -129,7 +128,7 @@ else
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
 $nt = '';
-$sql = "select `edu_teacher`.* , `edu_school`.`name` as `school_name`
+$sql = "SELECT `edu_teacher`.* , `edu_school`.`name` as `school_name`
 from `edu_teacher` 
 left join(`edu_school`) on(`edu_school`.`school_id` = `edu_teacher`.`school_id`)
 where `edu_teacher`.`school_id` = '$school_id'

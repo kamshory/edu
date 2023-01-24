@@ -6,7 +6,7 @@ include_once dirname(dirname(__FILE__))."/lib.inc/dom.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/lib.test.php";
 	if (isset($_GET['test_id'])) {
 		$test_id = kh_filter_input(INPUT_GET, 'test_id', FILTER_SANITIZE_STRING_NEW);
-		$sql = "select `edu_test`.* ,
+		$sql = "SELECT `edu_test`.* ,
 (select count(distinct `edu_question`.`question_id`) from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id`) as `koleksi`
 from `edu_test` where `test_id` = '$test_id' 
 ";
@@ -72,7 +72,7 @@ foreach($rows as $data){
 	if (stripos($data['content'], "<p") === false) {
 		$data['content'] = "<p>" . $data['content'] . "</p>";
 	}
-	$obj = parsehtmldata('<html><body>' . ($data['content']) . '</body></html>');
+	$obj = parseHtmlData('<html><body>' . ($data['content']) . '</body></html>');
 	$arrparno = array();
 	$arrparlen = array();
 	$cntmax = ""; // do not remove
@@ -99,7 +99,7 @@ foreach($rows as $data){
 		}
 	}
 
-	$sql2 = "select `edu_option`.*,
+	$sql2 = "SELECT `edu_option`.*,
 	(select count(distinct `edu_answer`.`answer_id`) 
 		from `edu_answer` 
 		where `edu_answer`.`answer` like concat('%,',`edu_option`.`option_id`,']%')

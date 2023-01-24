@@ -12,7 +12,7 @@ if (@$school_id != 0 && isset($_POST['question_text']) && isset($_POST['test_id'
 	if ($stmt->rowCount() > 0) {
 		// Format Plain
 		$picoEdu->sortQuestion($test_id);
-		$sql = "select `edu_test`.*, 
+		$sql = "SELECT `edu_test`.*, 
 		(select `edu_question`.`order` from `edu_question` where `edu_question`.`test_id` = `edu_test`.`test_id` order by `order` desc limit 0,1) as `order`
 		from `edu_test`
 		where `edu_test`.`test_id` = '$test_id'

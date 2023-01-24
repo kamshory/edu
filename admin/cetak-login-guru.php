@@ -7,7 +7,7 @@ exit();
 }
 $edit_key = kh_filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
-$sql = "select `edu_school`.*, `edu_school`.`name` as `school_name`
+$sql = "SELECT `edu_school`.*, `edu_school`.`name` as `school_name`
 from `edu_school` 
 where 1 and `edu_school`.`school_id` = '$school_id'
 ";
@@ -90,7 +90,7 @@ h3{
 </div>
 <div class="main">
 <?php
-    $sql = "select `edu_teacher`.* 
+    $sql = "SELECT `edu_teacher`.* 
     from `edu_teacher` 
     where `edu_teacher`.`school_id` = '$school_id' 
     order by `edu_teacher`.`name` asc 

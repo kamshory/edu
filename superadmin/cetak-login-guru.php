@@ -80,7 +80,7 @@ h3{
 </div>
 <div class="main">
 <?php
-    $sql = "select `edu_teacher`.* 
+    $sql = "SELECT `edu_teacher`.* 
     from `edu_teacher` 
     where `edu_teacher`.`active` = true
     order by `edu_teacher`.`name` asc 

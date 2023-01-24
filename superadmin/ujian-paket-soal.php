@@ -1446,12 +1446,12 @@ $sql_filter .= " and (`edu_test_collection`.`grade_id` = '$grade_id' )";
 $nt = '';
 
 
-$sql = "select `edu_test_collection`.* $nt
+$sql = "SELECT `edu_test_collection`.* $nt
 from `edu_test_collection`
 where 1 $sql_filter
 order by `edu_test_collection`.`test_collection_id` desc
 ";
-$sql_test = "select `edu_test_collection`.*
+$sql_test = "SELECT `edu_test_collection`.*
 from `edu_test_collection`
 where 1 $sql_filter
 ";
