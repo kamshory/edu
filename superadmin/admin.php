@@ -72,7 +72,7 @@ if(isset($_POST['delete']) && isset($_POST['admin_id']))
 		$admin_id = addslashes($val);
 		if($val != $admin_login->admin_id)
 		{
-			$sql = "delete from `edu_member_school` where `member_id` = '$admin_id' and `role` = 'A' ";
+			$sql = "DELETE FROM `edu_member_school` where `member_id` = '$admin_id' and `role` = 'A' ";
 			$database->executeDelete($sql);
 			$sql = "update `edu_admin` set `school_id` = '0' where `admin_id` = '$admin_id' ";
 			$database->executeUpdate($sql);

@@ -28,7 +28,7 @@ $configs->db_name = "mini_picopi";
 $configs->db_time_zone = "Asia/Jakarta";
 
 
-$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."";
+$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."/pico-edu/";
 $cfg->base_assets = "http://".$_SERVER['SERVER_NAME']."/";
 $cfg->app_name = "Planet Edu";
 $cfg->mail_reset_password = "resetpassword@quliah.com";
@@ -46,7 +46,7 @@ $cfg->base_languages = "http://".$_SERVER['SERVER_NAME']."/lib.languages/";
 $cfg->base_url = 'http://'.$_SERVER['SERVER_NAME'].'/';
 $cfg->meta_description = "Planet Edu merupakan sekolah virtual yang dapat dimanfaatkan oleh sekolah, guru dan siswa untuk pengayaan materi dan ujian online. Planet Edu bukanlan sistem informasi akademik karena sebenarnya Planet Edu merupakan media sosial yang mendukung pendidikan.";
 
-$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."";
+$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."/";
 $cfg->base_assets = "http://".$_SERVER['SERVER_NAME']."/";
 $cfg->mail_reset_password = "resetpassword@quliah.com";
 $cfg->mail_invitation = "invitation@quliah.com";
@@ -65,12 +65,11 @@ $cfg->base_languages = "http://".$_SERVER['SERVER_NAME']."/lib.languages/";
 $cfg->base_url = 'http://'.$_SERVER['SERVER_NAME'].'/';
 */
 
-$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."/";
+$cfg->base_url = "http://".$_SERVER['SERVER_NAME']."/pico-edu/";
 $cfg->base_assets = "http://".$_SERVER['SERVER_NAME']."/pico-pi/html/";
 $cfg->base_avatar = "/media.images/";
 $cfg->base_images = "/media.images/";
 $cfg->base_languages = "/lib.languages/";
-$cfg->base_url = '/';
 
 
 $cfg->language_id = 'id';

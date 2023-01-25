@@ -130,11 +130,11 @@ if(isset($_POST['delete']) && isset($_POST['test_id']))
 			if($stmt->rowCount() > 0)
 			{
 				$database->executeTransaction('start transaction');
-				$sql = "delete from `edu_answer` where `test_id` = '$test_id' ";
+				$sql = "DELETE FROM `edu_answer` where `test_id` = '$test_id' ";
 				$database->executeDelete($sql);
-				$sql = "delete from `edu_question` where `test_id` = '$test_id' ";
+				$sql = "DELETE FROM `edu_question` where `test_id` = '$test_id' ";
 				$database->executeDelete($sql);
-				$sql = "delete from `edu_test` where `test_id` = '$test_id' ";
+				$sql = "DELETE FROM `edu_test` where `test_id` = '$test_id' ";
 				$database->executeDelete($sql);
 				// destroy all test file
 				$database->executeTransaction("commit");

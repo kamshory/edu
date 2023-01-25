@@ -67,13 +67,13 @@ if(isset($_POST['publish']) || isset($_POST['draff']))
 	}
 	if($option == 'add')
 	{
+		$info_id = $database->generateNewId();
 		$sql = "INSERT INTO `edu_info`
-		(`name`, `time_create`, `time_edit`, `admin_create`, `admin_edit`, `ip_create`, `ip_edit`, `active`) values	
-		('$name', '$time', '$time', '$admin_id', '$admin_id', '$ip', '$ip', '$active')
+		(`info_id`, `name`, `time_create`, `time_edit`, `admin_create`, `admin_edit`, `ip_create`, `ip_edit`, `active`) values	
+		('$info_id', '$name', '$time', '$time', '$admin_id', '$admin_id', '$ip', '$ip', '$active')
 		";
 		$stmt = $database->executeQuery($sql);
 		if ($stmt->rowCount() > 0) {
-			$info_id = $database->getDatabaseConnection()->lastInsertId();
 
 			$base_dir = dirname(dirname(__FILE__)) . "/media.edu/info/$info_id";
 			$base_src = "media.edu/info/$info_id";
@@ -96,7 +96,7 @@ if(isset($_POST['publish']) || isset($_POST['draff']))
 			`content` = '$content'
 			where `info_id` = '$info_id'
 			";
-			$database->execute($sql);
+			$database->executeUpdate($sql);
 		}
 		
 		header("Location: ".basename($_SERVER['PHP_SELF'])."?option=edit&info_id=$info_id");
@@ -130,7 +130,7 @@ if(isset($_POST['publish']) || isset($_POST['draff']))
 		`time_edit` = '$time', `admin_edit` = '$admin_id', `ip_edit` =  '$ip', `active` = '$active'
 		where `info_id` = '$info_id'
 		";
-		$database->execute($sql);
+		$database->executeUpdate($sql);
 		header("Location: ".basename($_SERVER['PHP_SELF'])."?option=detail&info_id=$info_id");
 	}
 }
@@ -285,7 +285,7 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 else if(@$_GET['option'] == 'edit' && isset($_GET['info_id']))
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
-$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_UINT);
+$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 $sql = "select * from `edu_info` where `info_id` = '$info_id'";
 $stmt = $database->executeQuery($sql);
 if($stmt->rowCount() > 0)
@@ -439,7 +439,7 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 else if(isset($_GET['info_id']))
 {
 	include_once dirname(__FILE__)."/lib.inc/header.php";
-	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_UINT);
+	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 	$sql_filter_info = " and `edu_info`.`info_id` = '$info_id' ";
 
 	$sql = "SELECT `edu_info`.*, `member`.`name` as `creator`

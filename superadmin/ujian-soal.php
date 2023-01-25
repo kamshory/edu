@@ -24,9 +24,9 @@ if(@$_GET['option']=='delete')
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$id = $data['question_id'];
 		$test_id = $data['test_id'];
-		$sql = "delete from `edu_option` where `question_id` = '$id' ";
+		$sql = "DELETE FROM `edu_option` where `question_id` = '$id' ";
 		$database->executeDelete($sql);
-		$sql = "delete from `edu_question` where `question_id` = '$id' ";
+		$sql = "DELETE FROM `edu_question` where `question_id` = '$id' ";
 		$database->executeDelete($sql);
 		header("Location: ".basename($_SERVER['PHP_SELF'])."?test_id=$test_id");
 	}

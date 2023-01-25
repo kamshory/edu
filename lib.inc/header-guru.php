@@ -1,5 +1,4 @@
 <?php
-if(!defined('DB_NAME')) exit();
 if(isset($school_code) && @$base_dir == '')
 {
 	$base_dir = $school_code."/";

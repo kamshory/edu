@@ -72,7 +72,7 @@ if(isset($_POST['delete']) && isset($_POST['student_id']))
 		foreach($students as $key=>$val)
 		{
 			$student_id = addslashes($val);
-			$sql = "delete from `edu_member_school` where `member_id` = '$student_id' and `role` = 'S'  ";
+			$sql = "DELETE FROM `edu_member_school` where `member_id` = '$student_id' and `role` = 'S'  ";
 			$database->executeDelete($sql);
 			$sql = "update `edu_student` set `school_id` = '0' where `student_id` = '$student_id'  ";
 			$database->executeUpdate($sql);
@@ -131,18 +131,9 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		<td>Tingkat</td>
 		<td><select class="input-select" name="grade_id" id="grade_id">
 		<option value=""></option>
-		<option value="1"<?php if($data['grade_id']=='1') echo ' selected="selected"';?>>Tingkat 1</option>
-		<option value="2"<?php if($data['grade_id']=='2') echo ' selected="selected"';?>>Tingkat 2</option>
-		<option value="3"<?php if($data['grade_id']=='3') echo ' selected="selected"';?>>Tingkat 3</option>
-		<option value="4"<?php if($data['grade_id']=='4') echo ' selected="selected"';?>>Tingkat 4</option>
-		<option value="5"<?php if($data['grade_id']=='5') echo ' selected="selected"';?>>Tingkat 5</option>
-		<option value="6"<?php if($data['grade_id']=='6') echo ' selected="selected"';?>>Tingkat 6</option>
-		<option value="7"<?php if($data['grade_id']=='7') echo ' selected="selected"';?>>Tingkat 7</option>
-		<option value="8"<?php if($data['grade_id']=='8') echo ' selected="selected"';?>>Tingkat 8</option>
-		<option value="9"<?php if($data['grade_id']=='9') echo ' selected="selected"';?>>Tingkat 9</option>
-		<option value="10"<?php if($data['grade_id']=='10') echo ' selected="selected"';?>>Tingkat 10</option>
-		<option value="11"<?php if($data['grade_id']=='11') echo ' selected="selected"';?>>Tingkat 11</option>
-		<option value="12"<?php if($data['grade_id']=='12') echo ' selected="selected"';?>>Tingkat 12</option>
+		<?php
+		echo $picoEdu->createGradeOption($data['grade_id']);
+		?>
 		</select></td>
 		</tr>
 		<tr>
@@ -275,9 +266,9 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		<tr>
 		<td>Tingkat</td>
 		<td><?php 
-echo $picoEdu->getGradeName($data['grade_id']);
-?>
-<td>
+		echo $picoEdu->getGradeName($data['grade_id']);
+		?>
+		<td>
 		</tr>
 		<tr>
 		<td>Kelas</td>

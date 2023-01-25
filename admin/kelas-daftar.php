@@ -97,18 +97,9 @@ if (@$_GET['option'] == 'add') {
 				</td>
 				<td><select class="input-select" name="grade_id" id="grade_id">
 						<option value=""></option>
-						<option value="1">Tingkat 1</option>
-						<option value="2">Tingkat 2</option>
-						<option value="3">Tingkat 3</option>
-						<option value="4">Tingkat 4</option>
-						<option value="5">Tingkat 5</option>
-						<option value="6">Tingkat 6</option>
-						<option value="7">Tingkat 7</option>
-						<option value="8">Tingkat 8</option>
-						<option value="9">Tingkat 9</option>
-						<option value="10">Tingkat 10</option>
-						<option value="11">Tingkat 11</option>
-						<option value="12">Tingkat 12</option>
+						<?php
+						echo $picoEdu->createGradeOption(null);
+						?>
 					</select></td>
 			</tr>
 			<tr>
@@ -183,18 +174,9 @@ else if (@$_GET['option'] == 'edit')
 					</td>
 					<td><select class="input-select" name="grade_id" id="grade_id">
 							<option value=""></option>
-							<option value="1" <?php if ($data['grade_id'] == '1') echo ' selected="selected"'; ?>>Tingkat 1</option>
-							<option value="2" <?php if ($data['grade_id'] == '2') echo ' selected="selected"'; ?>>Tingkat 2</option>
-							<option value="3" <?php if ($data['grade_id'] == '3') echo ' selected="selected"'; ?>>Tingkat 3</option>
-							<option value="4" <?php if ($data['grade_id'] == '4') echo ' selected="selected"'; ?>>Tingkat 4</option>
-							<option value="5" <?php if ($data['grade_id'] == '5') echo ' selected="selected"'; ?>>Tingkat 5</option>
-							<option value="6" <?php if ($data['grade_id'] == '6') echo ' selected="selected"'; ?>>Tingkat 6</option>
-							<option value="7" <?php if ($data['grade_id'] == '7') echo ' selected="selected"'; ?>>Tingkat 7</option>
-							<option value="8" <?php if ($data['grade_id'] == '8') echo ' selected="selected"'; ?>>Tingkat 8</option>
-							<option value="9" <?php if ($data['grade_id'] == '9') echo ' selected="selected"'; ?>>Tingkat 9</option>
-							<option value="10" <?php if ($data['grade_id'] == '10') echo ' selected="selected"'; ?>>Tingkat 10</option>
-							<option value="11" <?php if ($data['grade_id'] == '11') echo ' selected="selected"'; ?>>Tingkat 11</option>
-							<option value="12" <?php if ($data['grade_id'] == '12') echo ' selected="selected"'; ?>>Tingkat 12</option>
+							<?php
+							echo $picoEdu->createGradeOption($data['grade_id']);
+							?>
 						</select></td>
 				</tr>
 				<tr>
@@ -273,7 +255,7 @@ if($stmt->rowCount() > 0)
 			<table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
 				<tr>
 					<td>Kode Kelas</td>
-					<td><?php echo ($data['class_code']);?></td>
+					<td><?php echo $data['class_code'];?></td>
 				</tr>
 				<tr>
 					<td>Tingkat
@@ -285,7 +267,7 @@ if($stmt->rowCount() > 0)
 				</tr>
 				<tr>
 					<td>Jurusan</td>
-					<td><?php echo ($data['school_program_id']);?></td>
+					<td><?php echo $data['school_program_id'];?></td>
 				</tr>
 				<tr>
 					<td>Nama Kelas
@@ -318,7 +300,7 @@ if($stmt->rowCount() > 0)
 				</tr>
 				<tr>
 					<td>Order</td>
-					<td><?php echo ($data['order']);?></td>
+					<td><?php echo $data['order'];?></td>
 				</tr>
 				<tr>
 					<td>Aktif

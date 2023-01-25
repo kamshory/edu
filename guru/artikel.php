@@ -27,13 +27,13 @@ if(isset($_POST['publish']) || isset($_POST['draff']))
 	}
 	if($option == 'add')
 	{
+		$article_id = $database->generateNewId();
 		$sql = "INSERT INTO `edu_article`
-		(`school_id`, `title`, `open`, `class`, `time_create`, `time_edit`, `member_create`, `role_create`, `member_edit`, `role_edit`, `ip_create`, `ip_edit`, `active`) values	
-		('$school_id', '$title', '$open', '$class', '$time', '$time', '$teacher_id', 'T', '$teacher_id', 'T', '$ip', '$ip', '$active')
+		(`article_id`, `school_id`, `title`, `open`, `class`, `time_create`, `time_edit`, `member_create`, `role_create`, `member_edit`, `role_edit`, `ip_create`, `ip_edit`, `active`) values	
+		('$article_id', '$school_id', '$title', '$open', '$class', '$time', '$time', '$teacher_id', 'T', '$teacher_id', 'T', '$ip', '$ip', '$active')
 		";
 		$stmt = $database->executeInsert($sql);
 		if ($stmt->rowCount() > 0) {
-			$article_id = $database->getDatabaseConnection()->lastInsertId();
 
 			$base_dir = dirname(dirname(__FILE__)) . "/media.edu/school/$school_id/article/$article_id";
 			$base_src = "media.edu/school/$school_id/article/$article_id";
@@ -63,7 +63,7 @@ if(isset($_POST['publish']) || isset($_POST['draff']))
 	}
 	else if($option == 'edit')
 	{
-		$article_id = kh_filter_input(INPUT_POST, 'article_id');
+		$article_id = kh_filter_input(INPUT_POST, 'article_id', FILTER_SANITIZE_STRING_NEW);
 
 		$base_dir = dirname(dirname(__FILE__))."/media.edu/school/$school_id/article/$article_id";
 		$base_src = "media.edu/school/$school_id/article/$article_id";
@@ -213,7 +213,7 @@ var base_assets = '<?php echo $cfg->base_assets;?>';
 <script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/article-editor.min.js"></script>
 
 <?php
-$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_NUMBER_UINT);
+$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_STRING_NEW);
 $sql = "select * from `edu_article` where `article_id` = '$article_id' and `school_id` = '$school_id' and `member_create` = '$auth_teacher_id' ";
 $stmt = $database->executeQuery($sql);
 if($stmt->rowCount() > 0)
@@ -267,7 +267,7 @@ var base_assets = '<?php echo $cfg->base_assets;?>';
 <script type="text/javascript" src="<?php echo $cfg->base_assets;?>lib.assets/theme/default/js/article-editor.min.js"></script>
 
 <?php
-$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_NUMBER_UINT);
+$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_STRING_NEW);
 $sql_filter_article = " and `edu_article`.`article_id` = '$article_id' ";
 
 if(isset($school_id))

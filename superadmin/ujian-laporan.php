@@ -45,7 +45,7 @@ if(isset($_POST['delete']) && isset($_POST['answerid']))
     foreach($answerid as $key=>$val)
     {
       $answer_id = addslashes($val);
-      $sql = "delete from `edu_answer` where `answer_id` = '$answer_id'  ";
+      $sql = "DELETE FROM `edu_answer` where `answer_id` = '$answer_id'  ";
       $database->executeDelete($sql);
     }
 	}

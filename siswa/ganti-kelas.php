@@ -52,7 +52,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 	<table width="100%" border="0" class="two-side-table responsive-tow-side-table" cellspacing="0" cellpadding="0">
 		<tr>
 		<td>Kode Kelas</td>
-		<td><?php echo ($data['class_code']);?></td>
+		<td><?php echo $data['class_code'];?></td>
 		</tr>
 		<tr>
 		<td>Tingkat
@@ -63,7 +63,7 @@ echo $picoEdu->getGradeName($data['grade_id']);
 		</tr>
 		<tr>
 		<td>Jurusan</td>
-		<td><?php echo ($data['school_program_id']);?></td>
+		<td><?php echo $data['school_program_id'];?></td>
 		</tr>
 		<tr>
 		<td>Nama Kelas
@@ -95,7 +95,7 @@ echo $picoEdu->getGradeName($data['grade_id']);
 		</tr>
 		<tr>
 		<td>Order</td>
-		<td><?php echo ($data['order']);?></td>
+		<td><?php echo $data['order'];?></td>
 		</tr>
 		<tr>
 		<td>Aktif
@@ -211,7 +211,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
       <td align="right"><?php echo $no;?></td>
       <td><a href="<?php echo 'ganti-kelas.php';?>?option=detail&class_id=<?php echo $data['class_id'];?>"><?php echo $data['name'];?></a></td>
       <td><a href="<?php echo 'ganti-kelas.php';?>?option=detail&class_id=<?php echo $data['class_id'];?>"><?php echo ($data['grade_id']);?></a></td>
-      <td><a href="<?php echo 'ganti-kelas.php';?>?option=detail&class_id=<?php echo $data['class_id'];?>"><?php echo ($data['school_program_id']);?></a></td>
+      <td><a href="<?php echo 'ganti-kelas.php';?>?option=detail&class_id=<?php echo $data['class_id'];?>"><?php echo $data['school_program_id'];?></a></td>
       <td><a href="<?php echo 'ganti-kelas.php';?>?option=detail&amp;class_id=<?php echo $data['class_id'];?>"><?php echo ($data['num_student']);?></a></td>
       </tr>
     <?php

@@ -48,7 +48,7 @@ if(@$_SESSION['curdir'] == '')
 
 if(@$_GET['section'] == 'info' && @$_GET['info_id']!='')
 {
-	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_UINT);
+	$info_id = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 	$_SESSION['curdir'] = "info/$info_id";
 }
 

@@ -5,9 +5,9 @@ if($admin_login->admin_level != 1)
 	include_once dirname(__FILE__)."/bukan-super-admin.php";
 	exit();
 }
-$info_id = kh_filter_input(INPUT_POST, 'info_id', FILTER_SANITIZE_NUMBER_UINT);
+$info_id = kh_filter_input(INPUT_POST, 'info_id', FILTER_SANITIZE_STRING_NEW);
 if(@$_POST['option'] == 'delete')
 {
-	$sql = "delete from `edu_info` where `info_id` = '$info_id' ";
+	$sql = "DELETE FROM `edu_info` where `info_id` = '$info_id' ";
 	$database->executeDelete($sql);
 }

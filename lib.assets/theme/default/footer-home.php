@@ -58,13 +58,14 @@
 		order by `edu_info`.`info_id` desc
 		limit 0, 10
 		";
-		$res = mysql_query($sql);
-		if(mysql_num_rows($res))
+		$stmt = $database->executeQuery($sql);
+		if($stmt->rowCount() > 0)
 		{
 		?>
        <ul>
        <?php
-	   while(($data = mysql_fetch_assoc($res)))
+       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	   foreach($rows as $data)
 	   {
 		   ?>
        		<li><a href="info.php?info_id=<?php echo $data['info_id'];?>"><?php echo $data['name'];?></a></li>
@@ -85,13 +86,14 @@
 		group by `month`
 		order by `edu_info`.`info_id` desc
 		";
-		$res = mysql_query($sql);
-		if(mysql_num_rows($res))
+		$stmt = $database->executeQuery($sql);
+		if($stmt->rowCount() > 0)
 		{
 		?>
        <ul>
        <?php
-	   while(($data = mysql_fetch_assoc($res)))
+	   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	   foreach($rows as $data)
 	   {
 			$period = translateDate(date('F Y', strtotime($data['month'].'-01')));
 		   ?>

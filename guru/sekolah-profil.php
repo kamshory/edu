@@ -34,7 +34,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		</tr>
 		<tr>
 		<td>Jenjang</td>
-		<td><?php if($data['school_grade_id'] == 1) echo 'Play Group'; if($data['school_grade_id'] == 2) echo 'Taman Kanak-Kanak'; if($data['school_grade_id'] == 3) echo 'SD Sederajat'; if($data['school_grade_id'] == 4) echo 'SMP Sederajat'; if($data['school_grade_id'] == 5) echo 'SMA Sederajat'; if($data['school_grade_id'] == 6) echo 'Perguruan Tinggi';?></td>
+		<td><?php echo $picoEdu->getSchoolGradeName($data['school_grade_id']);?></td>
 		</tr>
 		<tr>
 		<td>Negeri/Swasta</td>

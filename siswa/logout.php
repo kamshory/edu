@@ -1,9 +1,9 @@
 <?php
-include_once dirname(dirname(__FILE__))."/lib.inc/functions.php";
+include_once dirname(dirname(__FILE__))."/lib.inc/functions-pico.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/sessions.php";
 if(isset($_GET['confirm-logout']))
 {
-include_once dirname(dirname(__FILE__))."/lib.inc/functions.php";
+include_once dirname(dirname(__FILE__))."/lib.inc/functions-pico.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/sessions.php";
 unset($_SESSION['username']);
 unset($_SESSION['password']);

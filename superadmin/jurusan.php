@@ -60,7 +60,7 @@ if(isset($_POST['delete']) && isset($_POST['school_program_id']))
 		foreach($school_program as $key=>$val)
 		{
 			$school_program_id = addslashes($val);
-			$sql = "delete from `edu_school_program` where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
+			$sql = "DELETE FROM `edu_school_program` where `school_program_id` = '$school_program_id' and `school_id` = '$school_id' ";
 			$database->executeUpdate($sql);
 		}
 	}
@@ -93,11 +93,11 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		<tr>
 		<td width="200">Nama</td>
 		<td><input type="text" class="input-text input-text-long" name="name" id="name" value="<?php echo $data['name'];?>" autocomplete="off" />
-		  <input type="hidden" name="school_program_id2" id="school_program_id2" value="<?php echo ($data['school_program_id']);?>" /></td>
+		  <input type="hidden" name="school_program_id2" id="school_program_id2" value="<?php echo $data['school_program_id'];?>" /></td>
 		</tr>
 		<tr>
 		<td>Order</td>
-		<td><input type="number" class="input-text input-text-medium" name="order" id="order" value="<?php echo ($data['order']);?>" autocomplete="off" /></td>
+		<td><input type="number" class="input-text input-text-medium" name="order" id="order" value="<?php echo $data['order'];?>" autocomplete="off" /></td>
 		</tr>
 		<tr>
 		<td>Default</td>
@@ -152,7 +152,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
 		</tr>
 		<tr>
 		<td>Order</td>
-		<td><?php echo ($data['order']);?></td>
+		<td><?php echo $data['order'];?></td>
 		</tr>
 		<tr>
 		<td>Default</td>
@@ -326,7 +326,7 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
       <td align="right"><?php echo $no;?></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_program_id=<?php echo $data['school_program_id'];?>"><?php echo ($data['school_id']);?></a></td>
       <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_program_id=<?php echo $data['school_program_id'];?>"><?php echo $data['name'];?></a></td>
-      <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_program_id=<?php echo $data['school_program_id'];?>"><?php echo ($data['order']);?></a></td>
+      <td><a href="<?php echo basename($_SERVER['PHP_SELF']);?>?option=detail&school_program_id=<?php echo $data['school_program_id'];?>"><?php echo $data['order'];?></a></td>
       <td><?php echo ($data['default'])?'Ya':'Tidak';?></td>
       <td><?php echo ($data['active'])?'Ya':'Tidak';?></td>
      </tr>

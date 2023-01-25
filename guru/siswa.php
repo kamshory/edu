@@ -149,6 +149,11 @@ else
 include_once dirname(__FILE__)."/lib.inc/footer.php";
 
 }
+else if(@$_GET['option']=='print-password')
+{
+include_once dirname(__FILE__)."/cetak-login-siswa.php";
+}
+
 else
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
@@ -304,6 +309,10 @@ $pagination->str_result .= "<a href=\"".$obj->ref."\"$cls>".$obj->text."</a> ";
 <div class="search-pagination-control"><?php echo $pagination->str_result;?></div>
 <div class="search-pagination-label"><?php echo $pagination->start;?>-<?php echo $pagination->end;?>/<?php echo $pagination->total_record;?></div>
 </div>
+
+<div class="button-area">
+  <input type="button" name="print" id="print" value="Cetak Password" class="com-button" onclick="window.open('<?php echo basename($_SERVER['PHP_SELF']);?>?option=print-password<?php echo ($class_id)?("&class_id=$class_id"):"";?>')" />
+  </div>
 
 </form>
 <?php
