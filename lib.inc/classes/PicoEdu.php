@@ -656,13 +656,13 @@ class PicoEdo
 					$question_id = $question[0] * 1;
 					$option_id = $question[1] * 1;
 					$sql2 = "SELECT `edu_option`.`question_id`, `edu_option`.`option_id`, 
-				(select `edu_question`.`basic_competence` 
-					from `edu_question` 
-					where `edu_question`.`question_id` = `edu_option`.`question_id`) as `basic_competence`,
-				`edu_option`.`score`
-				from `edu_option`
-				where `edu_option`.`question_id` = '$question_id' and `edu_option`.`option_id` = '$option_id';
-				";
+					(select `edu_question`.`basic_competence` 
+						from `edu_question` 
+						where `edu_question`.`question_id` = `edu_option`.`question_id`) as `basic_competence`,
+					`edu_option`.`score`
+					from `edu_option`
+					where `edu_option`.`question_id` = '$question_id' and `edu_option`.`option_id` = '$option_id';
+					";
 					$stmt2 = $this->database->executeQuery($sql2);
 					if ($stmt2->rowCount() > 0) {
 						$data2 = $stmt2->fetch(PDO::FETCH_ASSOC);
@@ -730,16 +730,16 @@ class PicoEdo
 	public function loginTest($school_id, $student_id, $test_id, $sessions_id, $time, $ip)
 	{
 		$sql = "INSERT INTO `edu_test_member` 
-	(`school_id`, `student_id`, `test_id`, `sessions_id`, `time_enter`, `ip_enter`, `status`) values
-	('$school_id', '$student_id', '$test_id', '$sessions_id', '$time', '$ip', '1')
-	";
+		(`school_id`, `student_id`, `test_id`, `sessions_id`, `time_enter`, `ip_enter`, `status`) values
+		('$school_id', '$student_id', '$test_id', '$sessions_id', '$time', '$ip', '1')
+		";
 		$this->database->executeInsert($sql);
 	}
 	public function logoutTest($school_id, $student_id, $test_id, $sessions_id, $time, $ip)
 	{
 		$sql = "update `edu_test_member` set `time_exit` = '$time', `ip_exit` = '$ip', `status` = '2'
-	where `school_id` = '$school_id' and `student_id` = '$student_id' and `test_id` = '$test_id' and `sessions_id` = '$sessions_id'
-	";
+		where `school_id` = '$school_id' and `student_id` = '$student_id' and `test_id` = '$test_id' and `sessions_id` = '$sessions_id'
+		";
 		$this->database->executeUpdate($sql);
 	}
 
@@ -752,22 +752,34 @@ class PicoEdo
 	{
 		$arr = array(
 			"0"=>"",
-			"1"=>"tingkat 1",
-			"2"=>"tingkat 2",
-			"3"=>"tingkat 3",
-			"4"=>"tingkat 4",
-			"5"=>"tingkat 5",
-			"6"=>"tingkat 6",
-			"7"=>"tingkat 7",
-			"8"=>"tingkat 8",
-			"9"=>"tingkat 9",
-			"10"=>"tingkat 10",
-			"11"=>"tingkat 11",
-			"12"=>"tingkat 12",
+			"1"=>"Tingkat 1",
+			"2"=>"Tingkat 2",
+			"3"=>"Tingkat 3",
+			"4"=>"Tingkat 4",
+			"5"=>"Tingkat 5",
+			"6"=>"Tingkat 6",
+			"7"=>"Tingkat 7",
+			"8"=>"Tingkat 8",
+			"9"=>"Tingkat 9",
+			"10"=>"Tingkat 10",
+			"11"=>"Tingkat 11",
+			"12"=>"Tingkat 12",
 			"13"=>"Perguruan Tinggi"
 
 		);
 		return @$arr[$grade];
+	}
+
+	public function createGradeOption($grade)
+	{
+		$arr = array();
+		for($i = 1; $i<=12; $i++)
+		{
+			$sel = $i == $grade ? ' selected="selected"' : '';
+			$arr[] = '<option value="'.$i.'" '.$sel.'>Tingkat '.$i.'</option>';
+		}
+
+		return implode("\r\n", $arr);
 	}
 	public function getGenderName($gender)
 	{

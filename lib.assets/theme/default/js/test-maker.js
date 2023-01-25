@@ -1052,7 +1052,7 @@ function renderQuestion(elemInput, elemOutput, elemStatus)
 	let questions = buildQuestion(input);
 	out.innerHTML = buildQuestionHTML(questions, parseImg, baseIMGURL);
 	$('#preview2 > ol > li:first-child').attr('value', startFrom);
-	let na = noAnswer(questions);
+	let noAnswerQuestion = noAnswer(questions);
 	if(questions == null)
 	{
 		elemStatus.innerHTML = '';
@@ -1063,17 +1063,17 @@ function renderQuestion(elemInput, elemOutput, elemStatus)
 		if(modContinue)
 		{
 			let i;
-			for(i = 0; i < m.left; i++)
+			for(i = 0; i < noAnswerQuestion.length; i++)
 			{
-				na[i] += startFrom-1;
+				noAnswerQuestion[i] += startFrom-1;
 			}
 			nQuestion += startFrom-1;
 		}
 		let status = '';
 		status = 'Jumlah soal: '+nQuestion;
-		if(na.length)
+		if(noAnswerQuestion.length)
 		{
-			status += ' | Tanpa jawaban: Nomor '+na.join(', ');
+			status += ' | Tanpa jawaban: Nomor '+noAnswerQuestion.join(', ');
 		}
 		elemStatus.innerHTML = status;
 	}

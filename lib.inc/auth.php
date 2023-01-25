@@ -15,7 +15,7 @@ if(isset($_SESSION['password']))
 $password = $_SESSION['password'];
 }
 
-$member_login = new MemberAuth($username, $password, false);
+$member_login = new MemberAuth($database, $username, $password, false);
 if(@$member_login->member_id)
 {
 	$member_id = $member_login->member_id;
@@ -24,4 +24,3 @@ if($member_login->member_id)
 {
 }
 
-?>

@@ -5,7 +5,7 @@ $cfg->module_title = "Edu Info";
 include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 if(count(@$_POST))
 {
-	$info_id = kh_filter_input(INPUT_POST, 'info_id', FILTER_SANITIZE_NUMBER_INT);
+	$info_id = kh_filter_input(INPUT_POST, 'info_id', FILTER_SANITIZE_STRING_NEW);
 	$info_id2 = kh_filter_input(INPUT_POST, 'info_id2', FILTER_SANITIZE_NUMBER_INT);
 	if(!isset($_POST['info_id']))
 	{
@@ -121,7 +121,7 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 else if(@$_GET['option']=='edit')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
-$edit_key = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_INT);
+$edit_key = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 $sql = "SELECT `".DB_PREFIX."edu_info`.* 
 from `".DB_PREFIX."edu_info` 
 where 1
@@ -194,7 +194,7 @@ include_once dirname(__FILE__)."/lib.inc/footer.php";
 else if(@$_GET['option']=='detail')
 {
 include_once dirname(__FILE__)."/lib.inc/header.php";
-$edit_key = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_NUMBER_INT);
+$edit_key = kh_filter_input(INPUT_GET, 'info_id', FILTER_SANITIZE_STRING_NEW);
 $nt = '';
 $sql = "SELECT `".DB_PREFIX."edu_info`.* $nt
 from `".DB_PREFIX."edu_info` 

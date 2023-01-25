@@ -13,7 +13,7 @@ include_once dirname(dirname(__FILE__))."/lib.inc/cfg.pagination.php";
 
 if(isset($_GET['article_id']))
 {
-	$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_NUMBER_UINT);
+	$article_id = kh_filter_input(INPUT_GET, 'article_id', FILTER_SANITIZE_STRING_NEW);
 
 	$sql = "SELECT `edu_article`.*, `member`.`name` as `creator`
 	from `edu_article` 

@@ -1,5 +1,5 @@
 <?php
-include_once dirname(dirname(__FILE__))."/lib.inc/functions.php";
+include_once dirname(dirname(__FILE__))."/lib.inc/functions-pico.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/sessions.php";
 if(isset($_POST['username']) && isset($_POST['password']))
 {

@@ -1,5 +1,5 @@
 <?php
-include_once dirname(dirname(__FILE__))."/lib.inc/functions.php";
+include_once dirname(dirname(__FILE__))."/lib.inc/functions-pico.php";
 include_once dirname(dirname(__FILE__))."/lib.inc/sessions.php";
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
