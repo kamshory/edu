@@ -260,7 +260,7 @@ else
 	<?php
 	}
 	?>
-<p><a href="http://www.planetbiru.com/register.php" target="_blank">Klik di sini jika belum terdaftar</a></p>
+<p><a href="https://www.planetbiru.com/register.php" target="_blank">Klik di sini jika belum terdaftar</a></p>
 <p><a href="./">Kembali ke depan</a></p>
 </div>
 </div>

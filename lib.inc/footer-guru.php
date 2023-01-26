@@ -5,7 +5,7 @@ if(!defined('DB_NAME')) exit();
     </div>
     
     <div class="footer">
-        &copy; <a href="http://www.planetbiru.com/" target="_blank">Planetbiru</a> 2008-<?php echo date('Y');?>. All rights reserved.
+        &copy; <a href="https://www.planetbiru.com/" target="_blank">Planetbiru</a> 2008-<?php echo date('Y');?>. All rights reserved.
     </div>
 </div>
 </body>

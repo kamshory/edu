@@ -32,7 +32,7 @@ $cfg->mail_reset_password = "resetpassword@quliah.com";
 $cfg->mail_invitation = "invitation@quliah.com";
 $cfg->mail_noreply = "noreply@planetbiru.com";
 $cfg->mail_update_profile = "noreply@planetbiru.com";
-$cfg->main_url = "http://www.planetbiru.com";
+$cfg->main_url = "https://www.planetbiru.com";
 $cfg->main_domain = "www.planetbiru.com";
 
 $cfg->cdn_jquery = $cfg->base_assets."lib.assets/script/jquery/jquery.min.js";
@@ -49,7 +49,7 @@ $cfg->mail_reset_password = "resetpassword@quliah.com";
 $cfg->mail_invitation = "invitation@quliah.com";
 $cfg->mail_noreply = "noreply@planetbiru.com";
 $cfg->mail_update_profile = "noreply@planetbiru.com";
-$cfg->main_url = "http://www.planetbiru.com";
+$cfg->main_url = "https://www.planetbiru.com";
 $cfg->main_domain = "www.planetbiru.com";
 
 $cfg->cdn_jquery = $cfg->base_assets."lib.assets/script/jquery/jquery.min.js";

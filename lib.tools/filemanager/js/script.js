@@ -1,7 +1,7 @@
 /*
 ** Copyright Kamshory Developer 2010-2013 
 ** All rights reserved
-** Join Planet Biru http://www.planetbiru.com
+** Join Planet Biru https://www.planetbiru.com
 */
 let angle = 0;
 let fliph = 0;
@@ -2284,10 +2284,10 @@ function about() {
 		'<table width="100%" border="0" cellpadding="0" cellspacing="0" class="dialog-table dialog-about">' +
 		'<tr><td width="40%">Module Name</td><td>Planetbiru File Manager</td></tr>' +
 		'<tr><td>Version</td><td>2.2</td></tr>' +
-		'<tr><td>Developer</td><td><a href="http://www.kamshory.com" target="_blank">Kamshory Developer</a></td></tr>' +
+		'<tr><td>Developer</td><td><a href="https://www.planetbiru.com" target="_blank">Kamshory Developer</a></td></tr>' +
 		'<tr><td>Release Date</td><td>2012-10-20</td></tr>' +
 		'<tr><td>Price</td><td>30 USD</td></tr>' +
-		'<tr><td>Sponsored Link</td><td><a href="http://www.planetbiru.com/" target="_blank">Planetbiru</a></td></tr>' +
+		'<tr><td>Sponsored Link</td><td><a href="https://www.planetbiru.com/" target="_blank">Planetbiru</a></td></tr>' +
 		'<tr><td>Information</td><td><a href="javascript:;" onclick="return showInformation();">Click Here</a></td></tr>' +
 		'</table>';
 	overlayDialog(html, 320, 140);
