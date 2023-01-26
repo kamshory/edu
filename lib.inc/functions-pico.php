@@ -1,6 +1,10 @@
 <?php
 include_once dirname(dirname(__FILE__)) . "/lib.config/inc-cfg.php";
 
+function punchTrim($val)
+{
+	return trim($val, " ._-/\\ ");
+}
 mb_regex_encoding('UTF-8');
 function mb_replace($search, $replace, $subject, &$count = 0)
 {
