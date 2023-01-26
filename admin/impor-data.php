@@ -58,7 +58,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 					$data = array();
 					for ($col = 0; $col < $highestColumnIndex; ++$col) 
 					{
-						$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
+						$data[$fieldArray[$col]] = lineTrim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 					}
 					$name = $picoEdu->filterSanitizeName(@$data['name'], true);
 					
@@ -243,7 +243,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							for ($row = 2; $row <= $highestRow; ++$row) {
 								$data = array();
 								for ($col = 0; $col < $highestColumnIndex; ++$col) {
-									$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
+									$data[$fieldArray[$col]] = lineTrim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 								}
 
 								$name = $picoEdu->filterSanitizeName(@$data['name']);
@@ -335,7 +335,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							for ($row = 2; $row <= $highestRow; ++$row) {
 								$data = array();
 								for ($col = 0; $col < $highestColumnIndex; ++$col) {
-									$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
+									$data[$fieldArray[$col]] = lineTrim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 								}
 
 								$name = $picoEdu->filterSanitizeName(@$data['name']);
@@ -414,7 +414,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							for ($row = 2; $row <= $highestRow + 3; ++$row) {
 								$data = array();
 								for ($col = 0; $col < $highestColumnIndex; ++$col) {
-									$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
+									$data[$fieldArray[$col]] = lineTrim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 								}
 								$reg_number = $picoEdu->filterSanitizeDoubleSpace(@$data['reg_number']);
 								$reg_number_national = $picoEdu->filterSanitizeDoubleSpace(@$data['reg_number_national']);
@@ -441,15 +441,15 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 								$password = md5(md5($password_initial));
 
 
-								$phone = trim($phone, " ._-/\\ ");
-								$email = trim($email, " ._-/\\ ");
+								$phone = punchTrim($phone);
+								$email = punchTrim($email);
 								$email = $picoEdu->filterEmailAddress($email);
 
 								if ($name == '') {
 									continue;
 								}
 								if ($email == '') {
-									$email = $picoEdu->generateAltEmail('planetbiru.com', ($reg_number_national != '') ? 'st_' . $reg_number_national . '_' . $school_id : '', ($reg_number != '') ? 'st_' . $reg_number . '_' . $school_id : '', ($phone != '') ? 'ph_' . $country_id . '_' . $phone : '');
+									$email = $picoEdu->generateAltEmail('local', ($reg_number_national != '') ? 'st_' . $reg_number_national : '', ($reg_number != '') ? 'st_' . $reg_number : '', ($phone != '') ? 'phs_' . $phone : '');
 								}
 
 								$user_data = array();
@@ -548,7 +548,7 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 							for ($row = 2; $row <= $highestRow; ++$row) {
 								$data = array();
 								for ($col = 0; $col < $highestColumnIndex; ++$col) {
-									$data[$fieldArray[$col]] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue(), " \r\n\t ");
+									$data[$fieldArray[$col]] = lineTrim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
 								}
 
 								$reg_number = $picoEdu->filterSanitizeDoubleSpace(@$data['reg_number']);
@@ -573,14 +573,14 @@ if(isset($_POST['upload']) && isset($_FILES['file']['name']))
 								$password = md5(md5($password_initial));
 
 
-								$phone = trim($phone, " ._-/\\ ");
-								$email = trim($email, " ._-/\\ ");
+								$phone = punchTrim($phone);
+								$email = punchTrim($email, " ._-/\\ ");
 
 								if ($name == '') {
 									continue;
 								}
 								if ($email == '') {
-									$email = $picoEdu->generateAltEmail('planetbiru.com', ($reg_number_national != '') ? 'tc_' . $reg_number_national . '_' . $school_id : '', ($reg_number != '') ? 'tc_' . $reg_number . '_' . $school_id : '', ($phone != '') ? 'ph_' . $country_id . '_' . $phone : '');
+									$email = $picoEdu->generateAltEmail('local', ($reg_number_national != '') ? 'tc_' . $reg_number_national : '', ($reg_number != '') ? 'tc_' . $reg_number : '', ($phone != '') ? 'pht_' . $phone : '');
 								}
 
 								$user_data = array();

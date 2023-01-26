@@ -1,6 +1,6 @@
 <?php
 include_once dirname(dirname(__FILE__))."/lib.inc/auth-siswa.php";
-if(@$school_id == 0)
+if(empty(@$school_id))
 {
 include_once dirname(__FILE__)."/login-form.php";
 exit();

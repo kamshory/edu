@@ -1,12 +1,13 @@
 <?php
 
-class PicoEdo 
+class PicoEdo //NOSONAR
 {
 	const SPAN_OPEN = '<span>';
 	const SPAN_CLOSE = '</span>';
 	const SPAN_TITLE = '<span title="';
 	const TRIM_EXTRA_SPACE = "/\s+/";
 	const TRIM_NON_NUMERIC = "/[^0-9]/i";
+	const PARAM_OFFSET = "&offset=";
 
 	public PicoDatabase $database;
 	public function __construct(PicoDatabase $database)
@@ -116,7 +117,7 @@ class PicoEdo
 		}
 		return $text;
 	}
-	public function get_country_name($country_id)
+	public function getCountryName($country_id)
 	{
 		$sql = "SELECT `name` from `country` where `country_id` = '$country_id' ";
 		$stmt = $this->database->executeQuery($sql);
@@ -160,7 +161,7 @@ class PicoEdo
 		$name = trim(preg_replace(self::TRIM_EXTRA_SPACE, " ", $name));
 
 		$gender = $user_data['gender'];
-		$email = trim($user_data['email'], " \r\n\t ");
+		$email = lineTrim($user_data['email']);
 		$phone = $user_data['phone'];
 		$password = $user_data['password'];
 		$birth_day = $user_data['birth_day'];
@@ -173,7 +174,6 @@ class PicoEdo
 		$username = "";
 		while ($oke === false || $oke == '') {
 			$username = $oke = $this->isValidUsername($uname);
-			$this->log($oke." ".__LINE__);
 			if ($oke == '' || $oke === false) {
 				$uname = $uname . mt_rand(11, 99);
 				$username = $uname;
@@ -184,7 +184,6 @@ class PicoEdo
 			from `member` 
 			where `name` like '$name' and `birth_day` like '$birth_day' 
 			";
-		$this->log(__LINE__." ".$sql);
 		$stmt = $this->database->executeQuery($sql);
 		if ($stmt->rowCount()) {
 			$data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -204,7 +203,6 @@ class PicoEdo
 			('$member_id', '$name', '$username', '$email', '$gender', '$birth_day', '$password', '$auth', '$language', '$phone', '$country_id', 
 			'$now', '$ip', '$now', '$ip', '$now', '1');
 			";
-			$this->log(__LINE__." ".$sql);
 			$this->database->executeInsert($sql);
 			
 			return array(
@@ -233,7 +231,7 @@ class PicoEdo
 		return false;
 	}
 
-	public function createPagination($module, $totalrecord, $resultperpage = 1, $numberofpage = 1, $offset = 0, $arrayget, $showfirstandlast = true, $first = "First", $last = "Last", $prev = "Prev", $next = "Next")
+	public function createPagination($module, $totalrecord, $resultperpage = 1, $numberofpage = 1, $offset = 0, $arrayget = array(), $showfirstandlast = true, $first = "First", $last = "Last", $prev = "Prev", $next = "Next") //NOSONAR
 	{
 		$result = array();
 		$result[0] = new StdClass();
@@ -252,7 +250,6 @@ class PicoEdo
 			$arg .= "&$item=" . @$_GET[$item];
 		}
 		$arg = "$module?" . trim($arg, "&");
-		$allpage = ceil($totalrecord / $resultperpage);
 		$curpage = abs(ceil($offset / $resultperpage)) + 1;
 		$startpage = abs(ceil($curpage - floor($numberofpage / 2)));
 		if ($startpage < 1) {
@@ -283,18 +280,18 @@ class PicoEdo
 		}
 
 		$result[0]->text = $pg->str_first;
-		$result[0]->ref = str_replace("?&", "?", $arg . "&offset=" . $pg->ref_first);
+		$result[0]->ref = str_replace("?&", "?", $arg . self::PARAM_OFFSET . $pg->ref_first);
 		$result[0]->sel = 0;
 		if ($curpage >= 0) {
 			$result[1]->text = $pg->str_prev;
-			$result[1]->ref = str_replace("?&", "?", $arg . "&offset=" . $pg->ref_prev);
+			$result[1]->ref = str_replace("?&", "?", $arg . self::PARAM_OFFSET . $pg->ref_prev);
 			$result[1]->sel = 0;
 		}
 		for ($j = 2, $i = $startpage; $i <= ($endpage); $i++, $j++) {
 			$pn = $i;
 			$result[$j] = new StdClass();
 			$result[$j]->text = "$pn";
-			$result[$j]->ref = str_replace("?&", "?", $arg . "&offset=" . (($i - 1) * $resultperpage));
+			$result[$j]->ref = str_replace("?&", "?", $arg . self::PARAM_OFFSET . (($i - 1) * $resultperpage));
 			if ($curpage == $i) {
 				$result[$j]->sel = 1;
 			} else {
@@ -304,13 +301,13 @@ class PicoEdo
 		if ($endpage < $lastpage) {
 			$result[$j] = new StdClass();
 			$result[$j]->text = $pg->str_next;
-			$result[$j]->ref = str_replace("?&", "?", $arg . "&offset=" . $pg->ref_next);
+			$result[$j]->ref = str_replace("?&", "?", $arg . self::PARAM_OFFSET . $pg->ref_next);
 			$result[$j]->sel = 0;
 			$j++;
 		}
 		$result[$j] = new StdClass();
 		$result[$j]->text = $pg->str_last;
-		$result[$j]->ref = str_replace("?&", "?", $arg . "&offset=" . $pg->ref_last);
+		$result[$j]->ref = str_replace("?&", "?", $arg . self::PARAM_OFFSET . $pg->ref_last);
 		$result[$j]->sel = 0;
 		return $result;
 	}
@@ -484,7 +481,7 @@ class PicoEdo
 	{
 		if (count($score)) {
 			$result = array();
-			foreach ($score as $key => $val) {
+			foreach ($score as $val) {
 				$result[] = array($val['basic_competence'], $val['score']);
 			}
 		} else {
@@ -570,13 +567,13 @@ class PicoEdo
 			$active_token[] = $data['token'];
 		}
 		$temporary_token = $active_token;
-		for ($i = 0; $i < $count; $i++) {
+
+		for ($i = 0; count($new_token) < $count; $i++) {
 			$token = mt_rand($min, $max);
-			if (in_array($token, $temporary_token)) {
-				$i--;
+			if (!in_array($token, $temporary_token)) {
+				$new_token[] = $token;
+				$temporary_token[] = $token;
 			}
-			$new_token[] = $token;
-			$temporary_token[] = $token;
 		}
 		return $new_token;
 	}
@@ -834,7 +831,7 @@ class PicoEdo
 	{
 		$value = addslashes($value);
 		$value = trim(preg_replace(self::TRIM_EXTRA_SPACE, " ", $value));
-		return trim($value, " ._-/\\ ");
+		return punchTrim($value);
 	}
 
 	
