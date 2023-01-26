@@ -5,8 +5,12 @@ function punchTrim($val)
 {
 	return trim($val, " ._-/\\ ");
 }
+function lineTrim($val)
+{
+	return trim($val, " \r\n\t ");
+}
 mb_regex_encoding('UTF-8');
-function mb_replace($search, $replace, $subject, &$count = 0)
+function mb_replace($search, $replace, $subject, &$count = 0) //NOSONAR
 {
 	if (!is_array($search) && is_array($replace)) {
 		return false;
@@ -17,6 +21,7 @@ function mb_replace($search, $replace, $subject, &$count = 0)
 			$string = &mb_replace($search, $replace, $string, $c);
 			$count += $c;
 		}
+		unset($string);
 	} 
 	else if (is_array($search)) 
 	{
@@ -321,7 +326,7 @@ function scrap($url)
 		return date('Y-m-d', (24141 + $int) * 86400);
 	}
 	
-	function liststyle($style, $index = 1)
+	function listStyle($style, $index = 1)
 	{
 		switch ($style) {
 			case "armenian":

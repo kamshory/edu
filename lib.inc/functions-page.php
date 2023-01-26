@@ -45,7 +45,7 @@ function menu_build_for_page($res){
 	$html .= "<ul>\r\n";
 	if(is_array($res))
 	{
-		foreach($res as $k=>$val)
+		foreach($res as $val)
 		{
 			$lnk = $val->link;
 			$html .= "<li>".
@@ -67,7 +67,7 @@ function menu_build_for_edit($res){
 	$html .= "<ul>\r\n";
 	if(is_array($res))
 	{
-		foreach($res as $k=>$val)
+		foreach($res as $val)
 		{
 			if($val->page_id)
 			{
@@ -103,7 +103,7 @@ function menu_build_for_select($res, $value=''){
 	$html = "";
 	if(is_array($res))
 	{
-		foreach($res as $k=>$val)
+		foreach($res as $val)
 		{
 			$sel = '';
 			if(strlen($value) && $value==$val->id)
@@ -126,7 +126,7 @@ function menu_list_inline($res){
 	$arr = array();
 	if(is_array($res))
 	{
-		foreach($res as $k=>$val)
+		foreach($res as $val)
 		{
 			$arr[] = $val->id;
 			if($val->numchild)
@@ -145,7 +145,7 @@ function menu_list_inline_link($res){
 	$arr = array();
 	if(is_array($res))
 	{
-		foreach($res as $k=>$val)
+		foreach($res as $val)
 		{
 			$arr[] = $val->link;
 			if($val->numchild)
@@ -161,6 +161,3 @@ function menu_list_inline_link($res){
 	return $arr;
 }
 
-
-
-?>

@@ -161,7 +161,7 @@ class PicoEdo //NOSONAR
 		$name = trim(preg_replace(self::TRIM_EXTRA_SPACE, " ", $name));
 
 		$gender = $user_data['gender'];
-		$email = trim($user_data['email'], " \r\n\t ");
+		$email = lineTrim($user_data['email']);
 		$phone = $user_data['phone'];
 		$password = $user_data['password'];
 		$birth_day = $user_data['birth_day'];

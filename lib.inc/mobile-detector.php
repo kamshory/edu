@@ -10,5 +10,3 @@ if(stripos($useragent, "Android") !== false || strpos($useragent, "iOS") !== fal
 {
 	$mobile_browser = true;
 }
-
-?>

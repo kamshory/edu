@@ -216,10 +216,10 @@ if(isset($_POST['import']) && isset($_POST['test_id']) && isset($_FILES['file'])
 						{
 							foreach($question->question->file as $index_file_question => $file)
 							{
-								$name_file = trim(@$file->name, " \r\n\t ");
-								$type_file = trim(@$file->type, " \r\n\t ");
-								$encoding_file = trim(@$file->encoding, " \r\n\t ");
-								$data_file = trim(@$file->data, " \r\n\t ");
+								$name_file = lineTrim(@$file->name);
+								$type_file = lineTrim(@$file->type);
+								$encoding_file = lineTrim(@$file->encoding);
+								$data_file = lineTrim(@$file->data);
 								if(stripos($encoding_file, "base64") !== false)
 								{
 									$data_file = base64_decode($data_file);
@@ -258,10 +258,10 @@ if(isset($_POST['import']) && isset($_POST['test_id']) && isset($_FILES['file'])
 								{
 									foreach($option->file as $index_file_question => $file)
 									{
-										$name_file = trim(@$file->name, " \r\n\t ");
-										$type_file = trim(@$file->type, " \r\n\t ");
-										$encoding_file = trim(@$file->encoding, " \r\n\t ");
-										$data_file = trim(@$file->data, " \r\n\t ");
+										$name_file = lineTrim(@$file->name);
+										$type_file = lineTrim(@$file->type);
+										$encoding_file = lineTrim(@$file->encoding);
+										$data_file = lineTrim(@$file->data);
 										
 										if(stripos($encoding_file, "base64") !== false)
 										{
