@@ -95,7 +95,7 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$token_student = md5($school_id.'-'.$reg_number.'-'.time().'-'.mt_rand(111111, 999999));
 	if($email == '')
 	{
-		$email = $picoEdu->generateAltEmail('edu.planetbiru.com', 'st_'.$reg_number_national, 'st_'.$reg_number.'_'.$school_id, 'ph_'.$country_id.'_'.$phone);
+		$email = $picoEdu->generateAltEmail('edu.planetbiru.com', 'st_'.$reg_number_national, 'st_'.$reg_number, 'phs_'.$phone);
 	}
 	
 	$user_data = array();

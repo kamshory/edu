@@ -14,7 +14,7 @@ if(isset($_SESSION['student_password']))
 $password = $_SESSION['student_password'];
 }
 
-$student_login = new StudenAuth($username, $password, false);
+$student_login = new StudenAuth($database, $username, $password, false);
 
 $student_id = 0;
 $school_id = 0;

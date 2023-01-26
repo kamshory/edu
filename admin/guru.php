@@ -97,16 +97,16 @@ if(isset($_POST['save']) && @$_GET['option']=='add')
 	$password_initial = substr($token_teacher, 5, 6);
 	$password = md5(md5($password_initial));
 
-	$name = trim($name, " ._-/\\ ");
-	$reg_number = trim($reg_number, " ._-/\\ ");
-	$reg_number_national = trim($reg_number_national, " ._-/\\ ");
-	$phone = trim($phone, " ._-/\\ ");
-	$email = trim($email, " ._-/\\ ");
+	$name = punchTrim($name);
+	$reg_number = punchTrim($reg_number);
+	$reg_number_national = trim($reg_number_national);
+	$phone = punchTrim($phone);
+	$email = punchTrim($email);
 
 	if ($name != '') {
 
 		if ($email == '') {
-			$email = $picoEdu->generateAltEmail('planetbiru.com', ($reg_number_national != '') ? 'tc_' . $reg_number_national . '_' . $school_id : '', ($reg_number != '') ? 'tc_' . $reg_number . '_' . $school_id : '', ($phone != '') ? 'ph_' . $country_id . '_' . $phone : '');
+			$email = $picoEdu->generateAltEmail('local', ($reg_number_national != '') ? 'tc_' . $reg_number_national : '', ($reg_number != '') ? 'tc_' . $reg_number : '', ($phone != '') ? 'pht_' . $phone : '');
 		}
 
 		$user_data = array();
