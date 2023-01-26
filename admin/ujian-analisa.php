@@ -17,7 +17,7 @@ from `edu_test` where `test_id` = '$test_id'
 			header("Content-Disposition: attachment; filename=\"" . $data['name'] . ".xls\"");
 			?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Analisa Soal Ujian - <?php echo $cfg->app_name; ?></title>

@@ -43,7 +43,7 @@ if($stmt->rowCount() > 0)
 }
 }
 ?><!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <base href="<?php echo $cfg->base_url;?>">

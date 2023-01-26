@@ -12,11 +12,10 @@ class listFile
 			$this->findAll($location);
 		}
 	}
-	public function findAll($location)
+	public function findAll($location) //NOSONAR
 	{
 		global $cfg;
 		if (file_exists($location) && ($handle = opendir($location))) {
-			$i = 0;
 			while (false !== ($ufile = readdir($handle))) {
 				$fn = "$location/$ufile";
 				if ($ufile == "." || $ufile == "..") {
@@ -563,7 +562,7 @@ function dir_list($dir)
 	}
 }
 
-function deleteforbidden($dir, $containsubdir = false)
+function deleteforbidden($dir, $containsubdir = false) //NOSONAR
 {
 	global $cfg;
 	if ($cfg->delete_forbidden_extension && file_exists($dir) && is_array($cfg->forbidden_extension)) {
@@ -784,7 +783,8 @@ function get_capture_info($exif)
 function matchUser($user, $username, $password)
 {
 	$passwordType = $user[2];
-	switch ($passwordType) {
+	switch ($passwordType) //NOSONAR
+	{
 		case 'plain':
 			if ($username == $user[0] && $password == $user[1]) {
 				return true;

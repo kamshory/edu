@@ -92,7 +92,7 @@ header("Content-Disposition: attachment; filename=\"".str_replace(" ", "-", strt
 
 echo '
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hasil Ujian '.$data['name'].'</title>
